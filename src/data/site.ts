@@ -1,5 +1,11 @@
 // Edit this file to update the text on your portfolio.
 
+import type { ImageMetadata } from 'astro';
+import chooseType from '../assets/evertune/01-choose-type.png';
+import generating from '../assets/evertune/02-generating.png';
+import review from '../assets/evertune/03-review.png';
+import settings from '../assets/evertune/04-settings.png';
+
 export const site = {
 	name: 'Tinu Thomas',
 	role: 'Product Designer',
@@ -29,19 +35,50 @@ export const strengths = [
 	{ icon: 'component', title: 'Design systems', note: 'built and maintained in canvas and code' },
 ] as const;
 
+// One step of an interactive flow hero: a screen, a short label, and a one-line caption.
+export type FlowStep = { label: string; caption: string; image: ImageMetadata };
+
 export type Project = {
 	title: string;
 	summary: string;
 	tags: string[];
 	href?: string;
+	// Links the card to /case-studies/<slug>/.
+	slug?: string;
+	// Optional: shows a clickable step-through of the design as the project's hero.
+	flow?: FlowStep[];
 };
 
 // Add, remove, or reorder projects here.
 export const projects: Project[] = [
 	{
 		title: 'Improving how Evertune customers create prompts to analyze their AI visibility',
-		summary: 'Redesigning the prompt creation experience so customers can set up the right prompts to understand how their brand shows up in AI answers.',
+		summary:
+			'New users struggled to choose between five tracker types before writing a single prompt. I redesigned prompt creation around a simple chat with Evertune\u2019s agent, so new customers can get started without white-glove onboarding.',
+		slug: 'evertune',
 		tags: ['Evertune AI', 'B2B SaaS', 'Product Design'],
+		flow: [
+			{
+				label: 'Start',
+				caption: 'Begin with a simple chat: describe what to track and Evertune\u2019s agent takes it from there.',
+				image: chooseType,
+			},
+			{
+				label: 'Generate',
+				caption: 'Evertune researches the brand and drafts topics and prompts, showing its progress step by step.',
+				image: generating,
+			},
+			{
+				label: 'Refine',
+				caption: 'Edit topics and prompts directly, or ask the agent to change them, before anything runs.',
+				image: review,
+			},
+			{
+				label: 'Run',
+				caption: 'Adjust the settings (models, refresh cadence and credits), then run the tracker.',
+				image: settings,
+			},
+		],
 	},
 	{
 		title: 'Project Two',
