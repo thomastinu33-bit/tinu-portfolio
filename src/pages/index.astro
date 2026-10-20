@@ -270,10 +270,14 @@ const strengthIcons = { component: Component, prototype: MousePointerClick, rese
 			gap: 24px;
 		}
 	}
+	#work h2 {
+		text-align: center;
+	}
+	/* Projects stack one per row */
 	.grid {
-		display: grid;
-		grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
-		gap: 20px;
+		display: flex;
+		flex-direction: column;
+		gap: 24px;
 	}
 	.card {
 		border-radius: 12px;
