@@ -156,7 +156,9 @@ import ArrowUpRight from '@lucide/astro/icons/arrow-up-right';
 		text-align: center;
 	}
 	.greeting {
+		font-family: var(--font-sans);
 		font-weight: 300;
+		letter-spacing: 0.01em;
 		font-size: clamp(1.4rem, 3vw, 1.9rem);
 		color: var(--muted);
 		margin: 0 0 6px;
@@ -165,10 +167,11 @@ import ArrowUpRight from '@lucide/astro/icons/arrow-up-right';
 		display: grid;
 		max-width: 30ch;
 		margin: 0 auto;
-		font-weight: 500;
-		font-size: clamp(1.9rem, 5vw, 3.2rem);
-		line-height: 1.2;
-		letter-spacing: -0.01em;
+		font-family: var(--font-serif);
+		font-weight: 400;
+		font-size: clamp(2.4rem, 6vw, 4.2rem);
+		line-height: 1.1;
+		letter-spacing: -0.015em;
 	}
 	.rotator span {
 		grid-area: 1 / 1;
@@ -207,8 +210,9 @@ import ArrowUpRight from '@lucide/astro/icons/arrow-up-right';
 		padding: 20px;
 	}
 	.card h3 {
-		margin-top: 0;
-		font-weight: 500;
+		margin: 0 0 8px;
+		font-size: 1.6rem;
+		line-height: 1.2;
 	}
 	.tags {
 		list-style: none;
