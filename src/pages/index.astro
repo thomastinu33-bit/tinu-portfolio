@@ -4,11 +4,11 @@ import { site, projects, strengths } from '../data/site';
 import Mail from '@lucide/astro/icons/mail';
 import MapPin from '@lucide/astro/icons/map-pin';
 import ArrowUpRight from '@lucide/astro/icons/arrow-up-right';
-import Grid from '@lucide/astro/icons/grid-2x2';
-import Code from '@lucide/astro/icons/code';
-import Search from '@lucide/astro/icons/search';
+import Component from '@lucide/astro/icons/component';
+import MousePointerClick from '@lucide/astro/icons/mouse-pointer-click';
+import ScanSearch from '@lucide/astro/icons/scan-search';
 
-const strengthIcons = { grid: Grid, code: Code, search: Search };
+const strengthIcons = { component: Component, prototype: MousePointerClick, research: ScanSearch };
 ---
 
 <Layout>
@@ -247,9 +247,9 @@ const strengthIcons = { grid: Grid, code: Code, search: Search };
 		flex-shrink: 0;
 		display: grid;
 		place-items: center;
-		width: 52px;
-		height: 52px;
-		border-radius: 50%;
+		width: 48px;
+		height: 48px;
+		border-radius: 8px;
 		background: #fbede5;
 		border: 1px solid rgba(200, 130, 95, 0.18);
 		color: #b0694a;

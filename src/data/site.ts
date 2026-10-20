@@ -24,9 +24,9 @@ export const site = {
 // The "what I do" strip right below the intro: a short title plus a light one-line phrase.
 // `icon` must match one of the icons imported in src/pages/index.astro.
 export const strengths = [
-	{ icon: 'grid', title: 'Design systems', note: 'built and maintained in canvas and code' },
-	{ icon: 'code', title: 'Prototypes', note: 'shaped in Figma, brought to life with Claude & Codex' },
-	{ icon: 'search', title: 'User research', note: 'from early discovery to shipped features' },
+	{ icon: 'component', title: 'Design systems', note: 'built and maintained in canvas and code' },
+	{ icon: 'prototype', title: 'Prototypes', note: 'shaped in Figma, brought to life with Claude & Codex' },
+	{ icon: 'research', title: 'User research', note: 'from early discovery to shipped features' },
 ] as const;
 
 export type Project = {
