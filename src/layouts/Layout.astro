@@ -8,8 +8,6 @@ interface Props {
 
 const { title = `${site.name} · ${site.role}`, description = site.tagline } = Astro.props;
 const base = import.meta.env.BASE_URL;
-const [firstName, ...rest] = site.name.split(' ');
-const lastName = rest.join(' ');
 
 const navLinks = [
 	{ label: 'Home', href: `${base}/` },
@@ -38,10 +36,7 @@ const navLinks = [
 	<body>
 		<header class="nav-wrap">
 			<div class="nav glass">
-				<a class="brand" href={`${base}/`} aria-label={`${site.name}, home`}>
-					<span>{firstName}</span>
-					<span>{lastName}</span>
-				</a>
+				<a class="brand" href={`${base}/`} aria-label={`${site.name}, home`}>{site.name}</a>
 				<nav aria-label="Main">
 					{navLinks.map((l) => <a href={l.href}>{l.label}</a>)}
 				</nav>
@@ -50,14 +45,8 @@ const navLinks = [
 		<main>
 			<slot />
 		</main>
-		<footer id="contact" class="footer">
+		<footer class="footer">
 			<div class="container">
-				<h2>Get in touch</h2>
-				<ul class="contact">
-					<li><a href={`mailto:${site.email}`}>{site.email}</a></li>
-					<li><a href={site.linkedin} target="_blank" rel="noopener">LinkedIn</a></li>
-					<li>{site.location}</li>
-				</ul>
 				<p class="copyright">© {new Date().getFullYear()} {site.name}</p>
 			</div>
 		</footer>
@@ -125,17 +114,16 @@ const navLinks = [
 		display: flex;
 		justify-content: space-between;
 		align-items: center;
+		gap: 16px;
 	}
 	.brand {
-		display: flex;
-		flex-direction: column;
 		color: var(--fg);
 		text-decoration: none;
 		text-transform: uppercase;
+		white-space: nowrap;
 		font-weight: 400;
 		font-size: 0.95rem;
 		letter-spacing: 0.18em;
-		line-height: 1.15;
 	}
 	.nav nav {
 		display: flex;
@@ -160,14 +148,14 @@ const navLinks = [
 			padding: 0 20px;
 		}
 		.brand {
-			font-size: 0.8rem;
-			letter-spacing: 0.14em;
+			font-size: 0.78rem;
+			letter-spacing: 0.1em;
 		}
 		.nav nav {
-			gap: 14px;
+			gap: 12px;
 		}
 		.nav nav a {
-			font-size: 0.85rem;
+			font-size: 0.8rem;
 		}
 	}
 	@media (max-width: 380px) {
@@ -178,34 +166,13 @@ const navLinks = [
 
 	.footer {
 		margin-top: 48px;
-		padding: 64px 0 32px;
+		padding: 32px 0;
 		border-top: 1px solid rgba(90, 50, 30, 0.08);
 		text-align: center;
-	}
-	.footer h2 {
-		font-weight: 500;
-		margin: 0 0 16px;
-	}
-	.contact {
-		list-style: none;
-		padding: 0;
-		margin: 0;
-		display: flex;
-		flex-wrap: wrap;
-		justify-content: center;
-		gap: 8px 28px;
-		font-size: 1.05rem;
-	}
-	.contact a {
-		color: var(--fg);
-		text-underline-offset: 4px;
-	}
-	.contact a:hover {
-		color: var(--accent);
 	}
 	.copyright {
 		color: var(--muted);
 		font-size: 0.85rem;
-		margin: 40px 0 0;
+		margin: 0;
 	}
 </style>

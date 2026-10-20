@@ -1,6 +1,9 @@
 ---
 import Layout from '../layouts/Layout.astro';
 import { site, projects } from '../data/site';
+import Mail from '@lucide/astro/icons/mail';
+import MapPin from '@lucide/astro/icons/map-pin';
+import ArrowUpRight from '@lucide/astro/icons/arrow-up-right';
 ---
 
 <Layout>
@@ -12,6 +15,26 @@ import { site, projects } from '../data/site';
 				{site.intro.map((line, i) => <span class:list={{ 'is-active': i === 0 }}>{line}</span>)}
 			</p>
 			<p class="sr-only">{site.intro.join('. ')}.</p>
+		</div>
+		<div id="contact" class="hero-meta">
+			<div class="touch">
+				<span class="meta-label">Get in touch</span>
+				<a class="meta-link" href={`mailto:${site.email}`}>
+					<Mail size={16} strokeWidth={1.75} aria-hidden="true" />
+					{site.email}
+				</a>
+				<a class="meta-link" href={site.linkedin} target="_blank" rel="noopener">
+					LinkedIn
+					<ArrowUpRight size={16} strokeWidth={1.75} aria-hidden="true" />
+				</a>
+			</div>
+			<div class="location">
+				<span class="meta-label">Based in</span>
+				<span class="meta-link">
+					<MapPin size={16} strokeWidth={1.75} aria-hidden="true" />
+					{site.location}
+				</span>
+			</div>
 		</div>
 	</section>
 
@@ -64,8 +87,67 @@ import { site, projects } from '../data/site';
 		min-height: 100svh;
 		display: flex;
 		align-items: center;
-		padding: 112px 0 48px;
+		position: relative;
+		padding: 112px 0 140px;
 		background: var(--gradient);
+	}
+	/* Contact details pinned to the bottom corners of the first screen */
+	.hero-meta {
+		position: absolute;
+		left: 56px;
+		right: 56px;
+		bottom: 36px;
+		display: flex;
+		justify-content: space-between;
+		align-items: flex-end;
+		gap: 16px;
+		font-size: 0.95rem;
+	}
+	.touch {
+		display: flex;
+		flex-wrap: wrap;
+		align-items: baseline;
+		gap: 4px 20px;
+	}
+	.location {
+		flex-shrink: 0;
+		text-align: right;
+		white-space: nowrap;
+	}
+	.meta-label {
+		display: block;
+		width: 100%;
+		color: var(--muted);
+		font-size: 0.75rem;
+		text-transform: uppercase;
+		letter-spacing: 0.12em;
+	}
+	.meta-link {
+		display: inline-flex;
+		align-items: center;
+		gap: 6px;
+		color: var(--fg);
+		text-decoration: none;
+	}
+	.meta-link svg {
+		flex-shrink: 0;
+		color: var(--muted);
+		transition: color 0.15s, transform 0.15s;
+	}
+	a.meta-link:hover,
+	a.meta-link:hover svg {
+		color: var(--accent);
+	}
+	a.meta-link:hover svg.lucide-arrow-up-right {
+		transform: translate(2px, -2px);
+	}
+	@media (max-width: 600px) {
+		.hero-meta {
+			left: 32px;
+			right: 32px;
+			bottom: 24px;
+			font-size: 0.85rem;
+		}
 	}
 	.hero .container {
 		width: 100%;
