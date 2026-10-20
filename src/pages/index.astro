@@ -21,7 +21,7 @@ const strengthIcons = { grid: Grid, code: Code, search: Search };
 			</p>
 			<p class="sr-only">{site.intro.join('. ')}.</p>
 		</div>
-		<div id="contact" class="hero-meta">
+		<div id="contact" class="hero-meta nav-width">
 			<div class="touch">
 				<span class="meta-label">Get in touch</span>
 				<a class="meta-link" href={`mailto:${site.email}`}>
@@ -43,28 +43,28 @@ const strengthIcons = { grid: Grid, code: Code, search: Search };
 		</div>
 	</section>
 
-	<div class="container">
-		<section class="strengths" aria-label="What I do">
-			<ul>
-				{
-					strengths.map((s) => {
-						const Icon = strengthIcons[s.icon];
-						return (
-							<li>
-								<span class="badge">
-									<Icon size={22} strokeWidth={1.5} aria-hidden="true" />
-								</span>
-								<div>
-									<h3>{s.title}</h3>
-									<p>{s.note}</p>
-								</div>
-							</li>
-						);
-					})
-				}
-			</ul>
-		</section>
+	<section class="strengths nav-width" aria-label="What I do">
+		<ul>
+			{
+				strengths.map((s) => {
+					const Icon = strengthIcons[s.icon];
+					return (
+						<li>
+							<span class="badge">
+								<Icon size={20} strokeWidth={1.5} aria-hidden="true" />
+							</span>
+							<div>
+								<h3>{s.title}</h3>
+								<p>{s.note}</p>
+							</div>
+						</li>
+					);
+				})
+			}
+		</ul>
+	</section>
 
+	<div class="container">
 		<section id="work">
 			<h2>Case Studies</h2>
 			<div class="grid">
@@ -105,7 +105,7 @@ const strengthIcons = { grid: Grid, code: Code, search: Search };
 
 <style>
 	section {
-		padding: 48px 0;
+		padding-block: 48px;
 	}
 	/* Full-screen gradient intro; everything after it sits below the fold on white */
 	.hero {
@@ -120,8 +120,8 @@ const strengthIcons = { grid: Grid, code: Code, search: Search };
 	/* Contact details pinned to the bottom corners of the first screen */
 	.hero-meta {
 		position: absolute;
-		left: 56px;
-		right: 56px;
+		left: 0;
+		right: 0;
 		bottom: 36px;
 		display: flex;
 		justify-content: space-between;
@@ -169,8 +169,6 @@ const strengthIcons = { grid: Grid, code: Code, search: Search };
 	}
 	@media (max-width: 600px) {
 		.hero-meta {
-			left: 32px;
-			right: 32px;
 			bottom: 24px;
 			font-size: 0.85rem;
 		}
@@ -229,7 +227,7 @@ const strengthIcons = { grid: Grid, code: Code, search: Search };
 	}
 	/* "What I do" strip */
 	.strengths {
-		padding: 48px 0;
+		padding-block: 48px;
 		border-bottom: 1px solid rgba(90, 50, 30, 0.08);
 	}
 	.strengths ul {
@@ -243,14 +241,14 @@ const strengthIcons = { grid: Grid, code: Code, search: Search };
 	.strengths li {
 		display: flex;
 		align-items: center;
-		gap: 18px;
+		gap: 16px;
 	}
 	.badge {
 		flex-shrink: 0;
 		display: grid;
 		place-items: center;
-		width: 64px;
-		height: 64px;
+		width: 52px;
+		height: 52px;
 		border-radius: 50%;
 		background: #fbede5;
 		border: 1px solid rgba(200, 130, 95, 0.18);
