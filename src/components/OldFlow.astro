@@ -15,6 +15,11 @@ const methods = ['Let Evertune generate', 'Give instruction', 'Enter topics'];
 ---
 
 <div class="oldflow">
+	<div class="bar" hidden>
+		<button type="button" class="go">Walk through the old flow</button>
+		<span class="progress" aria-live="polite"></span>
+		<button type="button" class="reset" hidden>Start over</button>
+	</div>
 	<ol class="steps">
 		<li class="step">
 			<span class="n">1</span>
@@ -28,13 +33,21 @@ const methods = ['Let Evertune generate', 'Give instruction', 'Enter topics'];
 			<ul class="chips">
 				{
 					types.map((t) => (
-						<li class:list={['chip', { on: t.leadsOn }]}>
-							{t.name}
-							{t.note && <small>{t.note}</small>}
+						<li>
+							<button
+								type="button"
+								class:list={['chip', { picked: t.leadsOn }]}
+								data-type={t.leadsOn ? 'follows' : 'other'}
+								aria-pressed={t.leadsOn ? 'true' : 'false'}
+							>
+								{t.name}
+								{t.note && <small>{t.note}</small>}
+							</button>
 						</li>
 					))
 				}
 			</ul>
+			<p class="hint" hidden>Each type led to a different path. This diagram follows Suggested prompts.</p>
 			<span class="flag"><TriangleAlert size={14} strokeWidth={1.75} aria-hidden="true" />Hard to choose</span>
 		</li>
 
@@ -43,7 +56,15 @@ const methods = ['Let Evertune generate', 'Give instruction', 'Enter topics'];
 			<h4>Pick how to start</h4>
 			<p class="only">Only for Suggested prompts</p>
 			<ul class="chips">
-				{methods.map((m) => <li class="chip">{m}</li>)}
+				{
+					methods.map((m) => (
+						<li>
+							<button type="button" class="chip" aria-pressed="false">
+								{m}
+							</button>
+						</li>
+					))
+				}
 			</ul>
 		</li>
 
@@ -78,6 +99,63 @@ const methods = ['Let Evertune generate', 'Give instruction', 'Enter topics'];
 	</ol>
 	<p class="count"><strong>8 steps</strong> on the Suggested prompts path, before a single prompt could run.</p>
 </div>
+
+<script>
+	const reduceMotion = matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+	document.querySelectorAll<HTMLElement>('.oldflow').forEach((root) => {
+		const steps = [...root.querySelectorAll<HTMLElement>('.step')];
+		const bar = root.querySelector<HTMLElement>('.bar')!;
+		const go = root.querySelector<HTMLButtonElement>('.go')!;
+		const reset = root.querySelector<HTMLButtonElement>('.reset')!;
+		const progress = root.querySelector<HTMLElement>('.progress')!;
+		const hint = root.querySelector<HTMLElement>('.hint')!;
+		let n = 0;
+
+		bar.hidden = false;
+
+		// Pick an option inside a step (one pick per list).
+		root.querySelectorAll<HTMLButtonElement>('.chips .chip').forEach((chip) => {
+			chip.addEventListener('click', () => {
+				const list = chip.closest('.chips')!;
+				list.querySelectorAll('.chip').forEach((c) => {
+					c.classList.remove('picked');
+					c.setAttribute('aria-pressed', 'false');
+				});
+				chip.classList.add('picked');
+				chip.setAttribute('aria-pressed', 'true');
+				if (chip.dataset.type) hint.hidden = chip.dataset.type === 'follows';
+			});
+		});
+
+		const show = (count: number) => {
+			n = count;
+			root.classList.toggle('walking', n > 0);
+			steps.forEach((step, i) => {
+				step.classList.toggle('reached', i < n);
+				step.classList.toggle('current', i === n - 1);
+			});
+			reset.hidden = n === 0;
+			if (n === 0) {
+				go.hidden = false;
+				go.textContent = 'Walk through the old flow';
+				progress.textContent = '';
+			} else if (n < steps.length) {
+				go.hidden = false;
+				go.textContent = 'Next step \u2192';
+				progress.textContent = `Step ${n} of ${steps.length}`;
+			} else {
+				go.hidden = true;
+				progress.textContent = `Step ${n} of ${steps.length}. Only now could a prompt run.`;
+			}
+			root.classList.toggle('finished', n === steps.length);
+			if (n > 1) steps[n - 1].scrollIntoView({ block: 'nearest', behavior: reduceMotion ? 'auto' : 'smooth' });
+		};
+
+		go.addEventListener('click', () => show(Math.min(n + 1, steps.length)));
+		reset.addEventListener('click', () => show(0));
+	});
+</script>
 
 <style>
 	.oldflow {
@@ -166,6 +244,9 @@ const methods = ['Let Evertune generate', 'Give instruction', 'Enter topics'];
 		width: 100%;
 	}
 	.chip {
+		all: unset;
+		box-sizing: border-box;
+		width: 100%;
 		display: inline-flex;
 		flex-direction: column;
 		font-size: 0.85rem;
@@ -174,16 +255,36 @@ const methods = ['Let Evertune generate', 'Give instruction', 'Enter topics'];
 		border-radius: 8px;
 		background: #faf7f4;
 		border: 1px solid rgba(90, 50, 30, 0.1);
+		cursor: pointer;
+		transition:
+			background 0.2s,
+			border-color 0.2s;
+	}
+	button.chip:hover {
+		border-color: rgba(176, 105, 74, 0.45);
+	}
+	button.chip:focus-visible {
+		outline: 2px solid var(--accent);
+		outline-offset: 2px;
 	}
 	.chip small {
 		font-size: 0.75rem;
 		color: var(--muted);
 	}
-	.chip.on {
+	.chip.picked {
 		background: #fbede5;
 		border-color: rgba(176, 105, 74, 0.45);
 	}
 	.chip.add {
+		cursor: default;
+	}
+	.step p.hint {
+		margin: 2px 0 0;
+		font-size: 0.8rem;
+		color: #a3442b;
+	}
+	.chip.add {
+		width: auto;
 		flex-direction: row;
 		align-items: center;
 		gap: 6px;
@@ -200,6 +301,74 @@ const methods = ['Let Evertune generate', 'Give instruction', 'Enter topics'];
 		font-size: 0.75rem;
 		color: #a3442b;
 		background: #fdeae4;
+	}
+	.bar {
+		display: flex;
+		align-items: center;
+		flex-wrap: wrap;
+		gap: 10px 16px;
+		margin-bottom: 22px;
+	}
+	.bar[hidden],
+	.bar [hidden] {
+		display: none;
+	}
+	.bar button {
+		all: unset;
+		box-sizing: border-box;
+		cursor: pointer;
+		padding: 8px 16px;
+		border-radius: 999px;
+		font-size: 0.9rem;
+	}
+	.bar button:focus-visible {
+		outline: 2px solid var(--accent);
+		outline-offset: 2px;
+	}
+	.bar .go {
+		color: #fff;
+		background: #2b2b2b;
+	}
+	.bar .go:hover {
+		background: #b0694a;
+	}
+	.bar .reset {
+		color: var(--muted);
+		border: 1px solid rgba(90, 50, 30, 0.15);
+	}
+	.bar .reset:hover {
+		color: var(--fg);
+	}
+	.progress {
+		color: var(--muted);
+		font-size: 0.9rem;
+	}
+	/* While walking, steps you haven't reached yet stay faint */
+	.step {
+		transition:
+			opacity 0.4s ease,
+			box-shadow 0.4s ease,
+			border-color 0.4s ease;
+	}
+	.walking .step:not(.reached) {
+		opacity: 0.28;
+	}
+	.walking .step.current {
+		border-color: rgba(176, 105, 74, 0.6);
+		box-shadow: 0 10px 28px rgba(176, 105, 74, 0.22);
+	}
+	.walking .count {
+		opacity: 0.4;
+		transition: opacity 0.4s;
+	}
+	.finished .count {
+		opacity: 1;
+	}
+	@media (prefers-reduced-motion: reduce) {
+		.step,
+		.walking .count {
+			transition: none;
+		}
 	}
 	.count {
 		margin: 22px 0 0;
