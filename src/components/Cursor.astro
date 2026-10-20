@@ -1,0 +1,110 @@
+---
+// A soft peach ring that trails the mouse, grows over links and squishes on click.
+// Only runs on devices with a mouse, and stays off for visitors who prefer reduced motion.
+---
+
+<div class="cursor-ring" aria-hidden="true"></div>
+<div class="cursor-dot" aria-hidden="true"></div>
+
+<script>
+	const ring = document.querySelector<HTMLElement>('.cursor-ring');
+	const dot = document.querySelector<HTMLElement>('.cursor-dot');
+	const canHover = matchMedia('(hover: hover) and (pointer: fine)').matches;
+	const reduceMotion = matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+	if (ring && dot && canHover && !reduceMotion) {
+		document.documentElement.classList.add('has-cursor-fx');
+
+		let mouseX = innerWidth / 2;
+		let mouseY = innerHeight / 2;
+		let ringX = mouseX;
+		let ringY = mouseY;
+
+		addEventListener('pointermove', (e) => {
+			mouseX = e.clientX;
+			mouseY = e.clientY;
+			dot.style.transform = `translate(${mouseX}px, ${mouseY}px)`;
+			document.documentElement.classList.add('cursor-visible');
+		});
+		document.addEventListener('pointerleave', () => {
+			document.documentElement.classList.remove('cursor-visible');
+		});
+
+		// Grow the ring over anything clickable.
+		addEventListener('pointerover', (e) => {
+			const target = e.target as Element;
+			ring.classList.toggle('is-hovering', !!target.closest('a, button'));
+		});
+		addEventListener('pointerdown', () => ring.classList.add('is-pressed'));
+		addEventListener('pointerup', () => ring.classList.remove('is-pressed'));
+
+		// The ring eases toward the mouse each frame, so it lags behind playfully.
+		const follow = () => {
+			ringX += (mouseX - ringX) * 0.18;
+			ringY += (mouseY - ringY) * 0.18;
+			ring.style.transform = `translate(${ringX}px, ${ringY}px)`;
+			requestAnimationFrame(follow);
+		};
+		requestAnimationFrame(follow);
+	}
+</script>
+
+<style is:global>
+	.cursor-ring,
+	.cursor-dot {
+		display: none;
+	}
+	/* The dot replaces the system pointer while the effect is on. */
+	.has-cursor-fx,
+	.has-cursor-fx * {
+		cursor: none !important;
+	}
+	.has-cursor-fx .cursor-ring,
+	.has-cursor-fx .cursor-dot {
+		display: block;
+		position: fixed;
+		top: 0;
+		left: 0;
+		z-index: 100;
+		pointer-events: none;
+		opacity: 0;
+		transition: opacity 0.3s;
+	}
+	.has-cursor-fx.cursor-visible .cursor-ring,
+	.has-cursor-fx.cursor-visible .cursor-dot {
+		opacity: 1;
+	}
+	.cursor-dot::before,
+	.cursor-ring::before {
+		content: '';
+		position: absolute;
+		border-radius: 50%;
+		translate: -50% -50%;
+	}
+	.cursor-dot::before {
+		width: 6px;
+		height: 6px;
+		background: #e8946a;
+	}
+	.cursor-ring::before {
+		width: 36px;
+		height: 36px;
+		border: 1px solid rgba(232, 148, 106, 0.6);
+		background: rgba(255, 214, 190, 0.12);
+		transition:
+			width 0.3s ease,
+			height 0.3s ease,
+			background 0.3s ease,
+			border-color 0.3s ease,
+			scale 0.15s ease;
+	}
+	.cursor-ring.is-hovering::before {
+		width: 64px;
+		height: 64px;
+		background: rgba(255, 200, 170, 0.28);
+		border-color: rgba(232, 148, 106, 0.25);
+	}
+	.cursor-ring.is-pressed::before {
+		scale: 0.8;
+	}
+</style>
