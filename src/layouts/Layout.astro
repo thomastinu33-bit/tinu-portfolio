@@ -63,14 +63,13 @@ const navLinks = [
 		--accent: #3f8f9a;
 		--border: rgba(255, 255, 255, 0.7);
 		--card: rgba(255, 255, 255, 0.55);
-		--glass: rgba(255, 255, 255, 0.45);
-		--glass-border: rgba(255, 255, 255, 0.6);
-		--glass-shadow: 0 8px 32px rgba(40, 70, 90, 0.08);
+		--glass: rgba(255, 255, 255, 0.6);
+		--glass-border: rgba(20, 40, 50, 0.07);
+		--glass-shadow: 0 8px 30px rgba(40, 70, 90, 0.07);
 		--gradient:
-			radial-gradient(60% 50% at 85% 10%, rgba(126, 196, 207, 0.35), transparent 70%),
-			radial-gradient(50% 45% at 10% 60%, rgba(196, 181, 253, 0.25), transparent 70%),
-			radial-gradient(45% 40% at 70% 95%, rgba(253, 205, 180, 0.25), transparent 70%),
-			linear-gradient(135deg, #ffffff 0%, #f3f8fa 50%, #eaf3f6 100%);
+			radial-gradient(55% 45% at 90% 0%, rgba(126, 196, 207, 0.16), transparent 70%),
+			radial-gradient(45% 40% at 0% 70%, rgba(196, 181, 253, 0.1), transparent 70%),
+			linear-gradient(135deg, #ffffff 0%, #ffffff 55%, #f6fafb 100%);
 		color-scheme: light dark;
 	}
 	@media (prefers-color-scheme: dark) {
@@ -133,8 +132,8 @@ const navLinks = [
 		max-width: 1100px;
 		margin: 0 auto;
 		height: 64px;
-		padding: 0 24px;
-		border-radius: 12px;
+		padding: 0 32px;
+		border-radius: 999px;
 		display: flex;
 		justify-content: space-between;
 		align-items: center;
@@ -170,7 +169,7 @@ const navLinks = [
 		}
 		.nav {
 			height: 56px;
-			padding: 0 16px;
+			padding: 0 20px;
 		}
 		.brand {
 			font-size: 0.8rem;
