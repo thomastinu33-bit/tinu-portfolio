@@ -9,7 +9,7 @@ export const site = {
 	intro: [
 		"I'm a product designer",
 		'I currently design at Evertune AI',
-		'I have been designing intuitive experiences for B2B SaaS platforms since 2021',
+		"I've been designing for B2B SaaS platforms since 2021",
 		'I turn complex problems into simple, user-centered designs',
 	],
 	about:
