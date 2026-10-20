@@ -39,9 +39,9 @@ export type Project = {
 // Add, remove, or reorder projects here.
 export const projects: Project[] = [
 	{
-		title: 'Project One',
-		summary: 'One or two sentences on the problem, your role, and the outcome.',
-		tags: ['UX Research', 'Prototyping'],
+		title: 'Improving how Evertune customers create prompts to analyze their AI visibility',
+		summary: 'Redesigning the prompt creation experience so customers can set up the right prompts to understand how their brand shows up in AI answers.',
+		tags: ['Evertune AI', 'B2B SaaS', 'Product Design'],
 	},
 	{
 		title: 'Project Two',
