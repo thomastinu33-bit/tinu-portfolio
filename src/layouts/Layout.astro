@@ -47,7 +47,7 @@ const navLinks = [
 				</nav>
 			</div>
 		</header>
-		<main class="container">
+		<main>
 			<slot />
 		</main>
 		<footer class="container footer">
@@ -79,8 +79,7 @@ const navLinks = [
 	body {
 		margin: 0;
 		min-height: 100vh;
-		background: var(--gradient);
-		background-attachment: fixed;
+		background: #ffffff;
 		color: var(--fg);
 		font-family: 'Rubik', system-ui, -apple-system, sans-serif;
 		font-weight: 300;
@@ -169,9 +168,6 @@ const navLinks = [
 		}
 	}
 
-	main.container {
-		padding-top: 88px;
-	}
 	.footer {
 		color: var(--muted);
 		font-size: 0.9rem;
