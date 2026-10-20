@@ -7,6 +7,8 @@ export const site = {
 	about:
 		'Write a short paragraph about yourself here: your background, what kind of work you love, and what you are looking for next.',
 	email: 'thomastinu33@gmail.com',
+	// Put your resume PDF in the `public/` folder with this file name.
+	resume: 'resume.pdf',
 	links: [
 		{ label: 'LinkedIn', href: 'https://www.linkedin.com/' },
 		{ label: 'GitHub', href: 'https://github.com/thomastinu33-bit' },

@@ -8,6 +8,15 @@ interface Props {
 
 const { title = `${site.name} · ${site.role}`, description = site.tagline } = Astro.props;
 const base = import.meta.env.BASE_URL;
+const [firstName, ...rest] = site.name.split(' ');
+const lastName = rest.join(' ');
+
+const navLinks = [
+	{ label: 'Home', href: `${base}/` },
+	{ label: 'Case Studies', href: `${base}/#work` },
+	{ label: 'About', href: `${base}/#about` },
+	{ label: 'Resume', href: `${base}/${site.resume}` },
+];
 ---
 
 <html lang="en">
@@ -17,17 +26,26 @@ const base = import.meta.env.BASE_URL;
 		<meta name="description" content={description} />
 		<link rel="icon" type="image/svg+xml" href={`${base}/favicon.svg`} />
 		<link rel="icon" href={`${base}/favicon.ico`} />
+		<link rel="preconnect" href="https://fonts.googleapis.com" />
+		<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+		<link
+			href="https://fonts.googleapis.com/css2?family=Rubik:wght@300;400;500&display=swap"
+			rel="stylesheet"
+		/>
 		<meta name="generator" content={Astro.generator} />
 		<title>{title}</title>
 	</head>
 	<body>
-		<header class="container nav">
-			<a class="brand" href={`${base}/`}>{site.name}</a>
-			<nav>
-				<a href="#work">Work</a>
-				<a href="#about">About</a>
-				<a href="#contact">Contact</a>
-			</nav>
+		<header class="nav-wrap">
+			<div class="nav glass">
+				<a class="brand" href={`${base}/`} aria-label={`${site.name}, home`}>
+					<span>{firstName}</span>
+					<span>{lastName}</span>
+				</a>
+				<nav aria-label="Main">
+					{navLinks.map((l) => <a href={l.href}>{l.label}</a>)}
+				</nav>
+			</div>
 		</header>
 		<main class="container">
 			<slot />
@@ -40,22 +58,35 @@ const base = import.meta.env.BASE_URL;
 
 <style is:global>
 	:root {
-		--bg: #fbfaf8;
-		--fg: #1c1b1a;
-		--muted: #6b6762;
-		--accent: #3a5bd9;
-		--card: #ffffff;
-		--border: #e7e3dd;
+		--fg: #2b2b2b;
+		--muted: #6a6a6a;
+		--accent: #3f8f9a;
+		--border: rgba(255, 255, 255, 0.7);
+		--card: rgba(255, 255, 255, 0.55);
+		--glass: rgba(255, 255, 255, 0.45);
+		--glass-border: rgba(255, 255, 255, 0.6);
+		--glass-shadow: 0 8px 32px rgba(40, 70, 90, 0.08);
+		--gradient:
+			radial-gradient(60% 50% at 85% 10%, rgba(126, 196, 207, 0.35), transparent 70%),
+			radial-gradient(50% 45% at 10% 60%, rgba(196, 181, 253, 0.25), transparent 70%),
+			radial-gradient(45% 40% at 70% 95%, rgba(253, 205, 180, 0.25), transparent 70%),
+			linear-gradient(135deg, #ffffff 0%, #f3f8fa 50%, #eaf3f6 100%);
 		color-scheme: light dark;
 	}
 	@media (prefers-color-scheme: dark) {
 		:root {
-			--bg: #141413;
-			--fg: #f1efe9;
-			--muted: #a29d95;
-			--accent: #8ea4ff;
-			--card: #1d1c1b;
-			--border: #2e2c2a;
+			--fg: #eef1f2;
+			--muted: #a3abae;
+			--accent: #7cc6d0;
+			--border: rgba(255, 255, 255, 0.08);
+			--card: rgba(255, 255, 255, 0.04);
+			--glass: rgba(20, 26, 30, 0.45);
+			--glass-border: rgba(255, 255, 255, 0.1);
+			--glass-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+			--gradient:
+				radial-gradient(60% 50% at 85% 10%, rgba(63, 143, 154, 0.3), transparent 70%),
+				radial-gradient(50% 45% at 10% 60%, rgba(120, 100, 200, 0.18), transparent 70%),
+				linear-gradient(135deg, #101416 0%, #131c20 50%, #172529 100%);
 		}
 	}
 	* {
@@ -63,12 +94,16 @@ const base = import.meta.env.BASE_URL;
 	}
 	html {
 		scroll-behavior: smooth;
+		scroll-padding-top: 110px;
 	}
 	body {
 		margin: 0;
-		background: var(--bg);
+		min-height: 100vh;
+		background: var(--gradient);
+		background-attachment: fixed;
 		color: var(--fg);
-		font-family: system-ui, -apple-system, 'Segoe UI', sans-serif;
+		font-family: 'Rubik', system-ui, -apple-system, sans-serif;
+		font-weight: 300;
 		line-height: 1.6;
 	}
 	a {
@@ -79,23 +114,83 @@ const base = import.meta.env.BASE_URL;
 		margin: 0 auto;
 		padding: 0 20px;
 	}
+
+	/* Frosted-glass surface, reused by the nav and cards */
+	.glass {
+		background: var(--glass);
+		-webkit-backdrop-filter: blur(24px) saturate(160%);
+		backdrop-filter: blur(24px) saturate(160%);
+		border: 1px solid var(--glass-border);
+		box-shadow: var(--glass-shadow);
+	}
+
+	.nav-wrap {
+		position: fixed;
+		inset: 24px 24px auto;
+		z-index: 10;
+	}
 	.nav {
+		max-width: 1100px;
+		margin: 0 auto;
+		height: 64px;
+		padding: 0 24px;
+		border-radius: 12px;
 		display: flex;
 		justify-content: space-between;
 		align-items: center;
-		padding-top: 24px;
-		padding-bottom: 24px;
+	}
+	.brand {
+		display: flex;
+		flex-direction: column;
+		color: var(--fg);
+		text-decoration: none;
+		text-transform: uppercase;
+		font-weight: 400;
+		font-size: 0.95rem;
+		letter-spacing: 0.18em;
+		line-height: 1.15;
 	}
 	.nav nav {
 		display: flex;
-		gap: 20px;
+		gap: 32px;
 	}
-	.nav a {
+	.nav nav a {
 		color: var(--fg);
+		opacity: 0.8;
 		text-decoration: none;
+		font-size: 1rem;
+		transition: opacity 0.15s;
 	}
-	.brand {
-		font-weight: 700;
+	.nav nav a:hover {
+		opacity: 1;
+	}
+	@media (max-width: 600px) {
+		.nav-wrap {
+			inset: 12px 12px auto;
+		}
+		.nav {
+			height: 56px;
+			padding: 0 16px;
+		}
+		.brand {
+			font-size: 0.8rem;
+			letter-spacing: 0.14em;
+		}
+		.nav nav {
+			gap: 14px;
+		}
+		.nav nav a {
+			font-size: 0.85rem;
+		}
+	}
+	@media (max-width: 380px) {
+		.nav nav a:first-child {
+			display: none;
+		}
+	}
+
+	main.container {
+		padding-top: 88px;
 	}
 	.footer {
 		color: var(--muted);
