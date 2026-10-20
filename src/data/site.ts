@@ -2,17 +2,23 @@
 
 export const site = {
 	name: 'Tinu Thomas',
-	role: 'UX Designer',
-	tagline: 'I design clear, human-centered digital products.',
+	role: 'Product Designer',
+	// Used for the page's search/share description.
+	tagline: 'Product designer turning complex problems into simple, user-centered designs.',
+	// The lines that rotate under "Hi, I'm …" on the home page.
+	intro: [
+		"I'm a product designer",
+		'I currently design at Evertune AI',
+		'I have been designing intuitive experiences for B2B SaaS platforms since 2021',
+		'I turn complex problems into simple, user-centered designs',
+	],
 	about:
 		'Write a short paragraph about yourself here: your background, what kind of work you love, and what you are looking for next.',
 	email: 'thomastinu33@gmail.com',
+	linkedin: 'https://www.linkedin.com/in/tinuthomas33/',
+	location: 'New York City',
 	// Put your resume PDF in the `public/` folder with this file name.
 	resume: 'resume.pdf',
-	links: [
-		{ label: 'LinkedIn', href: 'https://www.linkedin.com/' },
-		{ label: 'GitHub', href: 'https://github.com/thomastinu33-bit' },
-	],
 };
 
 export type Project = {

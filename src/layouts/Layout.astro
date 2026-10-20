@@ -50,8 +50,16 @@ const navLinks = [
 		<main>
 			<slot />
 		</main>
-		<footer class="container footer">
-			<p>© {new Date().getFullYear()} {site.name}</p>
+		<footer id="contact" class="footer">
+			<div class="container">
+				<h2>Get in touch</h2>
+				<ul class="contact">
+					<li><a href={`mailto:${site.email}`}>{site.email}</a></li>
+					<li><a href={site.linkedin} target="_blank" rel="noopener">LinkedIn</a></li>
+					<li>{site.location}</li>
+				</ul>
+				<p class="copyright">© {new Date().getFullYear()} {site.name}</p>
+			</div>
 		</footer>
 	</body>
 </html>
@@ -169,9 +177,35 @@ const navLinks = [
 	}
 
 	.footer {
+		margin-top: 48px;
+		padding: 64px 0 32px;
+		border-top: 1px solid rgba(90, 50, 30, 0.08);
+		text-align: center;
+	}
+	.footer h2 {
+		font-weight: 500;
+		margin: 0 0 16px;
+	}
+	.contact {
+		list-style: none;
+		padding: 0;
+		margin: 0;
+		display: flex;
+		flex-wrap: wrap;
+		justify-content: center;
+		gap: 8px 28px;
+		font-size: 1.05rem;
+	}
+	.contact a {
+		color: var(--fg);
+		text-underline-offset: 4px;
+	}
+	.contact a:hover {
+		color: var(--accent);
+	}
+	.copyright {
 		color: var(--muted);
-		font-size: 0.9rem;
-		padding-top: 48px;
-		padding-bottom: 32px;
+		font-size: 0.85rem;
+		margin: 40px 0 0;
 	}
 </style>
