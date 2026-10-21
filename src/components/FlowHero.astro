@@ -311,10 +311,10 @@ const steps = video.steps;
 	.caption {
 		margin: 16px 0 0;
 		min-height: 3em;
-		text-align: center;
+		padding-inline: 12px; /* lines up with the first step */
+		text-align: left;
 		color: var(--muted);
 		max-width: 60ch;
-		margin-inline: auto;
 	}
 	@media (max-width: 600px) {
 		.steps {
