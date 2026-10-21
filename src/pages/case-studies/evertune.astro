@@ -174,7 +174,11 @@ const base = import.meta.env.BASE_URL;
 	.bleed {
 		position: relative;
 		left: 50%;
-		width: min(1400px, calc(100vw - 48px));
+		/* As wide as the page allows, but never taller than the room below the floating nav
+		   (about 110px) once the step buttons are counted: the video is 1440:862, so its
+		   height follows its width. */
+		width: min(1400px, calc(100vw - 48px), max(560px, calc((100vh - 300px) * 1.6705 + 66px)));
+		width: min(1400px, calc(100vw - 48px), max(560px, calc((100svh - 300px) * 1.6705 + 66px)));
 		transform: translateX(-50%);
 	}
 	.bleed :global(.panel) {
