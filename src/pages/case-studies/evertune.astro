@@ -104,7 +104,9 @@ const base = import.meta.env.BASE_URL;
 				in a simple chat, use Evertune’s agent to modify the topics and prompts, and adjust the settings
 				before running.
 			</p>
-			<FlowHero steps={project.flow!} />
+			<div class="bleed">
+				<FlowHero steps={project.flow!} />
+			</div>
 		</section>
 
 		<section>
@@ -167,6 +169,23 @@ const base = import.meta.env.BASE_URL;
 		border: 1px solid #e3e3e3;
 		border-radius: 999px;
 		padding: 2px 10px;
+	}
+	/* The new-experience hero breaks out of the text column so the screens read larger */
+	.bleed {
+		position: relative;
+		left: 50%;
+		width: min(1400px, calc(100vw - 48px));
+		transform: translateX(-50%);
+	}
+	.bleed :global(.panel) {
+		padding: clamp(14px, 2.4vw, 32px);
+	}
+	@media (max-width: 960px) {
+		.bleed {
+			left: 0;
+			width: 100%;
+			transform: none;
+		}
 	}
 	.growth {
 		display: flex;
