@@ -1,6 +1,6 @@
 ---
 // The old "What kind of questions do you want to ask?" screen, with everything dimmed except
-// the five ways to create prompts, which get an outline, a label and a number each.
+// the five ways to create prompts, which get a number each.
 // Positions are measured on the image itself (1575 x 860) and drawn as percentages so they
 // stay aligned at any size.
 import { Image } from 'astro:assets';
@@ -40,11 +40,6 @@ const cards = [
 			<span class="dim" style={`left:0;top:${pct(hl.y, H)};width:${pct(hl.x, W)};height:${pct(hl.h, H)}`}></span>
 			<span class="dim" style={`left:${pct(hl.x + hl.w, W)};top:${pct(hl.y, H)};right:0;height:${pct(hl.h, H)}`}></span>
 
-			<span
-				class="ring"
-				style={`left:${pct(hl.x, W)};top:${pct(hl.y, H)};width:${pct(hl.w, W)};height:${pct(hl.h, H)}`}></span>
-			<span class="label" style={`left:${pct(hl.x, W)};top:${pct(hl.y, H)}`}>5 ways to create prompts</span>
-
 			{
 				cards.map((c) => (
 					<span
@@ -83,25 +78,6 @@ const cards = [
 		position: absolute;
 		background: rgba(244, 244, 244, 0.8);
 		pointer-events: none;
-	}
-	.ring {
-		position: absolute;
-		border: 2px solid #2b2b2b;
-		border-radius: 14px;
-		box-shadow: 0 10px 34px rgba(0, 0, 0, 0.08);
-		pointer-events: none;
-	}
-	.label {
-		position: absolute;
-		translate: 14px -50%;
-		padding: 4px clamp(8px, 1.2cqw, 14px);
-		border-radius: 999px;
-		background: #2b2b2b;
-		color: #fff;
-		font-size: clamp(0.66rem, 1.45cqw, 0.9rem);
-		font-weight: 400;
-		letter-spacing: 0.01em;
-		white-space: nowrap;
 	}
 	.num {
 		position: absolute;
