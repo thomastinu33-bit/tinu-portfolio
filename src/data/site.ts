@@ -3,8 +3,8 @@
 import type { ImageMetadata } from 'astro';
 import chooseType from '../assets/evertune/01-choose-type.png';
 import generating from '../assets/evertune/02-generating.png';
-import review from '../assets/evertune/03-review.png';
-import settings from '../assets/evertune/04-settings.png';
+import review from '../assets/evertune/03-refine.png';
+import settings from '../assets/evertune/04-run.png';
 
 export const site = {
 	name: 'Tinu Thomas',
