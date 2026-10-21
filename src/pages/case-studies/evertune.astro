@@ -2,6 +2,7 @@
 import Layout from '../../layouts/Layout.astro';
 import FlowHero from '../../components/FlowHero.astro';
 import OldFlow from '../../components/OldFlow.astro';
+import FiveWays from '../../components/FiveWays.astro';
 import { site, projects } from '../../data/site';
 import Check from '@lucide/astro/icons/check';
 
@@ -42,17 +43,7 @@ const base = import.meta.env.BASE_URL;
 				Very soon, we started hearing from new users that the prompt creation flow took too much time and was
 				hard to use.
 			</p>
-			<div class="growth" aria-label="From one way to create prompts to five">
-				<div>
-					<span class="count">1</span>
-					<span class="what">way to create prompts</span>
-				</div>
-				<span class="arrow" aria-hidden="true">→</span>
-				<div>
-					<span class="count">5</span>
-					<span class="what">ways, each added for a specific customer need</span>
-				</div>
-			</div>
+			<FiveWays />
 		</section>
 
 		<section>
