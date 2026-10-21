@@ -129,6 +129,17 @@ const navLinks = [
 		box-shadow: var(--glass-shadow);
 	}
 
+	/* The nav is a clearer glass than the cards: less white tint, more blur, and a faint bright edge */
+	.nav.glass {
+		background: rgba(255, 255, 255, 0.3);
+		-webkit-backdrop-filter: blur(30px) saturate(180%);
+		backdrop-filter: blur(30px) saturate(180%);
+		border: 1px solid rgba(255, 255, 255, 0.55);
+		box-shadow:
+			0 8px 32px rgba(0, 0, 0, 0.06),
+			inset 0 1px 0 rgba(255, 255, 255, 0.6);
+	}
+
 	.nav-wrap {
 		position: fixed;
 		inset: 24px 24px auto;
