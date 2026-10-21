@@ -1,10 +1,5 @@
 // Edit this file to update the text on your portfolio.
 
-import type { ImageMetadata } from 'astro';
-import chooseType from '../assets/evertune/01-choose-type.png';
-import generating from '../assets/evertune/02-generating.png';
-import review from '../assets/evertune/03-refine.png';
-import settings from '../assets/evertune/04-run.png';
 
 export const site = {
 	name: 'Tinu Thomas',
@@ -35,8 +30,10 @@ export const strengths = [
 	{ icon: 'component', title: 'Design systems', note: 'built and maintained in canvas and code' },
 ] as const;
 
-// One step of an interactive flow hero: a screen, a short label, and a one-line caption.
-export type FlowStep = { label: string; caption: string; image: ImageMetadata };
+// A walkthrough video split into chapters: each step names a chapter, says what happens in it,
+// and gives the second where it starts. Files live in `public/`.
+export type FlowStep = { label: string; caption: string; at: number };
+export type FlowVideo = { src: string; poster: string; steps: FlowStep[] };
 
 export type Project = {
 	title: string;
@@ -45,8 +42,8 @@ export type Project = {
 	href?: string;
 	// Links the card to /case-studies/<slug>/.
 	slug?: string;
-	// Optional: shows a clickable step-through of the design as the project's hero.
-	flow?: FlowStep[];
+	// Optional: shows a chaptered walkthrough video of the design as the project's hero.
+	flow?: FlowVideo;
 };
 
 // Add, remove, or reorder projects here.
@@ -57,28 +54,32 @@ export const projects: Project[] = [
 			'New users struggled to choose between five tracker types before writing a single prompt. I redesigned prompt creation around a simple chat with Evertune\u2019s agent, so new customers can get started without white-glove onboarding.',
 		slug: 'evertune',
 		tags: ['Evertune AI', 'B2B SaaS', 'Product Design'],
-		flow: [
-			{
-				label: 'Start',
-				caption: 'Begin with a simple chat: describe what to track and Evertune\u2019s agent takes it from there.',
-				image: chooseType,
-			},
-			{
-				label: 'Generate',
-				caption: 'Evertune researches the brand and drafts topics and prompts, showing its progress step by step.',
-				image: generating,
-			},
-			{
-				label: 'Refine',
-				caption: 'Edit topics and prompts directly, or ask the agent to change them, before anything runs.',
-				image: review,
-			},
-			{
-				label: 'Run',
-				caption: 'Adjust the settings (models, refresh cadence and credits), then run the tracker.',
-				image: settings,
-			},
-		],
+		flow: {
+			src: 'evertune/flow.mp4',
+			poster: 'evertune/flow-poster.jpg',
+			steps: [
+				{
+					label: 'Start',
+					caption: 'The page dims so there is one thing to do: describe what to track in a simple sentence.',
+					at: 0,
+				},
+				{
+					label: 'Generate',
+					caption: 'Evertune researches the brand and drafts topics and prompts, showing its progress step by step.',
+					at: 7.9,
+				},
+				{
+					label: 'Refine',
+					caption: 'Open any topic to edit its prompts directly, or ask the agent to change them, before anything runs.',
+					at: 12.4,
+				},
+				{
+					label: 'Run',
+					caption: 'Pick the models and refresh cadence and watch the monthly prompt usage update, then run the tracker.',
+					at: 29.3,
+				},
+			],
+		},
 	},
 	{
 		title: 'Project Two',

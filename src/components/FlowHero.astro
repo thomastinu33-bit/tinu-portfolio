@@ -1,14 +1,20 @@
 ---
-// A project hero: one screen in a window frame on a soft peach panel, with numbered steps
-// underneath. Click a step to jump to it; it also advances on its own until someone clicks.
-import { Image } from 'astro:assets';
-import type { FlowStep } from '../data/site';
+// A project hero: a walkthrough video in a window frame, split into chapters. The steps underneath
+// show where you are (with a thin progress line) and jump to a chapter when clicked. It plays on
+// its own while on screen, muted and looping, with a pause button.
+import Play from '@lucide/astro/icons/play';
+import Pause from '@lucide/astro/icons/pause';
+import type { FlowVideo } from '../data/site';
 
 interface Props {
-	steps: FlowStep[];
+	video: FlowVideo;
 }
 
-const { steps } = Astro.props;
+const { video } = Astro.props;
+const base = import.meta.env.BASE_URL;
+const src = `${base}/${video.src}`;
+const poster = `${base}/${video.poster}`;
+const steps = video.steps;
 ---
 
 <div class="flow" data-flow>
@@ -16,23 +22,25 @@ const { steps } = Astro.props;
 		<div class="window">
 			<div class="chrome" aria-hidden="true"><span></span><span></span><span></span></div>
 			<div class="stage">
-				{
-					steps.map((step, i) => (
-						<Image
-							class:list={['shot', { 'is-active': i === 0 }]}
-							src={step.image}
-							alt={`${step.label}: ${step.caption}`}
-							widths={[800, 1200, 1800]}
-							sizes="(max-width: 1000px) 100vw, 900px"
-							loading={i === 0 ? 'eager' : 'lazy'}
-						/>
-					))
-				}
+				<video
+					muted
+					loop
+					playsinline
+					preload="metadata"
+					poster={poster}
+					aria-label="Walkthrough of creating a tracker: start, generate, refine and run"
+				>
+					<source src={src} type="video/mp4" />
+				</video>
+				<button type="button" class="toggle" aria-label="Pause the walkthrough">
+					<span class="i-pause"><Pause size={16} strokeWidth={2} aria-hidden="true" /></span>
+					<span class="i-play"><Play size={16} strokeWidth={2} aria-hidden="true" /></span>
+				</button>
 			</div>
 		</div>
 	</div>
 
-	<ol class="steps" role="tablist" aria-label="Flow steps">
+	<ol class="steps" role="tablist" aria-label="Walkthrough chapters">
 		{
 			steps.map((step, i) => (
 				<li>
@@ -41,7 +49,7 @@ const { steps } = Astro.props;
 						role="tab"
 						class:list={{ 'is-active': i === 0 }}
 						aria-selected={i === 0 ? 'true' : 'false'}
-						data-step={i}
+						data-at={step.at}
 						data-caption={step.caption}
 					>
 						<span class="num">{i + 1}</span>
@@ -58,48 +66,89 @@ const { steps } = Astro.props;
 	const reduceMotion = matchMedia('(prefers-reduced-motion: reduce)').matches;
 
 	document.querySelectorAll<HTMLElement>('[data-flow]').forEach((flow) => {
-		const shots = flow.querySelectorAll<HTMLElement>('.shot');
-		const tabs = flow.querySelectorAll<HTMLButtonElement>('[data-step]');
+		const video = flow.querySelector<HTMLVideoElement>('video')!;
+		const tabs = [...flow.querySelectorAll<HTMLButtonElement>('[data-at]')];
 		const caption = flow.querySelector<HTMLElement>('.caption')!;
-		let current = 0;
-		let userTookOver = false;
-		let timer: number | undefined;
+		const toggle = flow.querySelector<HTMLButtonElement>('.toggle')!;
+		const starts = tabs.map((t) => Number(t.dataset.at));
 
-		const show = (i: number) => {
+		let current = -1;
+		let wantPlay = !reduceMotion; // false once someone pauses it, or if they prefer reduced motion
+		let raf = 0;
+
+		const chapterAt = (t: number) => starts.reduce((acc, s, n) => (t >= s - 0.03 ? n : acc), 0);
+
+		const setChapter = (i: number) => {
 			current = i;
-			shots.forEach((el, n) => el.classList.toggle('is-active', n === i));
-			tabs.forEach((el, n) => {
-				el.classList.toggle('is-active', n === i);
-				el.setAttribute('aria-selected', String(n === i));
+			tabs.forEach((tab, n) => {
+				tab.classList.toggle('is-active', n === i);
+				tab.setAttribute('aria-selected', String(n === i));
+				if (n !== i) tab.style.removeProperty('--p');
 			});
 			caption.textContent = tabs[i].dataset.caption ?? '';
 		};
 
+		const sync = () => {
+			const t = video.currentTime;
+			const i = chapterAt(t);
+			if (i !== current) setChapter(i);
+			const end = starts[i + 1] ?? (Number.isFinite(video.duration) ? video.duration : starts[i] + 1);
+			const p = Math.min(Math.max((t - starts[i]) / Math.max(end - starts[i], 0.1), 0), 1);
+			tabs[i].style.setProperty('--p', p.toFixed(3));
+		};
+		const loop = () => {
+			sync();
+			raf = requestAnimationFrame(loop);
+		};
+
+		const showState = () => {
+			const paused = video.paused;
+			toggle.classList.toggle('is-paused', paused);
+			toggle.setAttribute('aria-label', paused ? 'Play the walkthrough' : 'Pause the walkthrough');
+		};
+		video.addEventListener('play', () => {
+			cancelAnimationFrame(raf);
+			raf = requestAnimationFrame(loop);
+			showState();
+		});
+		video.addEventListener('pause', () => {
+			cancelAnimationFrame(raf);
+			sync();
+			showState();
+		});
+		video.addEventListener('seeked', sync);
+		video.addEventListener('loadedmetadata', sync);
+
+		const play = () => video.play().catch(() => showState());
+
 		tabs.forEach((tab, i) => {
 			tab.addEventListener('click', () => {
-				userTookOver = true;
-				window.clearInterval(timer);
-				show(i);
+				video.currentTime = starts[i];
+				sync();
+				wantPlay = true;
+				play();
 			});
 		});
+		toggle.addEventListener('click', () => {
+			if (video.paused) {
+				wantPlay = true;
+				play();
+			} else {
+				wantPlay = false;
+				video.pause();
+			}
+		});
 
-		// Gentle auto-play while the hero is on screen, until the visitor clicks a step.
-		const start = () => {
-			if (reduceMotion || userTookOver || timer) return;
-			timer = window.setInterval(() => show((current + 1) % shots.length), 4500);
-		};
-		const stop = () => {
-			window.clearInterval(timer);
-			timer = undefined;
-		};
+		// Play while at least half of it is on screen
 		new IntersectionObserver(
-			([entry]) => (entry.isIntersecting ? start() : stop()),
+			([entry]) => {
+				if (entry.isIntersecting && wantPlay) play();
+				else video.pause();
+			},
 			{ threshold: 0.5 },
 		).observe(flow);
-		flow.addEventListener('pointerenter', stop);
-		flow.addEventListener('pointerleave', () => {
-			if (!userTookOver) start();
-		});
+
+		showState();
 	});
 </script>
 
@@ -107,7 +156,6 @@ const { steps } = Astro.props;
 	.flow {
 		margin-top: 28px;
 	}
-	/* Soft peach backdrop, the same gradient as the intro */
 	.panel {
 		padding: clamp(16px, 4vw, 44px);
 		border-radius: 20px;
@@ -136,22 +184,55 @@ const { steps } = Astro.props;
 		border-radius: 50%;
 		background: #d9d9d9;
 	}
-	/* Every screen shares one cell, so switching never changes the height. */
 	.stage {
-		display: grid;
-		aspect-ratio: 2880 / 1724;
+		position: relative;
+		aspect-ratio: 1440 / 862;
+		background: #fff;
 	}
-	.stage :global(.shot) {
-		grid-area: 1 / 1;
+	.stage video {
+		display: block;
 		width: 100%;
 		height: 100%;
 		object-fit: cover;
-		display: block;
-		opacity: 0;
-		transition: opacity 0.5s ease;
 	}
-	.stage :global(.shot.is-active) {
+	.toggle {
+		all: unset;
+		box-sizing: border-box;
+		position: absolute;
+		right: 14px;
+		bottom: 14px;
+		display: grid;
+		place-items: center;
+		width: 36px;
+		height: 36px;
+		border-radius: 50%;
+		cursor: pointer;
+		color: #fff;
+		background: rgba(30, 30, 30, 0.62);
+		-webkit-backdrop-filter: blur(8px);
+		backdrop-filter: blur(8px);
+		opacity: 0.8;
+		transition:
+			opacity 0.2s,
+			background 0.2s;
+	}
+	.toggle:hover,
+	.toggle:focus-visible {
 		opacity: 1;
+		background: rgba(30, 30, 30, 0.85);
+	}
+	.toggle:focus-visible {
+		outline: 2px solid var(--accent);
+		outline-offset: 2px;
+	}
+	.toggle .i-play {
+		display: none;
+	}
+	.toggle.is-paused .i-play {
+		display: grid;
+	}
+	.toggle.is-paused .i-pause {
+		display: none;
 	}
 	.steps {
 		list-style: none;
@@ -164,11 +245,12 @@ const { steps } = Astro.props;
 	.steps button {
 		all: unset;
 		box-sizing: border-box;
+		position: relative;
 		width: 100%;
 		display: flex;
 		align-items: center;
 		gap: 12px;
-		padding: 10px 12px;
+		padding: 10px 12px 12px;
 		border-radius: 10px;
 		cursor: pointer;
 		color: var(--muted);
@@ -211,6 +293,20 @@ const { steps } = Astro.props;
 	.steps button.is-active .num {
 		background: #2b2b2b;
 		color: #fff;
+	}
+	/* A thin line that fills as the chapter plays */
+	.steps button.is-active::after {
+		content: '';
+		position: absolute;
+		left: 12px;
+		right: 12px;
+		bottom: 5px;
+		height: 2px;
+		border-radius: 2px;
+		background: #2b2b2b;
+		transform-origin: left;
+		transform: scaleX(var(--p, 0));
+		opacity: 0.55;
 	}
 	.caption {
 		margin: 16px 0 0;
