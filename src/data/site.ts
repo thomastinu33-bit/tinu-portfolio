@@ -60,7 +60,7 @@ export const projects: Project[] = [
 			steps: [
 				{
 					label: 'Start',
-					caption: 'The page dims so there is one thing to do: describe what to track in a simple sentence.',
+					caption: 'Start by entering instructions in the chat: describe what to track in a simple sentence.',
 					at: 0,
 				},
 				{
