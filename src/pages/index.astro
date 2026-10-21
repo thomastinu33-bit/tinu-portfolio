@@ -1,6 +1,7 @@
 ---
 import Layout from '../layouts/Layout.astro';
 import { Image } from 'astro:assets';
+import Lock from '@lucide/astro/icons/lock';
 import { site, projects, strengths } from '../data/site';
 import Mail from '@lucide/astro/icons/mail';
 import MapPin from '@lucide/astro/icons/map-pin';
@@ -67,6 +68,14 @@ const strengthIcons = { component: Component, prototype: MousePointerClick, rese
 		</ul>
 	</section>
 
+	<!-- Everything below the strip is private until the password is entered (see the script at the bottom). -->
+	<div id="gate-sentinel" aria-hidden="true"></div>
+	<script is:inline>
+		try {
+			if (localStorage.getItem('portfolio-unlocked') === '1') document.documentElement.classList.add('pw-unlocked');
+		} catch (e) {}
+	</script>
+	<div id="gated" class="gated">
 	<section id="work" class="nav-width">
 		<h2>Case Studies</h2>
 
@@ -148,7 +157,103 @@ const strengthIcons = { component: Component, prototype: MousePointerClick, rese
 			<p>{site.about}</p>
 		</section>
 	</div>
+	</div>
+
+	<dialog id="gate" class="gate" aria-labelledby="gate-title">
+		<form id="gate-form" autocomplete="off">
+			<span class="gate-icon"><Lock size={20} strokeWidth={1.75} aria-hidden="true" /></span>
+			<h2 id="gate-title">This work is private</h2>
+			<p class="gate-note">Enter the password to see the case studies and more.</p>
+			<label class="sr-only" for="gate-input">Password</label>
+			<input id="gate-input" type="password" placeholder="Password" autocomplete="off" required />
+			<p id="gate-error" class="gate-error" role="alert" hidden>That password isn’t right. Try again.</p>
+			<button type="submit" class="gate-submit">Unlock</button>
+			<button type="button" id="gate-back" class="gate-back">Back to top</button>
+		</form>
+	</dialog>
 </Layout>
+
+<script>
+	// A soft password gate: the content below the strip stays blurred and inert until the right password
+	// is entered. Only a salted SHA-256 hash of the password lives here, not the password itself.
+	// This keeps casual visitors out; it is not real security (the page's content is still in its HTML).
+	const SALT = 'tinu-portfolio::';
+	const HASH = '40b39b73b83ef876d85a9b09e934491c937d612581d22cd28b1d281d37893455';
+	const STORE = 'portfolio-unlocked';
+
+	const root = document.documentElement;
+	const gated = document.getElementById('gated')!;
+	const sentinel = document.getElementById('gate-sentinel')!;
+	const dialog = document.getElementById('gate') as HTMLDialogElement;
+	const form = document.getElementById('gate-form') as HTMLFormElement;
+	const input = document.getElementById('gate-input') as HTMLInputElement;
+	const error = document.getElementById('gate-error')!;
+
+	const sha256 = async (text: string) => {
+		const bytes = await crypto.subtle.digest('SHA-256', new TextEncoder().encode(SALT + text));
+		return [...new Uint8Array(bytes)].map((b) => b.toString(16).padStart(2, '0')).join('');
+	};
+
+	let armed = true; // false right after "Back to top", until the visitor is above the trigger again
+	const triggerLine = () => innerHeight * 0.7;
+
+	if (!root.classList.contains('pw-unlocked')) {
+		gated.setAttribute('inert', '');
+		const check = () => {
+			if (root.classList.contains('pw-unlocked')) return;
+			const top = sentinel.getBoundingClientRect().top;
+			if (top >= triggerLine()) armed = true;
+			else if (armed && !dialog.open) openGate();
+		};
+		const openGate = () => {
+			dialog.showModal();
+			root.style.overflow = 'hidden';
+			input.focus();
+		};
+		const closeGate = () => {
+			dialog.close();
+			root.style.overflow = '';
+		};
+
+		addEventListener('scroll', check, { passive: true });
+		addEventListener('resize', check);
+		check();
+
+		// Esc must not skip the gate; "Back to top" is the way out
+		dialog.addEventListener('cancel', (e) => e.preventDefault());
+
+		document.getElementById('gate-back')!.addEventListener('click', () => {
+			armed = false;
+			closeGate();
+			scrollTo({ top: 0, behavior: 'smooth' });
+		});
+
+		form.addEventListener('submit', async (e) => {
+			e.preventDefault();
+			let ok = false;
+			try {
+				ok = (await sha256(input.value)) === HASH;
+			} catch {
+				error.textContent = 'This browser can’t check the password here.';
+			}
+			if (ok) {
+				root.classList.add('pw-unlocked');
+				gated.removeAttribute('inert');
+				try {
+					localStorage.setItem(STORE, '1');
+				} catch {}
+				closeGate();
+			} else {
+				if (!error.textContent?.includes('browser')) error.textContent = 'That password isn’t right. Try again.';
+				error.hidden = false;
+				dialog.classList.remove('shake');
+				void dialog.offsetWidth; // restart the animation
+				dialog.classList.add('shake');
+				input.select();
+			}
+		});
+	}
+</script>
 
 <script>
 	const lines = document.querySelectorAll<HTMLElement>('.rotator span');
@@ -332,6 +437,133 @@ const strengthIcons = { component: Component, prototype: MousePointerClick, rese
 	#work h2 {
 		text-align: center;
 	}
+	/* The private part of the page */
+	.gated {
+		transition: filter 0.6s ease;
+	}
+	:global(html:not(.pw-unlocked)) .gated {
+		filter: blur(14px);
+		pointer-events: none;
+		user-select: none;
+	}
+	:global(html) {
+		scrollbar-gutter: stable;
+	}
+	#gate-sentinel {
+		height: 0;
+	}
+	.gate {
+		width: min(420px, calc(100vw - 32px));
+		padding: 32px;
+		border: 1px solid #e3e3e3;
+		border-radius: 24px;
+		background: #fff;
+		color: var(--fg);
+		box-shadow: 0 30px 80px rgba(0, 0, 0, 0.16);
+	}
+	.gate::backdrop {
+		background: rgba(255, 255, 255, 0.4);
+		-webkit-backdrop-filter: blur(6px);
+		backdrop-filter: blur(6px);
+	}
+	.gate form {
+		display: grid;
+		gap: 14px;
+		justify-items: start;
+	}
+	.gate-icon {
+		display: grid;
+		place-items: center;
+		width: 44px;
+		height: 44px;
+		border-radius: 12px;
+		background: #efefef;
+		color: #555;
+	}
+	.gate h2 {
+		margin: 4px 0 0;
+		font-size: 1.9rem;
+		line-height: 1.15;
+	}
+	.gate-note {
+		margin: 0;
+		color: var(--muted);
+	}
+	.gate input {
+		box-sizing: border-box;
+		width: 100%;
+		height: 46px;
+		padding: 0 14px;
+		border: 1px solid #d6d6d6;
+		border-radius: 12px;
+		font: inherit;
+		font-size: 1rem;
+		color: var(--fg);
+		background: #fff;
+	}
+	.gate input:focus-visible {
+		outline: 2px solid var(--accent);
+		outline-offset: 2px;
+	}
+	.gate-error {
+		margin: -4px 0 0;
+		font-size: 0.9rem;
+		color: #b3261e;
+	}
+	.gate-submit {
+		all: unset;
+		box-sizing: border-box;
+		width: 100%;
+		height: 46px;
+		display: grid;
+		place-items: center;
+		border-radius: 999px;
+		background: #2b2b2b;
+		color: #fff;
+		cursor: pointer;
+		transition: background 0.2s;
+	}
+	.gate-submit:hover {
+		background: #000;
+	}
+	.gate-submit:focus-visible,
+	.gate-back:focus-visible {
+		outline: 2px solid var(--accent);
+		outline-offset: 2px;
+	}
+	.gate-back {
+		all: unset;
+		cursor: pointer;
+		color: var(--muted);
+		font-size: 0.9rem;
+		text-decoration: underline;
+		text-underline-offset: 4px;
+	}
+	.gate-back:hover {
+		color: var(--fg);
+	}
+	.shake {
+		animation: shake 0.4s;
+	}
+	@keyframes shake {
+		20%,
+		60% {
+			transform: translateX(-6px);
+		}
+		40%,
+		80% {
+			transform: translateX(6px);
+		}
+	}
+	@media (prefers-reduced-motion: reduce) {
+		.shake {
+			animation: none;
+		}
+		.gated {
+			transition: none;
+		}
+	}
+
 	/* Case studies: one featured panel (short text, big picture), then a row of image-first tiles */
 	.eyebrow {
 		margin: 0;
