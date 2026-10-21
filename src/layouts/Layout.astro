@@ -31,6 +31,12 @@ const navLinks = [
 			href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;500&family=Jost:wght@300;400;500&display=swap"
 			rel="stylesheet"
 		/>
+		<!-- If this browser already unlocked the private work, say so before anything paints (see PasswordGate) -->
+		<script is:inline>
+			try {
+				if (localStorage.getItem('portfolio-unlocked') === '1') document.documentElement.classList.add('pw-unlocked');
+			} catch (e) {}
+		</script>
 		<meta name="generator" content={Astro.generator} />
 		<title>{title}</title>
 	</head>

@@ -3,6 +3,7 @@ import Layout from '../../layouts/Layout.astro';
 import FlowHero from '../../components/FlowHero.astro';
 import OldFlow from '../../components/OldFlow.astro';
 import FiveWays from '../../components/FiveWays.astro';
+import PasswordGate from '../../components/PasswordGate.astro';
 import { site, projects } from '../../data/site';
 import Check from '@lucide/astro/icons/check';
 
@@ -11,6 +12,7 @@ const base = import.meta.env.BASE_URL;
 ---
 
 <Layout title={`${project.title} · ${site.name}`} description={project.summary}>
+	<div id="gated" class="gated">
 	<article class="container study">
 		<a class="back" href={`${base}/#work`}>← All case studies</a>
 
@@ -104,6 +106,9 @@ const base = import.meta.env.BASE_URL;
 			</ul>
 		</section>
 	</article>
+	</div>
+
+	<PasswordGate mode="immediate" />
 </Layout>
 
 <style>
