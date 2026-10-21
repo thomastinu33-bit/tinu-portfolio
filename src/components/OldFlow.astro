@@ -1,397 +1,493 @@
 ---
-// The previous tracker creation flow, drawn as a diagram: eight steps on the
-// Suggested prompts path, with the two pain points flagged.
+// The previous tracker creation flow, drawn with its real routes: the type you pick
+// decides which steps come next, and every path merges at "Enter competitors".
+// Wires are drawn from the boxes' real positions (see the script), in a neutral palette.
 import Plus from '@lucide/astro/icons/plus';
 import TriangleAlert from '@lucide/astro/icons/triangle-alert';
 
-const types = [
-	{ name: 'Product Category Analysis', note: 'the old standard template' },
-	{ name: 'Run My Own' },
-	{ name: 'Suggested prompts', leadsOn: true },
-	{ name: 'Pitch report' },
-	{ name: 'Word association' },
-];
 const methods = ['Let Evertune generate', 'Give instruction', 'Enter topics'];
 ---
 
 <div class="oldflow">
-	<div class="bar" hidden>
-		<button type="button" class="go">Walk through the old flow</button>
-		<span class="progress" aria-live="polite"></span>
-		<button type="button" class="reset" hidden>Start over</button>
+	<div class="tree">
+		<svg class="wires" aria-hidden="true">
+			<defs>
+				<marker id="oldflow-arrow" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto">
+					<path d="M1 1 L9 5 L1 9 z" fill="#b9b9b9"></path>
+				</marker>
+			</defs>
+		</svg>
+
+		<div class="cell n1" data-node="n1">
+			<div class="node main">
+				<span class="num">1</span>
+				<div>
+					<b>Enter brand details</b>
+					<small>Brand, location and language</small>
+				</div>
+			</div>
+		</div>
+
+		<div class="cell n2" data-node="n2">
+			<div class="node main">
+				<span class="num">2</span>
+				<div>
+					<b>Pick a type</b>
+					<small>Five to choose from</small>
+				</div>
+			</div>
+			<span class="flag side"><TriangleAlert size={14} strokeWidth={1.75} aria-hidden="true" />Hard to choose</span>
+		</div>
+
+		<ul class="options">
+			<li class="cell t-pca" data-node="pca">
+				<div class="node opt">
+					<b>Product Category Analysis</b>
+					<small>the old standard template</small>
+				</div>
+				<span class="route">Straight to Enter competitors</span>
+			</li>
+			<li class="cell t-own" data-node="own">
+				<div class="node opt">
+					<b>Run My Own</b>
+				</div>
+				<span class="route">Straight to Review prompts</span>
+			</li>
+			<li class="cell t-sug" data-node="sug">
+				<div class="node opt">
+					<b>Suggested prompts</b>
+				</div>
+				<span class="route">Then Pick how to start</span>
+			</li>
+			<li class="cell t-pitch" data-node="pitch">
+				<div class="node opt">
+					<b>Pitch report</b>
+					<small>same, with a prompt limit</small>
+				</div>
+				<span class="route">Same as Suggested prompts</span>
+			</li>
+			<li class="cell t-word" data-node="word">
+				<div class="node opt">
+					<b>Word association</b>
+				</div>
+				<span class="route">Straight to Enter competitors</span>
+			</li>
+		</ul>
+
+		<div class="cell n3" data-node="n3">
+			<div class="node main">
+				<span class="num">3</span>
+				<div>
+					<b>Pick how to start</b>
+					<ul class="pills">
+						{methods.map((m) => <li>{m}</li>)}
+					</ul>
+				</div>
+			</div>
+		</div>
+
+		<div class="cell n4" data-node="n4">
+			<div class="node main">
+				<span class="num">4</span>
+				<div>
+					<b>Review prompts</b>
+					<small>Edit topics and prompts</small>
+					<span class="add"><Plus size={14} strokeWidth={1.75} aria-hidden="true" />Add topic or prompt</span>
+					<span class="flag"><TriangleAlert size={14} strokeWidth={1.75} aria-hidden="true" />Hard to add more</span>
+				</div>
+			</div>
+		</div>
+
+		<div class="cell n5" data-node="n5">
+			<div class="node main wide">
+				<span class="num">5</span>
+				<div>
+					<b>Enter competitors</b>
+				</div>
+			</div>
+		</div>
+
+		<div class="chain">
+			<div class="cell" data-node="n6">
+				<div class="node main">
+					<span class="num">6</span>
+					<div><b>Select models</b></div>
+				</div>
+			</div>
+			<div class="cell" data-node="n7">
+				<div class="node main">
+					<span class="num">7</span>
+					<div><b>Select refresh cadence</b></div>
+				</div>
+			</div>
+			<div class="cell" data-node="n8">
+				<div class="node main">
+					<span class="num">8</span>
+					<div>
+						<b>Review everything</b>
+						<small>including prompt usage</small>
+					</div>
+				</div>
+			</div>
+		</div>
 	</div>
-	<ol class="steps">
-		<li class="step">
-			<span class="n">1</span>
-			<h4>Enter brand details</h4>
-			<p>Brand, location and language.</p>
-		</li>
 
-		<li class="step">
-			<span class="n">2</span>
-			<h4>Pick a type</h4>
-			<ul class="chips">
-				{
-					types.map((t) => (
-						<li>
-							<button
-								type="button"
-								class:list={['chip', { picked: t.leadsOn }]}
-								data-type={t.leadsOn ? 'follows' : 'other'}
-								aria-pressed={t.leadsOn ? 'true' : 'false'}
-							>
-								{t.name}
-								{t.note && <small>{t.note}</small>}
-							</button>
-						</li>
-					))
-				}
-			</ul>
-			<p class="hint" hidden>Each type led to a different path. This diagram follows Suggested prompts.</p>
-			<span class="flag"><TriangleAlert size={14} strokeWidth={1.75} aria-hidden="true" />Hard to choose</span>
-		</li>
-
-		<li class="step">
-			<span class="n">3</span>
-			<h4>Pick how to start</h4>
-			<p class="only">Only for Suggested prompts</p>
-			<ul class="chips">
-				{
-					methods.map((m) => (
-						<li>
-							<button type="button" class="chip" aria-pressed="false">
-								{m}
-							</button>
-						</li>
-					))
-				}
-			</ul>
-		</li>
-
-		<li class="step">
-			<span class="n">4</span>
-			<h4>Review prompts</h4>
-			<p>Edit topics and prompts.</p>
-			<span class="chip add"><Plus size={14} strokeWidth={1.75} aria-hidden="true" />Add topic or prompt</span>
-			<span class="flag"><TriangleAlert size={14} strokeWidth={1.75} aria-hidden="true" />Hard to add more</span>
-		</li>
-
-		<li class="step">
-			<span class="n">5</span>
-			<h4>Enter competitors</h4>
-		</li>
-
-		<li class="step">
-			<span class="n">6</span>
-			<h4>Select models</h4>
-		</li>
-
-		<li class="step">
-			<span class="n">7</span>
-			<h4>Select refresh cadence</h4>
-		</li>
-
-		<li class="step">
-			<span class="n">8</span>
-			<h4>Review everything</h4>
-			<p>Including prompt usage.</p>
-		</li>
-	</ol>
-	<p class="count"><strong>8 steps</strong> on the Suggested prompts path, before a single prompt could run.</p>
+	<p class="end"><span class="big">6 to 8 steps</span> depending on the type you picked, before a tracker could run.</p>
 </div>
 
 <script>
-	const reduceMotion = matchMedia('(prefers-reduced-motion: reduce)').matches;
+	const root = document.querySelector<HTMLElement>('.oldflow');
+	if (root) {
+		const tree = root.querySelector<HTMLElement>('.tree')!;
+		const svg = root.querySelector<SVGSVGElement>('.wires')!;
+		const small = matchMedia('(max-width: 760px)');
+		const NS = 'http://www.w3.org/2000/svg';
 
-	document.querySelectorAll<HTMLElement>('.oldflow').forEach((root) => {
-		const steps = [...root.querySelectorAll<HTMLElement>('.step')];
-		const bar = root.querySelector<HTMLElement>('.bar')!;
-		const go = root.querySelector<HTMLButtonElement>('.go')!;
-		const reset = root.querySelector<HTMLButtonElement>('.reset')!;
-		const progress = root.querySelector<HTMLElement>('.progress')!;
-		const hint = root.querySelector<HTMLElement>('.hint')!;
-		let n = 0;
+		// from, to, how to draw it: a fan (shared bracket), a straight drop, or a short sideways arrow
+		const edges: [string, string, 'fan' | 'drop' | 'side'][] = [
+			['n1', 'n2', 'drop'],
+			['n2', 'pca', 'fan'],
+			['n2', 'own', 'fan'],
+			['n2', 'sug', 'fan'],
+			['n2', 'pitch', 'fan'],
+			['n2', 'word', 'fan'],
+			['pca', 'n5', 'drop'],
+			['word', 'n5', 'drop'],
+			['own', 'n4', 'drop'],
+			['sug', 'n3', 'drop'],
+			['pitch', 'n3', 'drop'],
+			['n3', 'n4', 'drop'],
+			['n4', 'n5', 'drop'],
+			['n5', 'n6', 'drop'],
+			['n6', 'n7', 'side'],
+			['n7', 'n8', 'side'],
+		];
 
-		bar.hidden = false;
+		const box = (key: string) => {
+			const el = tree.querySelector<HTMLElement>(`[data-node="${key}"] > .node`)!;
+			const t = tree.getBoundingClientRect();
+			const r = el.getBoundingClientRect();
+			return { l: r.left - t.left, r: r.right - t.left, t: r.top - t.top, b: r.bottom - t.top, cx: (r.left + r.right) / 2 - t.left, cy: (r.top + r.bottom) / 2 - t.top };
+		};
+		const clamp = (v: number, lo: number, hi: number) => Math.min(Math.max(v, lo), hi);
 
-		// Pick an option inside a step (one pick per list).
-		root.querySelectorAll<HTMLButtonElement>('.chips .chip').forEach((chip) => {
-			chip.addEventListener('click', () => {
-				const list = chip.closest('.chips')!;
-				list.querySelectorAll('.chip').forEach((c) => {
-					c.classList.remove('picked');
-					c.setAttribute('aria-pressed', 'false');
-				});
-				chip.classList.add('picked');
-				chip.setAttribute('aria-pressed', 'true');
-				if (chip.dataset.type) hint.hidden = chip.dataset.type === 'follows';
+		const draw = () => {
+			svg.querySelectorAll('path.wire').forEach((p) => p.remove());
+			root.classList.toggle('wired', !small.matches);
+			if (small.matches) return;
+
+			const t = tree.getBoundingClientRect();
+			svg.setAttribute('width', String(t.width));
+			svg.setAttribute('height', String(t.height));
+			svg.setAttribute('viewBox', `0 0 ${t.width} ${t.height}`);
+
+			const R = 10;
+			edges.forEach(([from, to, mode]) => {
+				const a = box(from);
+				const b = box(to);
+				let d: string;
+				if (mode === 'side') {
+					d = `M ${a.r + 4} ${a.cy} H ${b.l - 4}`;
+				} else if (mode === 'fan') {
+					const mid = a.b + (b.t - a.b) / 2;
+					const dir = Math.sign(b.cx - a.cx);
+					d =
+						dir === 0
+							? `M ${a.cx} ${a.b} V ${b.t - 3}`
+							: `M ${a.cx} ${a.b} V ${mid - R} Q ${a.cx} ${mid} ${a.cx + dir * R} ${mid} H ${b.cx - dir * R} Q ${b.cx} ${mid} ${b.cx} ${mid + R} V ${b.t - 3}`;
+				} else {
+					// Straight down at the x where the narrower box sits inside the wider one
+					const narrow = a.r - a.l <= b.r - b.l ? a : b;
+					const lo = Math.max(a.l, b.l) + 14;
+					const hi = Math.min(a.r, b.r) - 14;
+					const x = lo <= hi ? clamp(narrow.cx, lo, hi) : narrow.cx;
+					d = `M ${x} ${a.b} V ${b.t - 3}`;
+				}
+				const path = document.createElementNS(NS, 'path');
+				path.setAttribute('d', d);
+				path.setAttribute('class', 'wire');
+				path.setAttribute('marker-end', 'url(#oldflow-arrow)');
+				svg.appendChild(path);
 			});
-		});
-
-		const show = (count: number) => {
-			n = count;
-			root.classList.toggle('walking', n > 0);
-			steps.forEach((step, i) => {
-				step.classList.toggle('reached', i < n);
-				step.classList.toggle('current', i === n - 1);
-			});
-			reset.hidden = n === 0;
-			if (n === 0) {
-				go.hidden = false;
-				go.textContent = 'Walk through the old flow';
-				progress.textContent = '';
-			} else if (n < steps.length) {
-				go.hidden = false;
-				go.textContent = 'Next step \u2192';
-				progress.textContent = `Step ${n} of ${steps.length}`;
-			} else {
-				go.hidden = true;
-				progress.textContent = `Step ${n} of ${steps.length}. Only now could a prompt run.`;
-			}
-			root.classList.toggle('finished', n === steps.length);
-			if (n > 1) steps[n - 1].scrollIntoView({ block: 'nearest', behavior: reduceMotion ? 'auto' : 'smooth' });
 		};
 
-		go.addEventListener('click', () => show(Math.min(n + 1, steps.length)));
-		reset.addEventListener('click', () => show(0));
-	});
+		draw();
+		document.fonts?.ready.then(draw);
+		new ResizeObserver(draw).observe(tree);
+		small.addEventListener('change', draw);
+	}
 </script>
 
 <style>
 	.oldflow {
-		margin-top: 28px;
-		padding: clamp(16px, 3vw, 28px);
+		margin-top: 32px;
+		padding: clamp(18px, 3vw, 36px);
 		border-radius: 20px;
-		background: linear-gradient(121deg, #ffffff 0%, #fff3ec 100%);
-		border: 1px solid rgba(90, 50, 30, 0.07);
+		background: #f6f6f6;
+		border: 1px solid #ececec;
+		font-family: var(--font-sans);
 	}
-	.steps {
+	.tree {
+		position: relative;
+		display: grid;
+		grid-template-columns: repeat(5, 1fr);
+		column-gap: 14px;
+		row-gap: 58px;
+	}
+	.wires {
+		position: absolute;
+		top: 0;
+		left: 0;
+		z-index: 0;
+		overflow: visible;
+		pointer-events: none;
+	}
+	.wires :global(path.wire) {
+		fill: none;
+		stroke: #c4c4c4;
+		stroke-width: 2;
+		stroke-linecap: round;
+	}
+	.cell {
+		position: relative;
+		z-index: 1;
+		display: flex;
+		flex-direction: column;
+	}
+	.cell > .node {
+		flex: 1;
+	}
+
+	/* Where each box sits on the grid */
+	.n1 {
+		grid-column: 2 / 5;
+		grid-row: 1;
+	}
+	.n2 {
+		grid-column: 2 / 5;
+		grid-row: 2;
+	}
+	.options {
+		display: contents;
 		list-style: none;
 		margin: 0;
 		padding: 0;
-		display: grid;
-		grid-template-columns: repeat(4, 1fr);
-		gap: 28px 26px;
-		counter-reset: none;
 	}
-	.step {
-		position: relative;
+	.t-pca {
+		grid-column: 1;
+		grid-row: 3;
+	}
+	.t-own {
+		grid-column: 2;
+		grid-row: 3;
+	}
+	.t-sug {
+		grid-column: 3;
+		grid-row: 3;
+	}
+	.t-pitch {
+		grid-column: 4;
+		grid-row: 3;
+	}
+	.t-word {
+		grid-column: 5;
+		grid-row: 3;
+	}
+	.n3 {
+		grid-column: 3 / 5;
+		grid-row: 4;
+	}
+	.n4 {
+		grid-column: 2 / 5;
+		grid-row: 5;
+	}
+	.n5 {
+		grid-column: 1 / 6;
+		grid-row: 6;
+	}
+	.chain {
+		grid-column: 1 / 6;
+		grid-row: 7;
+		display: grid;
+		grid-template-columns: repeat(3, 1fr);
+		gap: 56px;
+		width: 82%;
+		margin: 0 auto;
+	}
+
+	/* Boxes */
+	.node {
 		display: flex;
-		flex-direction: column;
 		align-items: flex-start;
-		gap: 8px;
-		padding: 16px;
+		gap: 12px;
+		padding: 12px 16px;
 		border-radius: 12px;
 		background: #fff;
-		border: 1px solid rgba(90, 50, 30, 0.1);
-		box-shadow: 0 6px 18px rgba(120, 70, 40, 0.06);
+		border: 1px solid #e3e3e3;
+		box-shadow: 0 4px 14px rgba(0, 0, 0, 0.04);
+		line-height: 1.3;
 	}
-	/* Arrow to the next step */
-	.step::after {
-		content: '→';
-		position: absolute;
-		top: 50%;
-		right: -22px;
-		translate: 0 -50%;
-		color: #b0694a;
-		font-size: 1.1rem;
+	.node > div {
+		min-width: 0;
 	}
-	.step:nth-child(4)::after {
-		content: '↓';
-		top: auto;
-		bottom: -26px;
-		right: 14px;
-		translate: none;
+	.node b {
+		display: block;
+		font-weight: 500;
+		font-size: 1rem;
 	}
-	.step:nth-child(8)::after {
-		content: none;
+	.node small {
+		display: block;
+		margin-top: 2px;
+		font-size: 0.8rem;
+		color: var(--muted);
 	}
-	.n {
+	.node.main.wide {
+		justify-content: center;
+		align-items: center;
+	}
+	.chain .node {
+		align-items: center;
+	}
+	.n1 .node,
+	.n2 .node {
+		justify-content: center;
+		align-items: center;
+	}
+	.num {
+		flex-shrink: 0;
 		display: grid;
 		place-items: center;
 		width: 28px;
 		height: 28px;
 		border-radius: 8px;
-		background: #fbede5;
-		color: #b0694a;
+		background: #efefef;
+		color: #555;
 		font-size: 0.85rem;
-	}
-	h4 {
-		margin: 0;
-		font-family: var(--font-serif);
 		font-weight: 500;
-		font-size: 1.3rem;
-		line-height: 1.15;
 	}
-	.step p {
-		margin: 0;
+	.node.opt {
+		flex-direction: column;
+		align-items: center;
+		justify-content: center;
+		gap: 0;
+		text-align: center;
+		padding: 12px 8px;
+		box-shadow: none;
+	}
+	.node.opt b {
 		font-size: 0.9rem;
-		color: var(--muted);
-		line-height: 1.4;
 	}
-	.step p.only {
-		font-size: 0.75rem;
-		text-transform: uppercase;
-		letter-spacing: 0.08em;
-	}
-	.chips {
+	.pills {
 		list-style: none;
-		margin: 2px 0 0;
+		margin: 8px 0 0;
 		padding: 0;
 		display: flex;
 		flex-direction: column;
 		gap: 6px;
-		width: 100%;
 	}
-	.chip {
-		all: unset;
-		box-sizing: border-box;
-		width: 100%;
-		display: inline-flex;
-		flex-direction: column;
+	.pills li {
 		font-size: 0.85rem;
-		line-height: 1.3;
-		padding: 6px 10px;
+		padding: 5px 10px;
 		border-radius: 8px;
-		background: #faf7f4;
-		border: 1px solid rgba(90, 50, 30, 0.1);
-		cursor: pointer;
-		transition:
-			background 0.2s,
-			border-color 0.2s;
+		background: #f3f3f3;
+		border: 1px solid #e8e8e8;
 	}
-	button.chip:hover {
-		border-color: rgba(176, 105, 74, 0.45);
-	}
-	button.chip:focus-visible {
-		outline: 2px solid var(--accent);
-		outline-offset: 2px;
-	}
-	.chip small {
-		font-size: 0.75rem;
-		color: var(--muted);
-	}
-	.chip.picked {
-		background: #fbede5;
-		border-color: rgba(176, 105, 74, 0.45);
-	}
-	.chip.add {
-		cursor: default;
-	}
-	.step p.hint {
-		margin: 2px 0 0;
-		font-size: 0.8rem;
-		color: #a3442b;
-	}
-	.chip.add {
-		width: auto;
-		flex-direction: row;
+	.add {
+		display: inline-flex;
 		align-items: center;
 		gap: 6px;
-		background: #fff;
-		border-style: dashed;
+		margin-top: 8px;
+		padding: 4px 10px;
+		border-radius: 8px;
+		border: 1px dashed #c4c4c4;
+		font-size: 0.85rem;
 	}
 	.flag {
 		display: inline-flex;
 		align-items: center;
 		gap: 6px;
-		margin-top: 2px;
-		padding: 3px 8px;
+		padding: 4px 10px;
 		border-radius: 999px;
-		font-size: 0.75rem;
-		color: #a3442b;
-		background: #fdeae4;
+		font-size: 0.8rem;
+		color: #3b3b3b;
+		background: #e9e9e9;
+		white-space: nowrap;
 	}
-	.bar {
-		display: flex;
-		align-items: center;
-		flex-wrap: wrap;
-		gap: 10px 16px;
-		margin-bottom: 22px;
+	.flag.side {
+		position: absolute;
+		top: 50%;
+		left: calc(100% + 14px);
+		translate: 0 -50%;
 	}
-	.bar[hidden],
-	.bar [hidden] {
+	.n4 .flag {
+		margin: 8px 0 0 10px;
+	}
+
+	/* Where each type leads, in words (used when there are no wires) */
+	.route {
 		display: none;
-	}
-	.bar button {
-		all: unset;
-		box-sizing: border-box;
-		cursor: pointer;
-		padding: 8px 16px;
-		border-radius: 999px;
-		font-size: 0.9rem;
-	}
-	.bar button:focus-visible {
-		outline: 2px solid var(--accent);
-		outline-offset: 2px;
-	}
-	.bar .go {
-		color: #fff;
-		background: #2b2b2b;
-	}
-	.bar .go:hover {
-		background: #b0694a;
-	}
-	.bar .reset {
+		margin-top: 6px;
+		font-size: 0.8rem;
 		color: var(--muted);
-		border: 1px solid rgba(90, 50, 30, 0.15);
 	}
-	.bar .reset:hover {
-		color: var(--fg);
+	.oldflow:not(.wired) .route {
+		display: block;
 	}
-	.progress {
-		color: var(--muted);
-		font-size: 0.9rem;
-	}
-	/* While walking, steps you haven't reached yet stay faint */
-	.step {
-		transition:
-			opacity 0.4s ease,
-			box-shadow 0.4s ease,
-			border-color 0.4s ease;
-	}
-	.walking .step:not(.reached) {
-		opacity: 0.28;
-	}
-	.walking .step.current {
-		border-color: rgba(176, 105, 74, 0.6);
-		box-shadow: 0 10px 28px rgba(176, 105, 74, 0.22);
-	}
-	.walking .count {
-		opacity: 0.4;
-		transition: opacity 0.4s;
-	}
-	.finished .count {
-		opacity: 1;
-	}
-	@media (prefers-reduced-motion: reduce) {
-		.step,
-		.walking .count {
-			transition: none;
-		}
-	}
-	.count {
-		margin: 22px 0 0;
+
+	.end {
+		margin: 30px 0 0;
 		text-align: center;
 		color: var(--muted);
 	}
-	.count strong {
-		color: var(--fg);
+	.end .big {
 		font-weight: 500;
+		font-size: 1.4rem;
+		color: #2b2b2b;
+		margin-right: 6px;
 	}
-	@media (max-width: 820px) {
-		.steps {
-			grid-template-columns: 1fr;
-			gap: 30px;
+
+	/* Small screens: no wires, a simple stack where each option says where it leads */
+	@media (max-width: 760px) {
+		.tree {
+			display: flex;
+			flex-direction: column;
+			gap: 12px;
 		}
-		.step::after,
-		.step:nth-child(4)::after {
-			content: '↓';
-			top: auto;
-			bottom: -27px;
-			right: auto;
-			left: 24px;
+		.wires {
+			display: none;
+		}
+		.options {
+			display: flex;
+			flex-direction: column;
+			gap: 8px;
+			margin: 0 0 0 20px;
+			padding-left: 16px;
+			border-left: 2px solid #d6d6d6;
+		}
+		.node.opt {
+			align-items: flex-start;
+			text-align: left;
+		}
+		.flag.side {
+			position: static;
 			translate: none;
+			align-self: flex-start;
+			margin-top: 8px;
+		}
+		.chain {
+			display: flex;
+			flex-direction: column;
+			gap: 12px;
+			width: auto;
+			margin: 0;
+		}
+		.n1 .node,
+		.n2 .node,
+		.node.main.wide {
+			justify-content: flex-start;
+		}
+		.end {
+			text-align: left;
 		}
 	}
 </style>
