@@ -1,5 +1,8 @@
 // Edit this file to update the text on your portfolio.
 
+import type { ImageMetadata } from 'astro';
+import evertuneCover from '../assets/evertune/cover.jpg';
+
 
 export const site = {
 	name: 'Tinu Thomas',
@@ -40,6 +43,10 @@ export type Project = {
 	summary: string;
 	tags: string[];
 	href?: string;
+	// Up to three short lines shown beside the picture on the featured card.
+	highlights?: string[];
+	// The picture on the homepage card. Projects without one show a placeholder.
+	cover?: { image: ImageMetadata; alt: string };
 	// Links the card to /case-studies/<slug>/.
 	slug?: string;
 	// Optional: shows a chaptered walkthrough video of the design as the project's hero.
@@ -53,6 +60,15 @@ export const projects: Project[] = [
 		summary:
 			'New users struggled to choose between five tracker types before writing a single prompt. I redesigned prompt creation around a simple chat with Evertune\u2019s agent, so new customers can get started without white-glove onboarding.',
 		slug: 'evertune',
+		highlights: [
+			'One simple chat replaces five tracker types',
+			'No onboarding or white-glove service needed',
+			'Chat to canvas, built for an agentic platform',
+		],
+		cover: {
+			image: evertuneCover,
+			alt: 'The Evertune tracker draft: topics and prompts on the left, the agent chat on the right.',
+		},
 		tags: ['Evertune AI', 'B2B SaaS', 'Product Design'],
 		flow: {
 			src: 'evertune/flow.mp4',
