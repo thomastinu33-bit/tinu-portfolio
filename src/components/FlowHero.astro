@@ -111,30 +111,30 @@ const { steps } = Astro.props;
 	.panel {
 		padding: clamp(16px, 4vw, 44px);
 		border-radius: 20px;
-		background: linear-gradient(121deg, #ffffff 0%, #fff0e6 100%);
-		border: 1px solid rgba(90, 50, 30, 0.07);
+		background: #f6f6f6;
+		border: 1px solid #ececec;
 	}
 	.window {
 		border-radius: 12px;
 		overflow: hidden;
 		background: #fff;
-		border: 1px solid rgba(90, 50, 30, 0.1);
+		border: 1px solid #e3e3e3;
 		box-shadow:
-			0 30px 60px -20px rgba(120, 70, 40, 0.28),
-			0 8px 20px rgba(120, 70, 40, 0.08);
+			0 30px 60px -20px rgba(0, 0, 0, 0.18),
+			0 8px 20px rgba(0, 0, 0, 0.06);
 	}
 	.chrome {
 		display: flex;
 		gap: 6px;
 		padding: 10px 14px;
-		background: #f6f2ee;
-		border-bottom: 1px solid rgba(90, 50, 30, 0.08);
+		background: #f3f3f3;
+		border-bottom: 1px solid rgba(0, 0, 0, 0.06);
 	}
 	.chrome span {
 		width: 9px;
 		height: 9px;
 		border-radius: 50%;
-		background: #e1d8d0;
+		background: #d9d9d9;
 	}
 	/* Every screen shares one cell, so switching never changes the height. */
 	.stage {
@@ -193,8 +193,8 @@ const { steps } = Astro.props;
 		height: 30px;
 		border-radius: 8px;
 		font-size: 0.85rem;
-		background: #fbede5;
-		color: #b0694a;
+		background: #efefef;
+		color: #555;
 		transition:
 			background 0.2s,
 			color 0.2s;
@@ -204,12 +204,12 @@ const { steps } = Astro.props;
 	}
 	.steps button.is-active {
 		color: var(--fg);
-		border-color: rgba(90, 50, 30, 0.12);
+		border-color: #e3e3e3;
 		background: #fff;
-		box-shadow: 0 4px 14px rgba(120, 70, 40, 0.08);
+		box-shadow: 0 4px 14px rgba(0, 0, 0, 0.06);
 	}
 	.steps button.is-active .num {
-		background: #b0694a;
+		background: #2b2b2b;
 		color: #fff;
 	}
 	.caption {
