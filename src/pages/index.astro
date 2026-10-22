@@ -2,17 +2,18 @@
 import Layout from '../layouts/Layout.astro';
 import { Image } from 'astro:assets';
 import PasswordGate from '../components/PasswordGate.astro';
-import { site, projects, strengths, howIWork } from '../data/site';
+import { site, projects, strengths, principles } from '../data/site';
 import Mail from '@lucide/astro/icons/mail';
 import MapPin from '@lucide/astro/icons/map-pin';
 import ArrowUpRight from '@lucide/astro/icons/arrow-up-right';
 import Component from '@lucide/astro/icons/component';
 import MousePointerClick from '@lucide/astro/icons/mouse-pointer-click';
 import ScanSearch from '@lucide/astro/icons/scan-search';
-import GitPullRequest from '@lucide/astro/icons/git-pull-request';
+import Ear from '@lucide/astro/icons/ear';
+import UsersRound from '@lucide/astro/icons/users-round';
 
 const base = import.meta.env.BASE_URL;
-const coreIcons = { research: ScanSearch, prototype: MousePointerClick, ship: GitPullRequest };
+const principleIcons = { listen: Ear, prototype: MousePointerClick, system: Component, team: UsersRound };
 const strengthIcons = { component: Component, prototype: MousePointerClick, research: ScanSearch };
 ---
 
@@ -121,37 +122,35 @@ const strengthIcons = { component: Component, prototype: MousePointerClick, rese
 
 	<section id="how-i-work" class="nav-width">
 		<h2>How I work</h2>
-		<div class="story">
-			{howIWork.story.map((para) => <p>{para}</p>)}
-		</div>
-
-		<p class="core-intro">{howIWork.coreIntro}</p>
-		<ul class="core">
+		<p class="how-lead">Four habits that show up in every project.</p>
+		<ul class="principles">
 			{
-				howIWork.core.map((c, i) => {
-					const Icon = coreIcons[c.icon];
+				principles.map((pr) => {
+					const Icon = principleIcons[pr.icon];
 					return (
 						<li>
-							<span class="c-top">
-								<span class="c-badge">
-									<Icon size={20} strokeWidth={1.5} aria-hidden="true" />
-								</span>
-								<span class="c-n">0{i + 1}</span>
+							<span class="p-badge">
+								<Icon size={20} strokeWidth={1.5} aria-hidden="true" />
 							</span>
-							<h3>{c.title}</h3>
-							<p>{c.body}</p>
+							<h3>{pr.title}</h3>
+							<p>{pr.body}</p>
 						</li>
 					);
 				})
 			}
 		</ul>
-		<p class="team">{howIWork.team}</p>
 	</section>
 
 	<div class="container">
 		<section id="about">
 			<h2>About</h2>
-			<p>{site.about}</p>
+			<p class="about-lead">{site.about.lead}</p>
+			<ul class="facts">
+				{site.about.facts.map((f) => <li>{f}</li>)}
+			</ul>
+			<div class="about-story">
+				{site.about.story.map((para) => <p>{para}</p>)}
+			</div>
 		</section>
 	</div>
 	</div>
@@ -347,88 +346,99 @@ const strengthIcons = { component: Component, prototype: MousePointerClick, rese
 	/* How I work */
 	#how-i-work h2 {
 		text-align: center;
-		margin-bottom: 24px;
+		margin-bottom: 8px;
 	}
-	.story {
-		max-width: 760px;
-		margin: 0 auto;
-		display: grid;
-		gap: 18px;
-	}
-	.story p {
-		margin: 0;
-		font-family: var(--font-serif);
-		font-size: clamp(1.3rem, 2.4vw, 1.65rem);
-		line-height: 1.45;
-		color: var(--fg);
-	}
-	.core-intro {
-		max-width: 760px;
-		margin: 44px auto 18px;
-		font-size: 0.78rem;
-		letter-spacing: 0.14em;
-		text-transform: uppercase;
+	.how-lead {
+		text-align: center;
 		color: var(--muted);
+		margin: 0 auto 28px;
 	}
-	.core {
+	.principles {
 		list-style: none;
 		margin: 0;
 		padding: 0;
 		display: grid;
-		grid-template-columns: repeat(3, minmax(0, 1fr));
+		grid-template-columns: repeat(2, minmax(0, 1fr));
 		gap: 16px;
 	}
-	.core li {
-		padding: clamp(20px, 2.6vw, 28px);
+	.principles li {
+		padding: clamp(20px, 3vw, 30px);
 		border-radius: 20px;
 		background: #f6f6f6;
 		border: 1px solid #ececec;
 	}
-	.c-top {
-		display: flex;
-		align-items: center;
-		justify-content: space-between;
-		margin-bottom: 18px;
-	}
-	.c-badge {
+	.p-badge {
 		display: grid;
 		place-items: center;
 		width: 44px;
 		height: 44px;
+		margin-bottom: 16px;
 		border-radius: 8px;
 		background: #fff;
 		border: 1px solid #e3e3e3;
 		color: #555;
 	}
-	.c-n {
-		font-family: var(--font-serif);
-		font-variant-numeric: lining-nums;
-		font-size: 1.5rem;
-		color: #c4c4c4;
-	}
-	.core h3 {
+	.principles h3 {
 		margin: 0 0 8px;
-		font-size: clamp(1.4rem, 2.2vw, 1.75rem);
+		font-size: clamp(1.4rem, 2.4vw, 1.8rem);
 		line-height: 1.2;
 	}
-	.core p {
+	.principles p {
 		margin: 0;
 		color: var(--muted);
 		line-height: 1.55;
 	}
-	.team {
-		max-width: 760px;
-		margin: 28px auto 0;
-		padding-top: 22px;
-		border-top: 1px solid #ececec;
-		font-size: 1.05rem;
-		line-height: 1.55;
-		color: var(--fg);
-	}
-	@media (max-width: 820px) {
-		.core {
+	@media (max-width: 720px) {
+		.principles {
 			grid-template-columns: 1fr;
 		}
+	}
+
+	/* About */
+	#about {
+		max-width: 760px;
+		margin-inline: auto;
+	}
+	#about h2 {
+		text-align: center;
+		margin-bottom: 20px;
+	}
+	.about-lead {
+		margin: 0;
+		font-family: var(--font-serif);
+		font-size: clamp(1.5rem, 3vw, 2rem);
+		line-height: 1.35;
+		font-variant-numeric: lining-nums;
+		letter-spacing: -0.01em;
+	}
+	.facts {
+		list-style: none;
+		margin: 22px 0 0;
+		padding: 0;
+		display: flex;
+		flex-wrap: wrap;
+		gap: 8px;
+	}
+	.facts li {
+		padding: 5px 14px;
+		border-radius: 999px;
+		background: #f6f6f6;
+		border: 1px solid #ececec;
+		font-size: 0.88rem;
+		color: #555;
+	}
+	.about-story {
+		margin-top: 32px;
+		padding-top: 28px;
+		border-top: 1px solid #ececec;
+		display: grid;
+		gap: 16px;
+	}
+	.about-story p {
+		margin: 0;
+		font-size: 1.08rem;
+		line-height: 1.65;
+		color: var(--fg);
 	}
 
 	/* Case studies: a stack of panels, each with a short summary beside a large picture */

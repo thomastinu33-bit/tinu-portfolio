@@ -17,8 +17,14 @@ export const site = {
 		"I've been designing for B2B SaaS platforms since 2021",
 		'I turn complex problems into simple, user-centered designs',
 	],
-	about:
-		'Write a short paragraph about yourself here: your background, what kind of work you love, and what you are looking for next.',
+	about: {
+		lead: 'I’m a product designer based in NYC, and I’ve been designing SaaS products for 5+ years. I have a degree in information experience design.',
+		facts: ['Based in NYC', '5+ years designing SaaS', 'Information experience design degree'],
+		story: [
+			'What I love about product design is how much it has changed in the last five years. Reflecting on my career as a designer so far, I remember months and months of back and forth with the product team and engineers to build design systems. User research was recording sessions, going back to review notes and making FigJams. Handoff was sending a Figma design to developers and crossing your fingers.',
+			'With AI, it has all gotten so much more powerful and so much faster. I never thought I would write a PR in my life, but here I am as a product designer, gathering feedback, designing and pushing code. It has been a fun journey.',
+		],
+	},
 	email: 'thomastinu33@gmail.com',
 	linkedin: 'https://www.linkedin.com/in/tinuthomas33/',
 	location: 'New York City',
@@ -39,33 +45,30 @@ export const strengths = [
 export type FlowStep = { label: string; caption: string; at: number };
 export type FlowVideo = { src: string; poster: string; steps: FlowStep[] };
 
-// "How I work": a short reflection, the three things at the core of the process, and how I work with the team.
+// "How I work": short principles, drawn from the case studies. Edit the wording freely.
 // `icon` must match one of the icons imported in src/pages/index.astro.
-export const howIWork = {
-	story: [
-		'What I love about product design is how much it has changed in the last five years. Reflecting on my career as a designer so far, I remember months and months of back and forth with the product team and engineers to build design systems. User research was recording sessions, going back to review notes and making FigJams. Handoff was sending a Figma design to developers and crossing your fingers.',
-		'With AI, it has all gotten so much more powerful and so much faster. I never thought I would write a PR in my life, but here I am as a product designer, gathering feedback, designing and pushing code. It has been a fun journey.',
-	],
-	coreIntro: 'The core of my process is still the same.',
-	core: [
-		{
-			icon: 'research',
-			title: 'Conduct research',
-			body: 'User research is the foundation of my design process. It is how I make sure my designs are solving the right problem.',
-		},
-		{
-			icon: 'prototype',
-			title: 'Create prototypes',
-			body: 'I use tools like Claude and Codex to build prototypes, so ideas can be tried and tested before they are built for real.',
-		},
-		{
-			icon: 'ship',
-			title: 'Ship designs',
-			body: 'I collaborate with engineers all the way to launch, so what I design is what ships.',
-		},
-	],
-	team: 'I work very closely with PMs and engineers at every step, from the first conversation with customers to the pull request.',
-};
+export const principles = [
+	{
+		icon: 'listen',
+		title: 'Start with customers',
+		body: 'I begin by listening: customer calls, feedback and how people actually use the product. The research shapes the problem before any screen is drawn.',
+	},
+	{
+		icon: 'prototype',
+		title: 'Make ideas real early',
+		body: 'I shape ideas in Figma, then build working prototypes with Claude and Codex, so teams can click through a decision before committing to it.',
+	},
+	{
+		icon: 'system',
+		title: 'Build systems, not just screens',
+		body: 'I build and maintain design systems in canvas and code, so what is designed and what ships stay in step as products grow.',
+	},
+	{
+		icon: 'team',
+		title: 'Work closely with the team',
+		body: 'I work side by side with PMs and engineers, and I keep talking to users after launch, so each decision is grounded in what people need.',
+	},
+] as const;
 
 export type Project = {
 	title: string;
