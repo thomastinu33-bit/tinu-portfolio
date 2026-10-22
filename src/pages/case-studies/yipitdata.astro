@@ -5,6 +5,7 @@ import { Image } from 'astro:assets';
 import { site, projects } from '../../data/site';
 import Quote from '@lucide/astro/icons/quote';
 import AffinityBoard from '../../components/AffinityBoard.astro';
+import UserFlow from '../../components/UserFlow.astro';
 
 const project = projects.find((p) => p.slug === 'yipitdata')!;
 const base = import.meta.env.BASE_URL;
@@ -123,9 +124,8 @@ const quotes = [
 					with customer needs.
 				</p>
 				<AffinityBoard />
-				<div class="slots">
-					<figure class="slot"><span>User workflow diagram</span></figure>
-				</div>
+				<UserFlow />
+				<p class="figcap">One of the user flow diagrams, from onboarding to digging into the data.</p>
 			</section>
 
 			<section>
@@ -296,6 +296,11 @@ const quotes = [
 	.label {
 		color: var(--muted);
 		font-size: 0.95rem;
+	}
+	section p.figcap {
+		margin: 12px 0 0;
+		color: var(--muted);
+		font-size: 0.9rem;
 	}
 	.slots {
 		display: grid;

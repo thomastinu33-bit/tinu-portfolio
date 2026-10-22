@@ -1,0 +1,693 @@
+---
+// A user flow for the YipitData portal, redrawn from the original diagram:
+//   1. an eight-step onboarding chain with the design notes behind it
+//   2. the email lane that sends people into the portal
+//   3. the two paths through the portal, with one decision point
+// Wires and their labels are drawn from the boxes' real positions (see the script), so they stay
+// attached at any width. Below 1100px it becomes a plain top-to-bottom list.
+const onboarding = [
+	{ n: 1, text: 'CS sends email about signing up to the portal' },
+	{ n: 2, text: 'User creates an account' },
+	{ n: 3, text: 'Portal landing page' },
+	{ n: 4, text: 'Scrolls to My Product Grid' },
+	{
+		n: 5,
+		text: 'Marks products as favorite + enables email for all products',
+		asks: ['How does marking products as favorite benefit these users?', 'How does enabling email preferences benefit these users?'],
+	},
+	{ n: 6, text: 'Goes to YD live page' },
+	{ n: 7, text: 'Views all metrics' },
+	{ n: 8, text: 'Adds metrics to watchlist', asks: ['How does adding metrics to watchlist benefit these users?'] },
+];
+
+const notes = [
+	{
+		title: 'Impact of favorite',
+		body: 'Show Product in the search bar.',
+		ask: 'What if we showed favorite products in BTB?',
+		answer:
+			'This wouldn’t impact this client as much since they have only 5 or less products, so we can safely assume they’re all favorites.',
+	},
+	{
+		title: 'Impact of email notification',
+		body: 'User receives an email as soon as a report is published.',
+		ask: 'What if only products with email turned on showed in BTB?',
+		answer: 'Since there are only 5 or less products, this feature wouldn’t be impactful. It’s just an additional step.',
+	},
+	{
+		title: 'Impact of watchlist',
+		body: 'Watchlisted metrics in a new grid on top of the page. Not super impactful for a user with 5 or less products.',
+	},
+];
+---
+
+<div class="breakout">
+	<figure class="uflow">
+		<svg class="wires" aria-hidden="true">
+			<defs>
+				<marker id="uflow-arrow" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto">
+					<path d="M1 1 L9 5 L1 9 z" fill="#a9a9a9"></path>
+				</marker>
+			</defs>
+		</svg>
+		<div class="elabels" aria-hidden="true"></div>
+
+		<!-- 1. Onboarding -->
+		<section class="lane onb-lane" aria-label="Onboarding flow">
+			<span class="chip">Onboarding flow</span>
+			<ol class="onb">
+				{
+					onboarding.map((s) => (
+						<li class="node step" data-node={`o${s.n}`} data-in={s.n > 1 ? 'then' : undefined}>
+							<span class="num">{s.n}</span>
+							<div>
+								<p>{s.text}</p>
+								{s.asks && (
+									<ul class="asks">
+										{s.asks.map((a) => (
+											<li>{a}</li>
+										))}
+									</ul>
+								)}
+							</div>
+						</li>
+					))
+				}
+			</ol>
+			<div class="notes">
+				{
+					notes.map((n) => (
+						<div class="note">
+							<h4>{n.title}</h4>
+							<p>{n.body}</p>
+							{n.ask && (
+								<p class="qa">
+									<b>{n.ask}</b>
+									<span>{n.answer}</span>
+								</p>
+							)}
+						</div>
+					))
+				}
+				<div class="note stat">
+					<h4>What % users fall under this category</h4>
+					<p class="big">30.03%</p>
+				</div>
+			</div>
+		</section>
+
+		<!-- 2 and 3. Email lane and the portal -->
+		<div class="portal-grid">
+			<span class="panel email-panel" aria-hidden="true"><span class="chip">Receive content via email</span></span>
+			<span class="panel portal-panel" aria-hidden="true"><span class="chip">Visits the portal</span></span>
+
+			<div class="node step e1" data-node="e1" data-start="Receive content via email"><p>Receives 5 reports via email</p></div>
+			<div class="node step e2" data-node="e2"><p>Receives BTB email</p></div>
+
+			<div class="node step la" data-node="la" data-start="Visits the portal, asking “What are the latest key metrics”"><p>Login to portal</p></div>
+			<div class="node step ydl" data-node="ydl" data-in="then"><p>Go to YDL page</p></div>
+			<div class="node decision dec" data-node="dec" data-in="then"><p>Do I expect these values?</p></div>
+			<div class="node step next" data-node="next" data-in="Yes"><p>Move to next product</p></div>
+			<div class="node step dash" data-node="dash" data-in="No" data-out="“What is YD analyst saying” goes to Read report"><p>Open dashboard to take a deep dive into data</p></div>
+			<div class="node step dl" data-node="dl" data-in="I want to do my own analysis" data-out="“Need more context” goes to Schedule call with RA"><p>Download data for further analysis</p></div>
+
+			<div class="node step lb" data-node="lb" data-start="Or visits the portal, asking “What did the previous report say?”"><p>Login to portal</p></div>
+			<div class="node step pd" data-node="pd" data-in="then"><p>Product Details Page</p></div>
+			<div class="node step rep" data-node="rep" data-in="then"><p>Reports</p></div>
+			<div class="node step read" data-node="read" data-in="then"><p>Read report</p></div>
+			<div class="node end call" data-node="call" data-in="Need more context"><p>Schedule call with RA</p></div>
+
+			<div class="node-note btb">
+				<h4>Is BTB useful for this user?</h4>
+				<p>Probably not since their coverage is small.</p>
+			</div>
+		</div>
+	</figure>
+</div>
+
+<script>
+	const root = document.querySelector<HTMLElement>('.uflow');
+	if (root) {
+		const svg = root.querySelector<SVGSVGElement>('svg.wires')!;
+		const labels = root.querySelector<HTMLElement>('.elabels')!;
+		const stacked = matchMedia('(max-width: 1099px)');
+		const NS = 'http://www.w3.org/2000/svg';
+		const R = 10;
+
+		type Mode = 'side' | 'drop' | 'fan' | 'branch';
+		const edges: { from: string; to: string; mode: Mode; label?: string; dashed?: boolean }[] = [
+			// onboarding
+			{ from: 'o1', to: 'o2', mode: 'side' },
+			{ from: 'o2', to: 'o3', mode: 'side' },
+			{ from: 'o3', to: 'o4', mode: 'side' },
+			{ from: 'o4', to: 'o5', mode: 'fan' },
+			{ from: 'o5', to: 'o6', mode: 'side' },
+			{ from: 'o6', to: 'o7', mode: 'side' },
+			{ from: 'o7', to: 'o8', mode: 'side' },
+			// email lane into the portal
+			{ from: 'e1', to: 'la', mode: 'side', label: 'What are the latest key metrics', dashed: true },
+			{ from: 'e1', to: 'lb', mode: 'branch', label: 'What did the previous report say?', dashed: true },
+			// portal, top path
+			{ from: 'la', to: 'ydl', mode: 'side' },
+			{ from: 'ydl', to: 'dec', mode: 'side' },
+			{ from: 'dec', to: 'next', mode: 'drop', label: 'Yes' },
+			{ from: 'dec', to: 'dash', mode: 'side', label: 'No' },
+			{ from: 'dash', to: 'dl', mode: 'side', label: 'I want to do my own analysis' },
+			{ from: 'dash', to: 'read', mode: 'drop', label: 'What is YD analyst saying' },
+			{ from: 'dl', to: 'call', mode: 'drop', label: 'Need more context' },
+			// portal, bottom path
+			{ from: 'lb', to: 'pd', mode: 'side' },
+			{ from: 'pd', to: 'rep', mode: 'side' },
+			{ from: 'rep', to: 'read', mode: 'side' },
+			{ from: 'read', to: 'call', mode: 'side', label: 'Need more context' },
+		];
+
+		const box = (key: string) => {
+			const el = root.querySelector<HTMLElement>(`[data-node="${key}"]`)!;
+			const t = root.getBoundingClientRect();
+			const r = el.getBoundingClientRect();
+			return { l: r.left - t.left, r: r.right - t.left, t: r.top - t.top, b: r.bottom - t.top, cx: (r.left + r.right) / 2 - t.left, cy: (r.top + r.bottom) / 2 - t.top };
+		};
+
+		const draw = () => {
+			svg.querySelectorAll('path.wire').forEach((p) => p.remove());
+			labels.replaceChildren();
+			root.classList.toggle('wired', !stacked.matches);
+			if (stacked.matches) return;
+
+			const t = root.getBoundingClientRect();
+			svg.setAttribute('width', String(t.width));
+			svg.setAttribute('height', String(t.height));
+			svg.setAttribute('viewBox', `0 0 ${t.width} ${t.height}`);
+
+			edges.forEach((e) => {
+				const a = box(e.from);
+				const b = box(e.to);
+				let d = '';
+				let lx = 0;
+				let ly = 0;
+				if (e.mode === 'side') {
+					d = `M ${a.r + 4} ${a.cy} H ${b.l - 4}`;
+					lx = (a.r + b.l) / 2;
+					ly = a.cy;
+				} else if (e.mode === 'drop') {
+					d = `M ${a.cx} ${a.b + 4} V ${b.t - 4}`;
+					lx = a.cx;
+					ly = (a.b + b.t) / 2;
+				} else if (e.mode === 'fan') {
+					const mid = a.b + (b.t - a.b) / 2;
+					const dir = Math.sign(b.cx - a.cx) || 1;
+					d = `M ${a.cx} ${a.b + 4} V ${mid - R} Q ${a.cx} ${mid} ${a.cx + dir * R} ${mid} H ${b.cx - dir * R} Q ${b.cx} ${mid} ${b.cx} ${mid + R} V ${b.t - 4}`;
+				} else {
+					// branches off the horizontal wire halfway across the gap, drops, then turns into the target
+					const xm = (a.r + b.l) / 2;
+					d = `M ${xm} ${a.cy} V ${b.cy - R} Q ${xm} ${b.cy} ${xm + R} ${b.cy} H ${b.l - 4}`;
+					lx = xm;
+					ly = (a.cy + b.cy) / 2;
+				}
+				const path = document.createElementNS(NS, 'path');
+				path.setAttribute('d', d);
+				path.setAttribute('class', e.dashed ? 'wire dashed' : 'wire');
+				path.setAttribute('marker-end', 'url(#uflow-arrow)');
+				svg.appendChild(path);
+
+				if (e.label) {
+					const l = document.createElement('span');
+					l.className = 'elabel';
+					l.textContent = e.label;
+					l.style.left = `${lx}px`;
+					l.style.top = `${ly}px`;
+					// on a horizontal wire the label sits just above it, so the arrowhead stays visible
+					if (e.mode === 'side') l.classList.add('above');
+					labels.appendChild(l);
+				}
+			});
+		};
+
+		draw();
+		document.fonts?.ready.then(draw);
+		new ResizeObserver(draw).observe(root);
+		stacked.addEventListener('change', draw);
+	}
+</script>
+
+<style>
+	/* Break out of the text column so the diagram has room */
+	.breakout {
+		position: relative;
+		left: 50%;
+		width: min(1160px, calc(100vw - 48px));
+		transform: translateX(-50%);
+		margin-top: 28px;
+	}
+	.uflow {
+		position: relative;
+		margin: 0;
+		padding: clamp(14px, 2.4vw, 28px);
+		border-radius: 20px;
+		background: #fbfbfb;
+		border: 1px solid #ececec;
+		font-family: var(--font-sans);
+		display: grid;
+		gap: 64px;
+	}
+	.wires {
+		position: absolute;
+		top: 0;
+		left: 0;
+		z-index: 1;
+		overflow: visible;
+		pointer-events: none;
+	}
+	.wires :global(path.wire) {
+		fill: none;
+		stroke: #b4b4b4;
+		stroke-width: 2;
+		stroke-linecap: round;
+	}
+	.wires :global(path.wire.dashed) {
+		stroke-dasharray: 6 6;
+	}
+	.elabels {
+		position: absolute;
+		inset: 0;
+		z-index: 4;
+		pointer-events: none;
+	}
+	.elabels :global(.elabel) {
+		position: absolute;
+		translate: -50% -50%;
+		width: max-content;
+		max-width: 80px;
+		padding: 3px 6px;
+		border-radius: 8px;
+		background: #fbfbfb;
+		border: 1px solid #e3e3e3;
+		font-size: 0.66rem;
+		line-height: 1.25;
+		text-align: center;
+		color: #4a4a4a;
+	}
+
+	.elabels :global(.elabel.above) {
+		translate: -50% calc(-100% - 6px);
+	}
+
+	/* Lanes and chips */
+	.lane,
+	.portal-grid {
+		position: relative; /* no z-index on purpose: boxes inside must be able to sit above the wires */
+	}
+	.chip {
+		position: absolute;
+		top: 0;
+		left: 0;
+		translate: 0 -50%;
+		padding: 3px 12px;
+		border-radius: 999px;
+		background: #2b2b2b;
+		color: #fff;
+		font-size: 0.78rem;
+		letter-spacing: 0.02em;
+		white-space: nowrap;
+	}
+	.lane {
+		padding: 38px 24px 24px;
+		border-radius: 16px;
+		background: #f3f3f3;
+		border: 1px solid #e8e8e8;
+	}
+	.lane .chip {
+		left: 18px;
+	}
+
+	/* Boxes */
+	.node {
+		position: relative;
+		z-index: 2;
+		box-sizing: border-box;
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		padding: 12px 12px;
+		border-radius: 12px;
+		background: #fff;
+		border: 1px solid #e0e0e0;
+		box-shadow: 0 4px 14px rgba(0, 0, 0, 0.04);
+		font-size: 0.82rem;
+		line-height: 1.35;
+		color: var(--fg);
+		text-align: center;
+	}
+	.node p {
+		margin: 0;
+	}
+	.node.end {
+		background: #2b2b2b;
+		border-color: #2b2b2b;
+		color: #fff;
+	}
+	.num {
+		flex-shrink: 0;
+		display: grid;
+		place-items: center;
+		width: 26px;
+		height: 26px;
+		border-radius: 8px;
+		background: #efefef;
+		color: #555;
+		font-size: 0.8rem;
+		font-weight: 500;
+	}
+
+	/* Decision diamond: a clipped dark shape with a clipped white shape inside it */
+	.node.decision {
+		background: none;
+		border: none;
+		box-shadow: none;
+		padding: 0 22%;
+	}
+	.node.decision::before,
+	.node.decision::after {
+		content: '';
+		position: absolute;
+		z-index: -1;
+		clip-path: polygon(50% 0, 100% 50%, 50% 100%, 0 50%);
+	}
+	.node.decision::before {
+		inset: 0;
+		background: #2b2b2b;
+	}
+	.node.decision::after {
+		inset: 2px;
+		background: #fff;
+	}
+
+	/* Onboarding chain: two rows of four, then the notes */
+	.onb {
+		list-style: none;
+		margin: 0;
+		padding: 0;
+		display: grid;
+		grid-template-columns: repeat(4, 1fr);
+		column-gap: 64px;
+		row-gap: 56px;
+	}
+	.onb .node {
+		justify-content: flex-start;
+		gap: 12px;
+		text-align: left;
+		min-height: 88px;
+	}
+	.asks {
+		list-style: none;
+		margin: 8px 0 0;
+		padding: 8px 0 0;
+		border-top: 1px solid #ececec;
+		display: grid;
+		gap: 4px;
+		font-size: 0.72rem;
+		color: var(--muted);
+	}
+	.notes {
+		display: grid;
+		grid-template-columns: repeat(4, 1fr);
+		column-gap: 64px;
+		row-gap: 16px;
+		margin-top: 40px;
+	}
+	.note,
+	.node-note {
+		padding: 14px 16px;
+		border-radius: 12px;
+		border: 1px dashed #cfcfcf;
+		background: #fafafa;
+		font-size: 0.8rem;
+		line-height: 1.4;
+		color: #3b3b3b;
+	}
+	.note h4,
+	.node-note h4 {
+		margin: 0 0 6px;
+		font-family: var(--font-sans);
+		font-size: 0.82rem;
+		font-weight: 500;
+	}
+	.note p,
+	.node-note p {
+		margin: 0;
+	}
+	.qa {
+		display: grid;
+		gap: 4px;
+		margin-top: 10px !important;
+		padding-top: 10px;
+		border-top: 1px solid #ececec;
+	}
+	.qa b {
+		font-weight: 500;
+	}
+	.qa span {
+		color: var(--muted);
+	}
+	.note.stat {
+		background: #eef1f6;
+		border-style: solid;
+		border-color: #d9dfe9;
+	}
+	.note.stat .big {
+		font-family: var(--font-serif);
+		font-variant-numeric: lining-nums;
+		font-size: 2.2rem;
+		line-height: 1;
+		margin-top: 6px;
+	}
+
+	/* The email lane and the portal */
+	.portal-grid {
+		display: grid;
+		grid-template-columns: repeat(6, 1fr);
+		grid-template-rows: auto auto auto auto;
+		column-gap: 84px;
+		row-gap: 56px;
+		align-items: stretch;
+		padding-top: 24px;
+	}
+	.panel {
+		position: relative;
+		z-index: 0;
+		margin: -24px -16px -16px -16px;
+		border-radius: 16px;
+		background: #f3f3f3;
+		border: 1px solid #e8e8e8;
+	}
+	.panel .chip {
+		left: 14px;
+	}
+	.email-panel {
+		grid-column: 1;
+		grid-row: 1 / 4;
+	}
+	.portal-panel {
+		grid-column: 2 / 7;
+		grid-row: 1 / 4;
+		margin-left: -34px;
+	}
+	.e1 {
+		grid-column: 1;
+		grid-row: 1;
+	}
+	.e2 {
+		grid-column: 1;
+		grid-row: 3;
+	}
+	.la {
+		grid-column: 2;
+		grid-row: 1;
+	}
+	.ydl {
+		grid-column: 3;
+		grid-row: 1;
+	}
+	.dec {
+		grid-column: 4;
+		grid-row: 1;
+	}
+	.dash {
+		grid-column: 5;
+		grid-row: 1;
+	}
+	.dl {
+		grid-column: 6;
+		grid-row: 1;
+	}
+	.next {
+		grid-column: 4;
+		grid-row: 2;
+		border-radius: 999px;
+	}
+	.lb {
+		grid-column: 2;
+		grid-row: 3;
+	}
+	.pd {
+		grid-column: 3;
+		grid-row: 3;
+	}
+	.rep {
+		grid-column: 4;
+		grid-row: 3;
+	}
+	.read {
+		grid-column: 5;
+		grid-row: 3;
+	}
+	.call {
+		grid-column: 6;
+		grid-row: 3;
+	}
+	.btb {
+		grid-column: 1 / 3;
+		grid-row: 4;
+		margin-top: -8px;
+	}
+	.portal-grid .node {
+		min-height: 92px;
+	}
+	.portal-grid .node.decision {
+		min-height: 118px;
+	}
+	.portal-grid .node.next {
+		min-height: 52px;
+	}
+
+	/* Below 1100px: no wires, a simple top-to-bottom list where each box says how you get to it */
+	@media (max-width: 1099px) {
+		.breakout {
+			left: 0;
+			width: 100%;
+			transform: none;
+		}
+		.uflow {
+			gap: 40px;
+		}
+		.wires,
+		.elabels,
+		.panel {
+			display: none;
+		}
+		.lane {
+			padding-top: 40px;
+		}
+		.onb,
+		.notes,
+		.portal-grid {
+			display: flex;
+			flex-direction: column;
+			gap: 22px;
+		}
+		.notes {
+			margin-top: 28px;
+		}
+		.portal-grid {
+			padding-top: 0;
+		}
+		.node,
+		.onb .node,
+		.portal-grid .node,
+		.portal-grid .node.decision,
+		.portal-grid .node.next {
+			min-height: 0;
+			justify-content: flex-start;
+			text-align: left;
+		}
+		.node.decision {
+			padding: 12px;
+			background: #fff;
+			border: 1.5px solid #2b2b2b;
+			box-shadow: none;
+		}
+		.node.decision::after {
+			display: none;
+		}
+		/* the diamond's dark shape becomes the plain "way in" label like every other box */
+		.node.decision::before {
+			clip-path: none;
+			background: none;
+			inset: auto;
+			z-index: auto;
+		}
+		.next {
+			border-radius: 12px;
+		}
+		/* "then" / the label of the way in, shown above each box */
+		.node[data-in]::before {
+			content: '↓ ' attr(data-in);
+			position: absolute;
+			top: -19px;
+			left: 14px;
+			font-size: 0.7rem;
+			color: var(--muted);
+			white-space: nowrap;
+		}
+		.node[data-in='then']::before {
+			content: '↓';
+		}
+		.onb .node[data-in='then']::before {
+			content: '↓';
+		}
+		/* A heading above the first box of each lane or path */
+		.node[data-start] {
+			margin-top: 26px;
+		}
+		.node[data-start]::before {
+			content: attr(data-start);
+			position: absolute;
+			left: 2px;
+			right: 2px;
+			bottom: calc(100% + 8px);
+			font-size: 0.76rem;
+			font-weight: 500;
+			line-height: 1.3;
+			color: var(--fg);
+		}
+		/* Where a branch leads, shown under the box */
+		.node[data-out] {
+			margin-bottom: 34px;
+		}
+		.node[data-out]::after {
+			content: '→ ' attr(data-out);
+			position: absolute;
+			left: 14px;
+			top: calc(100% + 4px);
+			right: 8px;
+			font-size: 0.7rem;
+			line-height: 1.3;
+			color: var(--muted);
+		}
+		.btb {
+			margin-top: 6px;
+		}
+		.e1,
+		.e2,
+		.la,
+		.ydl,
+		.dec,
+		.next,
+		.dash,
+		.dl,
+		.lb,
+		.pd,
+		.rep,
+		.read,
+		.call,
+		.btb {
+			grid-column: auto;
+			grid-row: auto;
+		}
+		.uflow {
+			max-width: 640px;
+			margin-inline: auto;
+		}
+	}
+</style>
