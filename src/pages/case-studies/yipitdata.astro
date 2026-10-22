@@ -6,6 +6,7 @@ import { site, projects } from '../../data/site';
 import Quote from '@lucide/astro/icons/quote';
 import AffinityBoard from '../../components/AffinityBoard.astro';
 import UserFlow from '../../components/UserFlow.astro';
+import DesignSystem from '../../components/DesignSystem.astro';
 
 const project = projects.find((p) => p.slug === 'yipitdata')!;
 const base = import.meta.env.BASE_URL;
@@ -168,10 +169,8 @@ const quotes = [
 					clicks where the design leaned on hover. To resolve this, certain components and their behavior were
 					redefined, which cut down on repetitive annotation during handoff.
 				</p>
-				<div class="slots two">
-					<figure class="slot"><span>Foundations of the design system</span></figure>
-					<figure class="slot"><span>The custom filter component</span></figure>
-				</div>
+				<DesignSystem />
+				<p class="figcap">Foundations and a few components of the design system. The filter is interactive.</p>
 			</section>
 
 			<section>

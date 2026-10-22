@@ -1,0 +1,898 @@
+---
+// A native showcase of the Investor Platform design system, drawn from its Figma documentation:
+// foundations (color tokens, type scale) and components (a live filter, report cards, alerts).
+// Colors with a hex value are the ones labeled in the Figma file; the semantic set is shown by role.
+import ListFilter from '@lucide/astro/icons/list-filter';
+import X from '@lucide/astro/icons/x';
+import ChevronRight from '@lucide/astro/icons/chevron-right';
+import ShieldCheck from '@lucide/astro/icons/shield-check';
+import CircleAlert from '@lucide/astro/icons/circle-alert';
+import TriangleAlert from '@lucide/astro/icons/triangle-alert';
+import Info from '@lucide/astro/icons/info';
+import CircleCheck from '@lucide/astro/icons/circle-check';
+
+const primary = [
+	{ name: 'primary_main', value: '#0D4753', css: '#0D4753' },
+	{ name: 'primary_dark', value: '#0C404B', css: '#0C404B' },
+	{ name: 'primary_light', value: '#255964', css: '#255964' },
+	{ name: 'primary_contrast', value: '#FFFFFF', css: '#FFFFFF', line: true },
+];
+const states = [
+	{ name: 'hover', value: '#0D4753 @10%', css: 'rgba(13, 71, 83, 0.10)' },
+	{ name: 'selected', value: '#0D4753 @15%', css: 'rgba(13, 71, 83, 0.15)' },
+	{ name: 'focus', value: '#0D4753 @20%', css: 'rgba(13, 71, 83, 0.20)' },
+	{ name: 'outline', value: '#0D4753 @30%', css: 'rgba(13, 71, 83, 0.30)' },
+];
+const text = [
+	{ name: 'primary', value: '#000000 @87%', css: 'rgba(0, 0, 0, 0.87)' },
+	{ name: 'secondary', value: '#000000 @60%', css: 'rgba(0, 0, 0, 0.60)' },
+	{ name: 'tertiary', value: '#9E9E9E', css: '#9E9E9E' },
+	{ name: 'disabled', value: '#000000 @38%', css: 'rgba(0, 0, 0, 0.38)' },
+	{ name: 'link', value: '#0D4753', css: '#0D4753' },
+];
+const semantic = [
+	{ name: 'Red', base: '#E9514E' },
+	{ name: 'Orange', base: '#E8935F' },
+	{ name: 'Green', base: '#3F8A6D' },
+	{ name: 'Blue', base: '#3A86B0' },
+];
+const type = [
+	{ name: 'Heading 1', size: 24, lh: '120%', weight: 700 },
+	{ name: 'Heading 2', size: 20, lh: '120%', weight: 700 },
+	{ name: 'Heading 3', size: 16, lh: '140%', weight: 500 },
+	{ name: 'Body', size: 14, lh: '140%', weight: 400 },
+	{ name: 'Body-bold', size: 14, lh: '140%', weight: 500 },
+	{ name: 'Caption', size: 12, lh: '140%', weight: 400 },
+	{ name: 'Caption-bold', size: 12, lh: '140%', weight: 500 },
+];
+const categories = ['APAC', 'Cloud', 'Consumer Goods', 'Consumer Services', 'E-Commerce', 'Financial Services', 'Media & Internet', 'MedTech', 'Software'];
+const consumerGoods = [
+	'Auto Parts',
+	'Clothing & Apparel',
+	'Electronics & Appliances',
+	'Furniture',
+	'Health & Beauty',
+	'Home Improvement',
+	'Pet Supplies',
+	'Pool Supplies',
+	'Sports Goods & Clothing',
+	'Staples',
+	'Toys',
+	'Macro',
+	'Restaurants',
+];
+const alerts = [
+	{ kind: 'error', label: 'Error' },
+	{ kind: 'warning', label: 'Warning' },
+	{ kind: 'info', label: 'Info' },
+	{ kind: 'success', label: 'Success' },
+];
+---
+
+<link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" rel="stylesheet" />
+
+<div class="ds">
+	<header class="ds-head">
+		<span class="mark">y</span>
+		<div>
+			<b>Investor Platform Design System</b>
+			<span>Roboto · 1.2 modular scale · 14px base</span>
+		</div>
+	</header>
+
+	<div class="tabs" role="tablist" aria-label="Design system sections" data-tabs hidden>
+		<button type="button" role="tab" id="ds-tab-foundations" aria-controls="ds-panel-foundations" aria-selected="true" data-tab="foundations">Foundations</button>
+		<button type="button" role="tab" id="ds-tab-filter" aria-controls="ds-panel-filter" aria-selected="false" tabindex="-1" data-tab="filter">Filter</button>
+		<button type="button" role="tab" id="ds-tab-cards" aria-controls="ds-panel-cards" aria-selected="false" tabindex="-1" data-tab="cards">Cards &amp; alerts</button>
+	</div>
+
+	<!-- Foundations -->
+	<section class="block" id="ds-panel-foundations" role="tabpanel" aria-labelledby="ds-tab-foundations" data-panel="foundations">
+		<h4 class="block-title">Foundations</h4>
+		<div class="found">
+			<div class="found-col">
+				<h5>Color</h5>
+
+				<p class="label">Primary</p>
+				<ul class="swatches">
+					{
+						primary.map((c) => (
+							<li>
+								<span class:list={['sw', { line: c.line }]} style={`background:${c.css}`} />
+								<b>{c.name}</b>
+								<span>{c.value}</span>
+							</li>
+						))
+					}
+				</ul>
+				<ul class="swatches small">
+					{
+						states.map((c) => (
+							<li>
+								<span class="sw line" style={`background:${c.css}`} />
+								<b>{c.name}</b>
+								<span>{c.value}</span>
+							</li>
+						))
+					}
+				</ul>
+
+				<p class="label">Text</p>
+				<ul class="swatches">
+					{
+						text.map((c) => (
+							<li>
+								<span class="sw" style={`background:${c.css}`} />
+								<b>{c.name}</b>
+								<span>{c.value}</span>
+							</li>
+						))
+					}
+				</ul>
+
+				<p class="label">Semantic <em>each with a light tint for backgrounds</em></p>
+				<ul class="swatches sem">
+					{
+						semantic.map((c) => (
+							<li>
+								<span class="pair">
+									<span class="sw" style={`background:${c.base}`} />
+									<span class="sw line" style={`background:${c.base}1A`} />
+								</span>
+								<b>{c.name}</b>
+							</li>
+						))
+					}
+				</ul>
+			</div>
+
+			<div class="found-col">
+				<h5>Type</h5>
+				<ul class="type">
+					{
+						type.map((t) => (
+							<li>
+								<span class="sample" style={`font-size:${t.size}px; font-weight:${t.weight}; line-height:${t.lh}`}>
+									{t.name}
+								</span>
+								<span class="spec">
+									{t.size}px · {t.lh} · {t.weight}
+								</span>
+							</li>
+						))
+					}
+				</ul>
+			</div>
+		</div>
+	</section>
+
+	<!-- Filter -->
+	<section class="block" id="ds-panel-filter" role="tabpanel" aria-labelledby="ds-tab-filter" data-panel="filter">
+		<h4 class="block-title">Filter <span>a custom component, since MUI has none</span></h4>
+		<p class="lead">
+			MUI has no filter component and mostly supports click-based interaction, so the filter was designed from the
+			foundational atoms, with hover as the way in.
+		</p>
+
+		<div class="states">
+			<div class="state">
+				<span class="state-name">Default</span>
+				<span class="fchip"><ListFilter size={14} strokeWidth={1.75} aria-hidden="true" />Filter</span>
+			</div>
+			<div class="state">
+				<span class="state-name">On hover</span>
+				<span class="fchip is-hover"><ListFilter size={14} strokeWidth={1.75} aria-hidden="true" />Filter</span>
+			</div>
+			<div class="state">
+				<span class="state-name">Selected</span>
+				<span class="fchip is-selected">
+					<ListFilter size={14} strokeWidth={1.75} aria-hidden="true" />Filter: Unread
+					<X size={13} strokeWidth={2} aria-hidden="true" />
+				</span>
+			</div>
+			<div class="state">
+				<span class="state-name">Multi-select</span>
+				<span class="fchip is-selected">
+					<ListFilter size={14} strokeWidth={1.75} aria-hidden="true" />Filter: (2) Unre…
+					<X size={13} strokeWidth={2} aria-hidden="true" />
+				</span>
+			</div>
+		</div>
+
+		<div class="try" data-filter>
+			<p class="try-hint">Try it: hover Consumer Goods, then pick a category.</p>
+			<div class="try-bar">
+				<span class="fchip live" data-chip>
+					<ListFilter size={14} strokeWidth={1.75} aria-hidden="true" />
+					<span data-chip-label>Filter</span>
+					<button type="button" class="clear" data-clear aria-label="Clear the filter" hidden>
+						<X size={13} strokeWidth={2} aria-hidden="true" />
+					</button>
+				</span>
+			</div>
+			<div class="menus">
+				<ul class="menu" role="menu" aria-label="Sectors">
+					{
+						categories.map((c) => (
+							<li class:list={['mitem', { has: c === 'Consumer Goods' }]}>
+								<button type="button" role="menuitem" aria-haspopup={c === 'Consumer Goods' ? 'true' : undefined}>
+									{c}
+									{c === 'Consumer Goods' && <ChevronRight size={14} strokeWidth={1.75} aria-hidden="true" />}
+								</button>
+								{c === 'Consumer Goods' && (
+									<ul class="menu sub" role="menu" aria-label="Consumer Goods">
+										{consumerGoods.map((g) => (
+											<li>
+												<button type="button" role="menuitemcheckbox" aria-checked="false" data-pick={g}>
+													{g}
+												</button>
+											</li>
+										))}
+									</ul>
+								)}
+							</li>
+						))
+					}
+				</ul>
+			</div>
+		</div>
+	</section>
+
+	<!-- Report cards and alerts share a tab -->
+	<div class="panel-group" id="ds-panel-cards" role="tabpanel" aria-labelledby="ds-tab-cards" data-panel="cards">
+	<section class="block">
+		<h4 class="block-title">Report cards <span>four states</span></h4>
+		<ul class="cards">
+			<li>
+				<span class="state-name">Default</span>
+				<div class="rcard">
+					<div class="top">
+						<b><ShieldCheck size={14} strokeWidth={2} aria-hidden="true" />Opendoor (OPEN)</b>
+						<span class="date">Mar 22, 2024</span>
+					</div>
+					<p>OPEN’s spread to HPA reaches all-time high; OPEN’s purchase prices trending more aggressive vs. the market.</p>
+				</div>
+			</li>
+			<li>
+				<span class="state-name">Hover</span>
+				<div class="rcard is-hover">
+					<div class="top">
+						<b>
+							<ShieldCheck size={14} strokeWidth={2} aria-hidden="true" />Opendoor (OPEN)
+							<span class="act"><ShieldCheck size={12} strokeWidth={2} aria-hidden="true" />Remove from Watchlist</span>
+						</b>
+						<span class="date">Mar 22, 2024</span>
+					</div>
+					<p>OPEN’s spread to HPA reaches all-time high; OPEN’s purchase prices trending more aggressive vs. the market.</p>
+				</div>
+			</li>
+			<li>
+				<span class="state-name">Read</span>
+				<div class="rcard is-read">
+					<div class="top">
+						<b><ShieldCheck size={14} strokeWidth={2} aria-hidden="true" />Opendoor (OPEN)</b>
+						<span class="date">Mar 22, 2024</span>
+					</div>
+					<p>OPEN’s spread to HPA reaches all-time high; OPEN’s purchase prices trending more aggressive vs. the market.</p>
+				</div>
+			</li>
+			<li>
+				<span class="state-name">Labeled</span>
+				<div class="rcard">
+					<div class="top">
+						<b>
+							<ShieldCheck size={14} strokeWidth={2} aria-hidden="true" />Opendoor (OPEN)
+							<span class="tag">Highlighted Research</span>
+						</b>
+						<span class="date">Mar 22, 2024</span>
+					</div>
+					<p>OPEN’s spread to HPA reaches all-time high; OPEN’s purchase prices trending more aggressive vs. the market.</p>
+				</div>
+			</li>
+		</ul>
+	</section>
+
+	<!-- Alerts -->
+	<section class="block">
+		<h4 class="block-title">Alerts</h4>
+		<ul class="alerts">
+			{
+				alerts.map((a) => (
+					<li class={`alert ${a.kind}`}>
+						{a.kind === 'error' && <CircleAlert size={16} strokeWidth={1.75} aria-hidden="true" />}
+						{a.kind === 'warning' && <TriangleAlert size={16} strokeWidth={1.75} aria-hidden="true" />}
+						{a.kind === 'info' && <Info size={16} strokeWidth={1.75} aria-hidden="true" />}
+						{a.kind === 'success' && <CircleCheck size={16} strokeWidth={1.75} aria-hidden="true" />}
+						<span>This is an alert</span>
+						<em>{a.label}</em>
+					</li>
+				))
+			}
+		</ul>
+	</section>
+	</div>
+</div>
+
+<script>
+	// Tabs: show one section at a time. Without JavaScript everything stays visible.
+	document.querySelectorAll<HTMLElement>('.ds').forEach((ds) => {
+		const bar = ds.querySelector<HTMLElement>('[data-tabs]');
+		if (!bar) return;
+		const tabs = [...bar.querySelectorAll<HTMLButtonElement>('[data-tab]')];
+		const panels = [...ds.querySelectorAll<HTMLElement>('[data-panel]')];
+		const show = (name: string, focus = false) => {
+			tabs.forEach((t) => {
+				const on = t.dataset.tab === name;
+				t.setAttribute('aria-selected', String(on));
+				t.tabIndex = on ? 0 : -1;
+				if (on && focus) t.focus();
+			});
+			panels.forEach((p) => (p.hidden = p.dataset.panel !== name));
+		};
+		bar.hidden = false;
+		show('foundations');
+		tabs.forEach((t, i) => {
+			t.addEventListener('click', () => show(t.dataset.tab!));
+			t.addEventListener('keydown', (e) => {
+				const move = e.key === 'ArrowRight' ? 1 : e.key === 'ArrowLeft' ? -1 : 0;
+				if (e.key === 'Home' || e.key === 'End') {
+					e.preventDefault();
+					show(tabs[e.key === 'Home' ? 0 : tabs.length - 1].dataset.tab!, true);
+				} else if (move) {
+					e.preventDefault();
+					show(tabs[(i + move + tabs.length) % tabs.length].dataset.tab!, true);
+				}
+			});
+		});
+	});
+
+	document.querySelectorAll<HTMLElement>('[data-filter]').forEach((root) => {
+		const label = root.querySelector<HTMLElement>('[data-chip-label]')!;
+		const chip = root.querySelector<HTMLElement>('[data-chip]')!;
+		const clear = root.querySelector<HTMLButtonElement>('[data-clear]')!;
+		const picks = [...root.querySelectorAll<HTMLButtonElement>('[data-pick]')];
+		const selected: string[] = [];
+
+		const render = () => {
+			const n = selected.length;
+			chip.classList.toggle('is-selected', n > 0);
+			label.textContent = n === 0 ? 'Filter' : n === 1 ? `Filter: ${selected[0]}` : `Filter: (${n}) ${selected[0]}…`;
+			clear.hidden = n === 0;
+			picks.forEach((b) => {
+				const on = selected.includes(b.dataset.pick!);
+				b.setAttribute('aria-checked', String(on));
+				b.classList.toggle('on', on);
+			});
+		};
+		picks.forEach((b) =>
+			b.addEventListener('click', () => {
+				const v = b.dataset.pick!;
+				const i = selected.indexOf(v);
+				if (i >= 0) selected.splice(i, 1);
+				else selected.push(v);
+				render();
+			}),
+		);
+		clear.addEventListener('click', () => {
+			selected.length = 0;
+			render();
+		});
+	});
+</script>
+
+<style>
+	.ds {
+		--teal: #0d4753;
+		margin-top: 28px;
+		padding: clamp(14px, 3vw, 28px);
+		border-radius: 20px;
+		background: #fbfbfb;
+		border: 1px solid #ececec;
+		font-family: 'Roboto', var(--font-sans);
+		font-size: 14px;
+		color: rgba(0, 0, 0, 0.87);
+		display: grid;
+		gap: 36px;
+	}
+	.ds :global(h4),
+	.ds :global(h5),
+	.ds :global(p) {
+		font-family: inherit;
+		letter-spacing: 0;
+	}
+	.ds-head {
+		display: flex;
+		align-items: center;
+		gap: 12px;
+		padding-bottom: 18px;
+		border-bottom: 1px solid #ececec;
+	}
+	.ds-head b {
+		display: block;
+		font-weight: 500;
+		font-size: 15px;
+	}
+	.ds-head span:not(.mark) {
+		font-size: 12px;
+		color: rgba(0, 0, 0, 0.6);
+	}
+	.mark {
+		display: grid;
+		place-items: center;
+		width: 32px;
+		height: 32px;
+		border-radius: 8px;
+		background: var(--teal);
+		color: #fff;
+		font-weight: 700;
+		font-size: 18px;
+	}
+	.block-title {
+		margin: 0 0 14px;
+		font-size: 12px;
+		font-weight: 500;
+		letter-spacing: 0.1em !important;
+		text-transform: uppercase;
+		color: rgba(0, 0, 0, 0.6);
+	}
+	.block-title span {
+		margin-left: 8px;
+		letter-spacing: 0;
+		text-transform: none;
+		font-weight: 400;
+		color: #9e9e9e;
+	}
+	.lead {
+		margin: 0 0 18px !important;
+		max-width: 64ch !important;
+		font-size: 14px !important;
+		line-height: 1.5;
+		color: rgba(0, 0, 0, 0.6) !important;
+	}
+
+	/* Tabs */
+	.tabs {
+		display: flex;
+		gap: 6px;
+		padding: 4px;
+		width: fit-content;
+		max-width: 100%;
+		border-radius: 999px;
+		background: #efefef;
+		overflow-x: auto;
+	}
+	.tabs[hidden] {
+		display: none;
+	}
+	.tabs button {
+		all: unset;
+		box-sizing: border-box;
+		padding: 7px 16px;
+		border-radius: 999px;
+		font-size: 13px;
+		color: rgba(0, 0, 0, 0.6);
+		cursor: pointer;
+		white-space: nowrap;
+		transition:
+			background 0.2s,
+			color 0.2s;
+	}
+	.tabs button:hover {
+		color: rgba(0, 0, 0, 0.87);
+	}
+	.tabs button[aria-selected='true'] {
+		background: #fff;
+		color: var(--teal);
+		font-weight: 500;
+		box-shadow: 0 1px 3px rgba(0, 0, 0, 0.12);
+	}
+	.tabs button:focus-visible {
+		outline: 2px solid var(--teal);
+		outline-offset: 2px;
+	}
+	[data-panel][hidden] {
+		display: none;
+	}
+	.panel-group {
+		display: grid;
+		gap: 36px;
+	}
+
+	/* Foundations */
+	.found {
+		display: grid;
+		grid-template-columns: 1.4fr 1fr;
+		gap: 32px;
+	}
+	.found-col h5 {
+		margin: 0 0 12px;
+		font-size: 20px;
+		font-weight: 700;
+		line-height: 1.2;
+	}
+	.label {
+		margin: 18px 0 8px !important;
+		font-size: 12px !important;
+		font-weight: 500;
+		color: rgba(0, 0, 0, 0.87) !important;
+		max-width: none !important;
+	}
+	.label em {
+		font-style: normal;
+		font-weight: 400;
+		color: #9e9e9e;
+		margin-left: 6px;
+	}
+	.swatches {
+		list-style: none;
+		margin: 0 0 8px;
+		padding: 0;
+		display: grid;
+		grid-template-columns: repeat(auto-fit, minmax(96px, 1fr));
+		gap: 10px;
+	}
+	.swatches li {
+		display: grid;
+		gap: 2px;
+		font-size: 11px;
+		line-height: 1.3;
+	}
+	.swatches b {
+		font-weight: 500;
+		font-size: 11px;
+		margin-top: 4px;
+	}
+	.swatches li > span:last-child {
+		color: #9e9e9e;
+	}
+	.sw {
+		display: block;
+		height: 44px;
+		border-radius: 8px;
+	}
+	.sw.line {
+		box-shadow: inset 0 0 0 1px rgba(0, 0, 0, 0.1);
+	}
+	.swatches.small .sw {
+		height: 30px;
+	}
+	.pair {
+		display: grid;
+		grid-template-columns: 1.4fr 1fr;
+		gap: 6px;
+	}
+	.type {
+		list-style: none;
+		margin: 0;
+		padding: 0;
+		display: grid;
+	}
+	.type li {
+		display: grid;
+		gap: 2px;
+		padding: 10px 0;
+		border-bottom: 1px solid #ececec;
+	}
+	.type li:last-child {
+		border-bottom: 0;
+	}
+	.spec {
+		font-size: 11px;
+		color: #9e9e9e;
+	}
+
+	/* Filter */
+	.states {
+		display: grid;
+		grid-template-columns: repeat(4, minmax(0, 1fr));
+		gap: 0;
+		border: 1px solid #ececec;
+		border-radius: 12px;
+		background: #fff;
+		overflow: hidden;
+	}
+	.state {
+		display: grid;
+		gap: 12px;
+		justify-items: start;
+		padding: 14px 16px;
+		border-right: 1px solid #ececec;
+	}
+	.state:last-child {
+		border-right: 0;
+	}
+	.state-name {
+		font-size: 11px;
+		color: #9e9e9e;
+	}
+	.fchip {
+		display: inline-flex;
+		align-items: center;
+		gap: 6px;
+		height: 30px;
+		padding: 0 10px;
+		border-radius: 8px;
+		font-size: 13px;
+		white-space: nowrap;
+		background: #fff;
+		color: rgba(0, 0, 0, 0.87);
+	}
+	.fchip.is-hover {
+		background: rgba(13, 71, 83, 0.1);
+	}
+	.fchip.is-selected {
+		background: rgba(13, 71, 83, 0.15);
+		color: var(--teal);
+	}
+	.try {
+		margin-top: 18px;
+		padding: 16px;
+		border: 1px solid #ececec;
+		border-radius: 12px;
+		background: #fff;
+	}
+	.try-hint {
+		margin: 0 0 12px !important;
+		font-size: 12px !important;
+		color: #9e9e9e !important;
+	}
+	.try-bar {
+		margin-bottom: 10px;
+	}
+	.fchip.live {
+		border: 1px solid rgba(13, 71, 83, 0.3);
+		transition: background 0.2s;
+	}
+	.fchip.live.is-selected {
+		background: rgba(13, 71, 83, 0.15);
+	}
+	.clear {
+		all: unset;
+		display: grid;
+		place-items: center;
+		width: 18px;
+		height: 18px;
+		border-radius: 50%;
+		cursor: pointer;
+	}
+	.clear[hidden] {
+		display: none;
+	}
+	.clear:hover,
+	.clear:focus-visible {
+		background: rgba(13, 71, 83, 0.15);
+	}
+	.menus {
+		position: relative;
+		min-height: 440px;
+	}
+	.menu {
+		list-style: none;
+		margin: 0;
+		padding: 8px 0;
+		width: 190px;
+		background: #fff;
+		border: 1px solid #e3e3e3;
+		border-radius: 8px;
+		box-shadow: 0 8px 24px rgba(0, 0, 0, 0.1);
+	}
+	/* the submenu aligns with the top of its parent list, as in the Figma file */
+	.menu {
+		position: relative;
+	}
+	.mitem {
+		position: static;
+	}
+	.menu button {
+		all: unset;
+		box-sizing: border-box;
+		width: 100%;
+		display: flex;
+		align-items: center;
+		justify-content: space-between;
+		gap: 8px;
+		padding: 7px 14px;
+		font-size: 13px;
+		line-height: 1.3;
+		cursor: pointer;
+		color: rgba(0, 0, 0, 0.87);
+	}
+	.menu button:hover,
+	.menu button:focus-visible,
+	.mitem.has:hover > button,
+	.mitem.has:focus-within > button {
+		background: rgba(13, 71, 83, 0.1);
+	}
+	.menu button:focus-visible {
+		outline: 2px solid var(--teal);
+		outline-offset: -2px;
+	}
+	.sub {
+		display: none;
+		position: absolute;
+		top: -1px;
+		left: calc(100% - 4px);
+		z-index: 5;
+		width: 220px;
+	}
+	.mitem.has:hover > .sub,
+	.mitem.has:focus-within > .sub {
+		display: block;
+	}
+	.sub button.on {
+		background: rgba(13, 71, 83, 0.15);
+		color: var(--teal);
+		font-weight: 500;
+	}
+	.sub button.on::after {
+		content: '✓';
+		font-size: 12px;
+	}
+
+	/* Report cards */
+	.cards {
+		list-style: none;
+		margin: 0;
+		padding: 0;
+		display: grid;
+		gap: 10px;
+	}
+	.cards > li {
+		display: grid;
+		grid-template-columns: 90px 1fr;
+		gap: 14px;
+		align-items: center;
+		padding: 10px 14px;
+		border: 1px solid #ececec;
+		border-radius: 12px;
+		background: #fff;
+	}
+	.rcard {
+		padding: 10px 14px;
+		border-radius: 8px;
+		background: #fff;
+		border: 1px solid #ececec;
+	}
+	.rcard.is-hover {
+		background: rgba(13, 71, 83, 0.1);
+		border-color: transparent;
+	}
+	.rcard.is-read {
+		background: #f1f1f1;
+		border-color: transparent;
+		color: rgba(0, 0, 0, 0.6);
+	}
+	.rcard .top {
+		display: flex;
+		justify-content: space-between;
+		gap: 12px;
+		font-size: 13px;
+	}
+	.rcard b {
+		display: inline-flex;
+		align-items: center;
+		gap: 6px;
+		font-weight: 500;
+		color: var(--teal);
+	}
+	.is-read b {
+		color: rgba(0, 0, 0, 0.6);
+	}
+	.rcard .date {
+		font-size: 12px;
+		color: #9e9e9e;
+		white-space: nowrap;
+	}
+	.rcard p {
+		margin: 4px 0 0 !important;
+		font-size: 12px !important;
+		line-height: 1.4;
+		color: rgba(0, 0, 0, 0.6) !important;
+		max-width: none !important;
+	}
+	.act,
+	.tag {
+		display: inline-flex;
+		align-items: center;
+		gap: 4px;
+		height: 22px;
+		padding: 0 8px;
+		border-radius: 6px;
+		font-size: 11px;
+		font-weight: 400;
+	}
+	.act {
+		background: rgba(13, 71, 83, 0.1);
+		color: var(--teal);
+		border: 1px solid rgba(13, 71, 83, 0.3);
+	}
+	.tag {
+		background: #eee;
+		color: rgba(0, 0, 0, 0.6);
+	}
+
+	/* Alerts */
+	.alerts {
+		list-style: none;
+		margin: 0;
+		padding: 0;
+		display: grid;
+		grid-template-columns: repeat(2, minmax(0, 1fr));
+		gap: 10px;
+	}
+	.alert {
+		display: flex;
+		align-items: center;
+		gap: 10px;
+		padding: 10px 14px;
+		border-radius: 8px;
+		font-size: 13px;
+	}
+	.alert em {
+		margin-left: auto;
+		font-style: normal;
+		font-size: 11px;
+		opacity: 0.7;
+	}
+	.alert.error {
+		background: #e9514e1a;
+		color: #b2312e;
+	}
+	.alert.warning {
+		background: #e8935f1f;
+		color: #a85b25;
+	}
+	.alert.info {
+		background: #3a86b01a;
+		color: #266b92;
+	}
+	.alert.success {
+		background: #3f8a6d1a;
+		color: #2b6a50;
+	}
+
+	@media (max-width: 760px) {
+		.found {
+			grid-template-columns: 1fr;
+		}
+		.states {
+			grid-template-columns: repeat(2, minmax(0, 1fr));
+		}
+		.state {
+			min-width: 0;
+			padding: 12px;
+		}
+		.fchip {
+			max-width: 100%;
+			padding: 0 8px;
+			gap: 4px;
+			font-size: 12px;
+		}
+		.state:nth-child(2) {
+			border-right: 0;
+		}
+		.state:nth-child(-n + 2) {
+			border-bottom: 1px solid #ececec;
+		}
+		.cards > li {
+			grid-template-columns: 1fr;
+			gap: 8px;
+		}
+		.alerts {
+			grid-template-columns: 1fr;
+		}
+		.menus {
+			min-height: 0;
+		}
+		.menu {
+			width: 100%;
+		}
+		/* on phones the submenu opens inline under its parent */
+		.sub {
+			position: static;
+			width: auto;
+			margin: 4px 10px 8px;
+			box-shadow: none;
+		}
+	}
+</style>
