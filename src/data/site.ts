@@ -39,6 +39,31 @@ export const strengths = [
 export type FlowStep = { label: string; caption: string; at: number };
 export type FlowVideo = { src: string; poster: string; steps: FlowStep[] };
 
+// "How I work": short principles, drawn from the case studies. Edit the wording freely.
+// `icon` must match one of the icons imported in src/pages/index.astro.
+export const principles = [
+	{
+		icon: 'listen',
+		title: 'Start with customers',
+		body: 'I begin by listening: customer calls, feedback and how people actually use the product. The research shapes the problem before any screen is drawn.',
+	},
+	{
+		icon: 'prototype',
+		title: 'Make ideas real early',
+		body: 'I shape ideas in Figma, then build working prototypes with Claude and Codex, so teams can click through a decision before committing to it.',
+	},
+	{
+		icon: 'system',
+		title: 'Build systems, not just screens',
+		body: 'I build and maintain design systems in canvas and code, so what is designed and what ships stay in step as products grow.',
+	},
+	{
+		icon: 'team',
+		title: 'Work closely with the team',
+		body: 'I work side by side with PMs and engineers, and I keep talking to users after launch, so each decision is grounded in what people need.',
+	},
+] as const;
+
 export type Project = {
 	title: string;
 	summary: string;
