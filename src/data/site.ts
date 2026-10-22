@@ -47,7 +47,8 @@ export type Project = {
 	// Up to three short lines shown beside the picture on the featured card.
 	highlights?: string[];
 	// The picture on the homepage card. Projects without one show a placeholder.
-	cover?: { image: ImageMetadata; alt: string };
+	// `bare: true` skips the browser frame, for images that are already a mockup.
+	cover?: { image: ImageMetadata; alt: string; bare?: boolean };
 	// Links the card to /case-studies/<slug>/.
 	slug?: string;
 	// Optional: shows a chaptered walkthrough video of the design as the project's hero.
@@ -103,15 +104,16 @@ export const projects: Project[] = [
 		summary:
 			'YipitData delivered its research by email. I led the design of the Investor Platform from 0 to 1, with 97% user adoption, 2x engagement and 72% retention.',
 		slug: 'yipitdata',
+		highlights: [
+			'97% user adoption of the new platform',
+			'2x user engagement',
+			'72% retention',
+		],
 		cover: {
 			image: ydCover,
 			alt: 'The YipitData Investor Platform homepage on a laptop and a phone.',
+			bare: true,
 		},
 		tags: ['YipitData', 'B2B SaaS', 'Design Systems', 'Research'],
-	},
-	{
-		title: 'Project Three',
-		summary: 'One or two sentences on the problem, your role, and the outcome.',
-		tags: ['Usability Testing'],
 	},
 ];
