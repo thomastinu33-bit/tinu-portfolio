@@ -18,6 +18,8 @@ export const site = {
 		'I turn complex problems into simple, user-centered designs',
 	],
 	about: {
+		// Add a portrait: import it at the top of this file and set `photo: { image: myPhoto, alt: '...' }`.
+		photo: undefined as { image: ImageMetadata; alt: string } | undefined,
 		lead: 'I’m a product designer based in NYC. For more than five years, I’ve designed SaaS products, and I hold a degree in information experience design.',
 		facts: ['Based in NYC', '5+ years designing SaaS', 'Information experience design degree'],
 		story: [
