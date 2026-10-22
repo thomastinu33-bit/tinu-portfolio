@@ -18,11 +18,12 @@ export const site = {
 		'I turn complex problems into simple, user-centered designs',
 	],
 	about: {
-		lead: 'I’m a product designer based in NYC, and I’ve been designing SaaS products for 5+ years. I have a degree in information experience design.',
+		lead: 'I’m a product designer based in NYC. For more than five years, I’ve designed SaaS products, and I hold a degree in information experience design.',
 		facts: ['Based in NYC', '5+ years designing SaaS', 'Information experience design degree'],
 		story: [
-			'What I love about product design is how much it has changed in the last five years. Reflecting on my career as a designer so far, I remember months and months of back and forth with the product team and engineers to build design systems. User research was recording sessions, going back to review notes and making FigJams. Handoff was sending a Figma design to developers and crossing your fingers.',
-			'With AI, it has all gotten so much more powerful and so much faster. I never thought I would write a PR in my life, but here I am as a product designer, gathering feedback, designing and pushing code. It has been a fun journey.',
+			'What I love most about product design is how much it has changed. Early in my career, building a design system meant months of back and forth with product and engineering. Research meant recording sessions, combing through notes and making FigJams. Handoff meant sending a Figma file to developers and crossing my fingers.',
+			'Then AI made all of it more powerful and much faster. I never thought I’d write a pull request, yet here I am as a product designer, gathering feedback, designing and pushing code. It’s been a fun journey.',
+			'What hasn’t changed is the foundation. I start with user research to make sure I’m solving the right problem, and I work closely with PMs and engineers to ship what I design.',
 		],
 	},
 	email: 'thomastinu33@gmail.com',
