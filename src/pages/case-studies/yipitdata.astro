@@ -3,7 +3,6 @@ import Layout from '../../layouts/Layout.astro';
 import PasswordGate from '../../components/PasswordGate.astro';
 import { Image } from 'astro:assets';
 import { site, projects } from '../../data/site';
-import Quote from '@lucide/astro/icons/quote';
 import AffinityBoard from '../../components/AffinityBoard.astro';
 import UserFlow from '../../components/UserFlow.astro';
 import DesignSystem from '../../components/DesignSystem.astro';
@@ -63,8 +62,16 @@ const experiences = [
 ];
 
 const quotes = [
-	'Visiting the platform now is a force of habit. When my browser opens, Yipit opens with it.',
-	'I think I use it more actually. It’s just more inviting. It just looks better and the layout seems easily digestible. Whereas before it was a little bit archaic.',
+	{
+		before: 'Visiting the platform now is a ',
+		mark: 'force of habit',
+		after: '. When my browser opens, Yipit opens with it.',
+	},
+	{
+		before: 'I think I use it more actually. It’s just ',
+		mark: 'more inviting',
+		after: '. It just looks better and the layout seems easily digestible. Whereas before it was a little bit archaic.',
+	},
 ];
 ---
 
@@ -213,15 +220,20 @@ const quotes = [
 
 			<section>
 				<h2>What customers said</h2>
-				<div class="quotes">
-					{
-						quotes.map((q) => (
-							<blockquote>
-								<Quote size={20} strokeWidth={1.5} aria-hidden="true" />
-								<p>{q}</p>
-							</blockquote>
-						))
-					}
+				<div class="voices">
+					<figure class="voice lead">
+						<span class="mark-big" aria-hidden="true">“</span>
+						<blockquote>
+							{quotes[0].before}<mark>{quotes[0].mark}</mark>{quotes[0].after}
+						</blockquote>
+						<figcaption>YipitData customer</figcaption>
+					</figure>
+					<figure class="voice">
+						<blockquote>
+							{quotes[1].before}<mark>{quotes[1].mark}</mark>{quotes[1].after}
+						</blockquote>
+						<figcaption>YipitData customer</figcaption>
+					</figure>
 				</div>
 			</section>
 		</article>
@@ -431,27 +443,74 @@ const quotes = [
 		margin: 0;
 		color: var(--muted);
 	}
-	.quotes {
+	/* Customer voices: one large pull-quote, one quieter */
+	.voices {
 		display: grid;
-		gap: 16px;
-		margin-top: 24px;
-	}
-	blockquote {
-		margin: 0;
-		padding: 24px 28px;
-		border-radius: 16px;
-		background: #f6f6f6;
+		gap: 0;
+		margin-top: 28px;
+		border-radius: 20px;
 		border: 1px solid #ececec;
+		overflow: hidden;
 	}
-	blockquote :global(svg) {
-		color: #9a9a9a;
-		margin-bottom: 10px;
+	.voice {
+		margin: 0;
+		position: relative;
 	}
-	blockquote p {
+	.voice.lead {
+		padding: clamp(28px, 5vw, 56px) clamp(24px, 5vw, 56px) clamp(24px, 4vw, 40px);
+		background: #fbfbfb;
+	}
+	.mark-big {
+		display: block;
+		font-family: var(--font-serif);
+		font-size: clamp(5rem, 11vw, 8rem);
+		line-height: 0.6;
+		height: 0.4em;
+		color: #d9d9d9;
+	}
+	.voice blockquote {
 		margin: 0;
 		font-family: var(--font-serif);
-		font-size: clamp(1.4rem, 3vw, 1.9rem);
-		line-height: 1.3;
+		font-weight: 400;
+		line-height: 1.22;
+		letter-spacing: -0.01em;
+	}
+	.voice.lead blockquote {
+		max-width: 24ch;
+		font-size: clamp(2rem, 5.2vw, 3.6rem);
+	}
+	.voice:not(.lead) {
+		padding: clamp(24px, 4vw, 36px) clamp(24px, 5vw, 56px);
+		background: #fff;
+		border-top: 1px solid #ececec;
+	}
+	.voice:not(.lead) blockquote {
+		max-width: 46ch;
+		font-size: clamp(1.3rem, 2.6vw, 1.7rem);
+		color: #4a4a4a;
+	}
+	/* A soft highlighter stroke under the phrase that matters */
+	.voice mark {
+		background: linear-gradient(transparent 62%, #e4e4e4 62%);
+		color: inherit;
+		padding: 0 2px;
+	}
+	.voice figcaption {
+		display: flex;
+		align-items: center;
+		gap: 10px;
+		margin-top: 22px;
+		font-family: var(--font-sans);
+		font-size: 0.82rem;
+		letter-spacing: 0.1em;
+		text-transform: uppercase;
+		color: var(--muted);
+	}
+	.voice figcaption::before {
+		content: '';
+		width: 22px;
+		height: 1px;
+		background: #bdbdbd;
 	}
 	@media (max-width: 720px) {
 		.stats,
