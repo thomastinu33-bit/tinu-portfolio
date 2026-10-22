@@ -2,6 +2,7 @@
 
 import type { ImageMetadata } from 'astro';
 import evertuneCover from '../assets/evertune/cover.jpg';
+import ydCover from '../assets/yd/cover.png';
 
 
 export const site = {
@@ -98,9 +99,15 @@ export const projects: Project[] = [
 		},
 	},
 	{
-		title: 'Project Two',
-		summary: 'One or two sentences on the problem, your role, and the outcome.',
-		tags: ['UI Design', 'Design Systems'],
+		title: 'Moving YipitData from email to an investor platform',
+		summary:
+			'YipitData delivered its research by email. I led the design of the Investor Platform from 0 to 1, with 97% user adoption, 2x engagement and 72% retention.',
+		slug: 'yipitdata',
+		cover: {
+			image: ydCover,
+			alt: 'The YipitData Investor Platform homepage on a laptop and a phone.',
+		},
+		tags: ['YipitData', 'B2B SaaS', 'Design Systems', 'Research'],
 	},
 	{
 		title: 'Project Three',
