@@ -7,6 +7,9 @@ import Quote from '@lucide/astro/icons/quote';
 import AffinityBoard from '../../components/AffinityBoard.astro';
 import UserFlow from '../../components/UserFlow.astro';
 import DesignSystem from '../../components/DesignSystem.astro';
+import homepageShot from '../../assets/yd/homepage.png';
+import metricsShot from '../../assets/yd/metrics.png';
+import reportShot from '../../assets/yd/report.png';
 
 const project = projects.find((p) => p.slug === 'yipitdata')!;
 const base = import.meta.env.BASE_URL;
@@ -42,17 +45,20 @@ const experiences = [
 	{
 		title: 'Homepage',
 		text: 'The homepage design made it easy for customers to quickly find the content they needed, resulting in a 12x increase in daily visitors.',
-		image: 'Homepage screen',
+		shot: homepageShot,
+		alt: 'The YipitData homepage: recently published reports, recently viewed products and trending products.',
 	},
 	{
 		title: 'Key metrics screener',
 		text: 'Customers were thrilled with the key metrics screener, which let them effortlessly track essential KPIs for the companies they cared about. The feature led to a 73% week-over-week retention rate.',
-		image: 'Key metrics screener screen',
+		shot: metricsShot,
+		alt: 'The key metrics screener: a table of metrics from the watchlist with trailing days, estimates and more.',
 	},
 	{
 		title: 'Reading a report',
 		text: 'Previously, customers, especially new ones, struggled to find key content within a report. The new design added report outlines, adaptive zoom and links to specific sections that can be shared with peers in an organization, making reading more intuitive and collaborative.',
-		image: 'Report reading screen',
+		shot: reportShot,
+		alt: 'Reading a report: an outline of sections beside the report, with tools to share a link, print and zoom.',
 	},
 ];
 
@@ -183,8 +189,13 @@ const quotes = [
 					{
 						experiences.map((e) => (
 							<div class="experience">
-								<figure class="slot wide">
-									<span>{e.image}</span>
+								<figure class="screen">
+									<div class="bar" aria-hidden="true">
+										<span />
+										<span />
+										<span />
+									</div>
+									<Image src={e.shot} alt={e.alt} widths={[800, 1200, 1600]} sizes="(max-width: 960px) 100vw, 900px" />
 								</figure>
 								<div class="copy">
 									<h3>{e.title}</h3>
@@ -308,6 +319,35 @@ const quotes = [
 		margin: 12px 0 0;
 		color: var(--muted);
 		font-size: 0.9rem;
+	}
+	/* Product screens in a plain window frame on the site's own neutral panel */
+	.screen {
+		margin: 0;
+		overflow: hidden;
+		border-radius: 14px;
+		background: #fff;
+		border: 1px solid #e3e3e3;
+		box-shadow:
+			0 24px 50px -22px rgba(0, 0, 0, 0.18),
+			0 8px 20px rgba(0, 0, 0, 0.05);
+	}
+	.screen .bar {
+		display: flex;
+		gap: 6px;
+		padding: 9px 12px;
+		background: #f3f3f3;
+		border-bottom: 1px solid rgba(0, 0, 0, 0.06);
+	}
+	.screen .bar span {
+		width: 8px;
+		height: 8px;
+		border-radius: 50%;
+		background: #d9d9d9;
+	}
+	.screen :global(img) {
+		display: block;
+		width: 100%;
+		height: auto;
 	}
 	.slots {
 		display: grid;
