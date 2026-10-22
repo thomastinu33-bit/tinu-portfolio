@@ -4,6 +4,7 @@ import PasswordGate from '../../components/PasswordGate.astro';
 import { Image } from 'astro:assets';
 import { site, projects } from '../../data/site';
 import Quote from '@lucide/astro/icons/quote';
+import affinityMap from '../../assets/yd/affinity-map.webp';
 
 const project = projects.find((p) => p.slug === 'yipitdata')!;
 const base = import.meta.env.BASE_URL;
@@ -121,8 +122,16 @@ const quotes = [
 					creating research artifacts like affinity maps and user flow diagrams so the designs stayed aligned
 					with customer needs.
 				</p>
-				<div class="slots two">
-					<figure class="slot"><span>Affinity map</span></figure>
+				<figure class="shot">
+					<Image
+						src={affinityMap}
+						alt="An affinity map of customer interview quotes on sticky notes, grouped into Workflow, Discoverability, Deep-Dive, and Personalization and Customization."
+						widths={[900, 1400, 2000]}
+						sizes="(max-width: 960px) 100vw, 900px"
+					/>
+					<figcaption>One of the affinity maps built from customer calls.</figcaption>
+				</figure>
+				<div class="slots">
 					<figure class="slot"><span>User workflow diagram</span></figure>
 				</div>
 			</section>
@@ -295,6 +304,21 @@ const quotes = [
 	.label {
 		color: var(--muted);
 		font-size: 0.95rem;
+	}
+	.shot {
+		margin: 28px 0 0;
+	}
+	.shot :global(img) {
+		display: block;
+		width: 100%;
+		height: auto;
+		border-radius: 16px;
+		border: 1px solid #ececec;
+	}
+	.shot figcaption {
+		margin-top: 10px;
+		color: var(--muted);
+		font-size: 0.9rem;
 	}
 	.slots {
 		display: grid;
