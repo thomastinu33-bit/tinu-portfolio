@@ -45,7 +45,7 @@ import { resume } from '../data/resume';
 					<ArrowUpRight size={15} strokeWidth={1.75} aria-hidden="true" />
 				</a>
 			</li>
-			<li class="where-now">{site.location} <span aria-hidden="true">·</span> Permanent Resident</li>
+			<li class="where-now">{site.location}<span class="print-only"> <span aria-hidden="true">·</span> Permanent Resident</span></li>
 		</ul>
 
 		<section class="block">
@@ -185,6 +185,10 @@ import { resume } from '../data/resume';
 	.where-now {
 		color: var(--muted);
 	}
+	/* Only appears on the printed / PDF resume */
+	.print-only {
+		display: none;
+	}
 
 	/* Sections: a small label on the left, the content on the right */
 	.block {
@@ -311,6 +315,9 @@ import { resume } from '../data/resume';
 
 	/* Print / Save as PDF: just the resume, compact, black on white */
 	@media print {
+		.print-only {
+			display: inline;
+		}
 		:global(.nav-wrap),
 		.actions {
 			display: none !important;
