@@ -3,6 +3,7 @@
 import type { ImageMetadata } from 'astro';
 import evertuneCover from '../assets/evertune/cover.jpg';
 import ydCover from '../assets/yd/cover.png';
+import portrait from '../assets/about/portrait.webp';
 
 
 export const site = {
@@ -18,8 +19,12 @@ export const site = {
 		'I turn complex problems into simple, user-centered designs',
 	],
 	about: {
-		// Add a portrait: import it at the top of this file and set `photo: { image: myPhoto, alt: '...' }`.
-		photo: undefined as { image: ImageMetadata; alt: string } | undefined,
+		// `position` keeps the face in frame when the picture is cropped to the panel.
+		photo: {
+			image: portrait,
+			alt: 'Portrait of Tinu Thomas, smiling at a restaurant table.',
+			position: '46% 30%',
+		} as { image: ImageMetadata; alt: string; position?: string } | undefined,
 		lead: 'I’m a product designer based in NYC. For more than five years, I’ve designed SaaS products, and I hold a degree in information experience design.',
 		facts: ['Based in NYC', '5+ years designing SaaS', 'Information experience design degree'],
 		story: [

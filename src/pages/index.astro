@@ -156,7 +156,13 @@ const strengthIcons = { component: Component, prototype: MousePointerClick, rese
 			<div class="about-photo">
 				{
 					site.about.photo ? (
-						<Image src={site.about.photo.image} alt={site.about.photo.alt} widths={[600, 900, 1200]} sizes="(max-width: 860px) 100vw, 440px" />
+						<Image
+							src={site.about.photo.image}
+							alt={site.about.photo.alt}
+							widths={[600, 900, 1200]}
+							sizes="(max-width: 860px) 100vw, 440px"
+							style={`object-position: ${site.about.photo.position ?? 'center'}`}
+						/>
 					) : (
 						<span class="photo-slot">Your photo goes here</span>
 					)
