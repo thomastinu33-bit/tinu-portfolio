@@ -22,3 +22,6 @@ pnpm-debug.log*
 
 # jetbrains setting folder
 .idea/
+
+# A Netlify-ready build for drag-and-drop uploads
+dist-netlify/
