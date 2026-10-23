@@ -1,4 +1,5 @@
 ---
+import { base } from '../lib/base';
 import Layout from '../layouts/Layout.astro';
 import Download from '@lucide/astro/icons/download';
 import Mail from '@lucide/astro/icons/mail';
@@ -6,7 +7,6 @@ import ArrowUpRight from '@lucide/astro/icons/arrow-up-right';
 import { site } from '../data/site';
 import { resume } from '../data/resume';
 
-const base = import.meta.env.BASE_URL;
 ---
 
 <Layout title={`Resume · ${site.name}`} description={`${site.name}'s resume: ${site.role}.`}>

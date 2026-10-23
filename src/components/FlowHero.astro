@@ -1,4 +1,5 @@
 ---
+import { base } from '../lib/base';
 // A project hero: a walkthrough video in a window frame, split into chapters. The steps underneath
 // show where you are (with a thin progress line) and jump to a chapter when clicked. It plays on
 // its own while on screen, muted and looping, with a pause button.
@@ -11,7 +12,6 @@ interface Props {
 }
 
 const { video } = Astro.props;
-const base = import.meta.env.BASE_URL;
 const src = `${base}/${video.src}`;
 const poster = `${base}/${video.poster}`;
 const steps = video.steps;
