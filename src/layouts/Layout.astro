@@ -13,6 +13,7 @@ const base = import.meta.env.BASE_URL;
 const navLinks = [
 	{ label: 'Home', href: `${base}/` },
 	{ label: 'Case Studies', href: `${base}/#work` },
+	{ label: 'How I work', href: `${base}/#how-i-work` },
 	{ label: 'About', href: `${base}/#about` },
 	{ label: 'Resume', href: `${base}/${site.resume}` },
 ];
@@ -43,7 +44,10 @@ const navLinks = [
 	<body>
 		<header class="nav-wrap">
 			<div class="nav glass">
-				<a class="brand" href={`${base}/`} aria-label={`${site.name}, home`}>{site.name}</a>
+				<a class="brand" href={`${base}/`} aria-label={`${site.name}, home`}>
+					<span class="full">{site.name}</span>
+					<span class="short" aria-hidden="true">{site.name.split(' ').map((w) => w[0]).join('')}</span>
+				</a>
 				<nav aria-label="Main">
 					{navLinks.map((l) => <a href={l.href}>{l.label}</a>)}
 				</nav>
@@ -204,9 +208,44 @@ const navLinks = [
 			font-size: 0.8rem;
 		}
 	}
-	@media (max-width: 380px) {
+	/* Links never wrap. Where five don't fit beside the name, "Home" goes first (the name links home),
+	   then the name tightens, then it becomes initials. */
+	.nav nav a {
+		white-space: nowrap;
+	}
+	.brand .short {
+		display: none;
+	}
+	@media (max-width: 760px) {
 		.nav nav a:first-child {
 			display: none;
+		}
+	}
+	@media (max-width: 520px) {
+		.nav {
+			padding: 0 14px;
+			gap: 10px;
+		}
+		.nav nav {
+			gap: 10px;
+		}
+		.nav nav a {
+			font-size: 0.74rem;
+		}
+		.brand {
+			font-size: 0.7rem;
+			letter-spacing: 0.06em;
+			white-space: nowrap;
+		}
+	}
+	@media (max-width: 359px) {
+		.brand .full {
+			display: none;
+		}
+		.brand .short {
+			display: inline;
+			font-size: 0.85rem;
+			letter-spacing: 0.1em;
 		}
 	}
 
