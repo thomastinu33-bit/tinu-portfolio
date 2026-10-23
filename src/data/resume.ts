@@ -56,21 +56,21 @@ export const resume = {
 		{ degree: 'Bachelor of Engineering in Electronics Engineering', school: 'Mumbai University', place: 'Mumbai', when: 'Jul 2014 – May 2018' },
 	],
 	skills: [
-		'Product Design',
-		'UX/UI Design',
-		'End-to-End Experience Design',
-		'Design Systems',
-		'Prototyping & Interaction Design',
-		'User Research (Qual & Quant)',
-		'Journey Mapping',
-		'Usability Testing',
-		'Responsive Design',
-		'Data Visualization',
-		'Figma',
-		'AI Tools (Bolt, v0.dev, Cursor AI)',
-		'HTML',
-		'CSS',
-		'JavaScript',
-		'Cross-functional Collaboration (PMs, Engineers, Stakeholders)',
+		{
+			label: 'Design',
+			items: ['Product Design', 'UX/UI Design', 'End-to-End Experience Design', 'Interaction Design', 'Design Systems', 'Data Visualization', 'Responsive Design'],
+		},
+		{
+			label: 'Research',
+			items: ['User Research (Qual & Quant)', 'Usability Testing', 'Journey Mapping'],
+		},
+		{
+			label: 'Prototyping & build',
+			items: ['Prototyping', 'Figma', 'Claude', 'Codex', 'HTML', 'CSS', 'JavaScript'],
+		},
+		{
+			label: 'Collaboration',
+			items: ['Cross-functional Collaboration (PMs, Engineers, Stakeholders)'],
+		},
 	],
 };

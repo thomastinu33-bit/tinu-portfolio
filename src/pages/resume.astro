@@ -84,9 +84,20 @@ const base = import.meta.env.BASE_URL;
 
 		<section class="block">
 			<h2>Skills &amp; expertise</h2>
-			<ul class="skills">
-				{resume.skills.map((s) => <li>{s}</li>)}
-			</ul>
+			<div class="skill-groups">
+				{
+					resume.skills.map((g) => (
+						<div class="skill-group">
+							<h3>{g.label}</h3>
+							<ul class="skills">
+								{g.items.map((i) => (
+									<li>{i}</li>
+								))}
+							</ul>
+						</div>
+					))
+				}
+			</div>
 		</section>
 	</main>
 </Layout>
@@ -136,12 +147,11 @@ const base = import.meta.env.BASE_URL;
 		background: #000;
 	}
 	.summary {
-		margin: 30px 0 0;
-		max-width: 58ch;
-		font-family: var(--font-serif);
-		font-size: clamp(1.3rem, 2.4vw, 1.65rem);
-		line-height: 1.4;
-		color: var(--fg);
+		margin: 22px 0 0;
+		max-width: 68ch;
+		font-size: 1.02rem;
+		line-height: 1.65;
+		color: #3b3b3b;
 	}
 	.contact {
 		list-style: none;
@@ -240,6 +250,26 @@ const base = import.meta.env.BASE_URL;
 		border-radius: 50%;
 		background: #bdbdbd;
 	}
+
+	/* Skills: grouped rows, a label on the left and pills on the right */
+	.skill-groups {
+		display: grid;
+		gap: 18px;
+	}
+	.skill-group {
+		display: grid;
+		grid-template-columns: 150px minmax(0, 1fr);
+		gap: 8px 16px;
+		align-items: baseline;
+	}
+	.skill-group h3 {
+		margin: 0;
+		font-family: var(--font-sans);
+		font-weight: 500;
+		font-size: 0.88rem;
+		line-height: 1.4;
+		color: var(--fg);
+	}
 	.skills {
 		list-style: none;
 		margin: 0;
@@ -258,6 +288,9 @@ const base = import.meta.env.BASE_URL;
 	}
 
 	@media (max-width: 720px) {
+		.skill-group {
+			grid-template-columns: 1fr;
+		}
 		.block {
 			grid-template-columns: 1fr;
 			gap: 14px;
@@ -291,8 +324,8 @@ const base = import.meta.env.BASE_URL;
 			font-size: 30px;
 		}
 		.summary {
-			font-size: 12.5px;
-			line-height: 1.4;
+			font-size: 11.5px;
+			line-height: 1.45;
 			margin-top: 10px;
 			max-width: none;
 		}
@@ -330,6 +363,16 @@ const base = import.meta.env.BASE_URL;
 			font-size: 10.5px;
 			line-height: 1.38;
 			padding-left: 14px;
+		}
+		.skill-groups {
+			gap: 6px;
+		}
+		.skill-group {
+			grid-template-columns: 105px minmax(0, 1fr);
+			gap: 4px 10px;
+		}
+		.skill-group h3 {
+			font-size: 10px;
 		}
 		.skills {
 			gap: 4px;
