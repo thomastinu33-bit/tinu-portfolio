@@ -2,6 +2,7 @@
 
 import type { ImageMetadata } from 'astro';
 import evertuneCover from '../assets/evertune/cover.jpg';
+import agentCover from '../assets/agent/cover.jpg';
 import ydCover from '../assets/yd/cover.png';
 import portrait from '../assets/about/portrait-blur.webp';
 
@@ -96,6 +97,22 @@ export type Project = {
 
 // Add, remove, or reorder projects here.
 export const projects: Project[] = [
+	{
+		title: 'Designing one agent experience for GEO and Ads on the Evertune platform',
+		summary:
+			'GEO and Ads each had their own tools. I designed a unified agent experience so customers can ask how their visibility is doing, create GEO strategies and launch ad campaigns from one place, without it feeling complex or overwhelming.',
+		slug: 'evertune-agent',
+		highlights: [
+			'One agent for both GEO and Ads',
+			'Ask about visibility, build strategies, plan campaigns',
+			'Powerful without feeling overwhelming',
+		],
+		cover: {
+			image: agentCover,
+			alt: 'The Evertune agent chat with suggested actions for checking visibility, creating a GEO strategy and planning an ad campaign.',
+		},
+		tags: ['Evertune AI', 'B2B SaaS', 'AI Agents', 'Product Design'],
+	},
 	{
 		title: 'Improving how Evertune customers create prompts to analyze their AI visibility',
 		summary:
