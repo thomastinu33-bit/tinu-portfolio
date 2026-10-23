@@ -27,7 +27,7 @@ export const site = {
 		} as { image: ImageMetadata; alt: string; position?: string } | undefined,
 		lead: 'I’m a product designer based in NYC.',
 		story: [
-			'For more than five years, I’ve designed SaaS products, and I hold a degree in information experience design.',
+			'For more than five years, I’ve designed SaaS products. I hold an MS in IXD.',
 			'What I love most about product design is how much it has changed. Early in my career, building a design system meant months of back and forth with product and engineering. Research meant recording sessions, combing through notes and making FigJams. Handoff meant sending a Figma file to developers and crossing my fingers.',
 			'Then AI made all of it more powerful and much faster. I never thought I’d write a pull request, yet here I am as a product designer, gathering feedback, designing and pushing code. It’s been a fun journey.',
 			'What hasn’t changed is the foundation. I start with user research to make sure I’m solving the right problem, and I work closely with PMs and engineers to ship what I design.',
