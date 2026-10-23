@@ -1,5 +1,7 @@
 ---
+import { base } from '../lib/base';
 import { site } from '../data/site';
+import Cursor from '../components/Cursor.astro';
 
 interface Props {
 	title?: string;
@@ -7,7 +9,14 @@ interface Props {
 }
 
 const { title = `${site.name} · ${site.role}`, description = site.tagline } = Astro.props;
-const base = import.meta.env.BASE_URL;
+
+const navLinks = [
+	{ label: 'Home', href: `${base}/` },
+	{ label: 'Case Studies', href: `${base}/#work` },
+	{ label: 'How I work', href: `${base}/#how-i-work` },
+	{ label: 'About', href: `${base}/#about` },
+	{ label: 'Resume', href: `${base}/resume/` },
+];
 ---
 
 <html lang="en">
@@ -17,90 +26,238 @@ const base = import.meta.env.BASE_URL;
 		<meta name="description" content={description} />
 		<link rel="icon" type="image/svg+xml" href={`${base}/favicon.svg`} />
 		<link rel="icon" href={`${base}/favicon.ico`} />
+		<link rel="preconnect" href="https://fonts.googleapis.com" />
+		<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+		<link
+			href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;500&family=Jost:wght@300;400;500&display=swap"
+			rel="stylesheet"
+		/>
+		<!-- If this browser already unlocked the private work, say so before anything paints (see PasswordGate) -->
+		<script is:inline>
+			try {
+				if (localStorage.getItem('portfolio-unlocked') === '1') document.documentElement.classList.add('pw-unlocked');
+			} catch (e) {}
+		</script>
 		<meta name="generator" content={Astro.generator} />
 		<title>{title}</title>
 	</head>
 	<body>
-		<header class="container nav">
-			<a class="brand" href={`${base}/`}>{site.name}</a>
-			<nav>
-				<a href="#work">Work</a>
-				<a href="#about">About</a>
-				<a href="#contact">Contact</a>
-			</nav>
+		<header class="nav-wrap">
+			<div class="nav glass">
+				<a class="brand" href={`${base}/`} aria-label={`${site.name}, home`}>
+					<span class="full">{site.name}</span>
+					<span class="short" aria-hidden="true">{site.name.split(' ').map((w) => w[0]).join('')}</span>
+				</a>
+				<nav aria-label="Main">
+					{navLinks.map((l) => <a href={l.href}>{l.label}</a>)}
+				</nav>
+			</div>
 		</header>
-		<main class="container">
+		<main>
 			<slot />
 		</main>
-		<footer class="container footer">
-			<p>© {new Date().getFullYear()} {site.name}</p>
+		<footer class="footer">
+			<div class="container">
+				<p class="copyright">© {new Date().getFullYear()} {site.name}</p>
+			</div>
 		</footer>
+		<Cursor />
 	</body>
 </html>
 
 <style is:global>
 	:root {
-		--bg: #fbfaf8;
-		--fg: #1c1b1a;
-		--muted: #6b6762;
-		--accent: #3a5bd9;
-		--card: #ffffff;
-		--border: #e7e3dd;
-		color-scheme: light dark;
-	}
-	@media (prefers-color-scheme: dark) {
-		:root {
-			--bg: #141413;
-			--fg: #f1efe9;
-			--muted: #a29d95;
-			--accent: #8ea4ff;
-			--card: #1d1c1b;
-			--border: #2e2c2a;
-		}
+		--fg: #2b2b2b;
+		--muted: #6a6a6a;
+		--accent: #3f8f9a;
+		--border: rgba(255, 255, 255, 0.7);
+		--card: rgba(255, 255, 255, 0.55);
+		--glass: rgba(255, 255, 255, 0.6);
+		--glass-border: rgba(90, 50, 30, 0.07);
+		--glass-shadow: 0 8px 30px rgba(120, 70, 40, 0.06);
+		--gradient: linear-gradient(121deg, #ffffff 0%, #fff3ec 100%);
+		--font-sans: 'Jost', system-ui, -apple-system, sans-serif;
+		--font-serif: 'Cormorant Garamond', Georgia, serif;
+		color-scheme: light;
 	}
 	* {
 		box-sizing: border-box;
 	}
 	html {
 		scroll-behavior: smooth;
+		scroll-padding-top: 110px;
 	}
 	body {
 		margin: 0;
-		background: var(--bg);
+		min-height: 100vh;
+		background: #ffffff;
 		color: var(--fg);
-		font-family: system-ui, -apple-system, 'Segoe UI', sans-serif;
+		font-family: var(--font-sans);
+		font-weight: 300;
 		line-height: 1.6;
 	}
 	a {
 		color: var(--accent);
+	}
+	h1,
+	h2,
+	h3 {
+		font-family: var(--font-serif);
+		font-weight: 400;
+		font-variant-numeric: lining-nums;
+		letter-spacing: -0.01em;
+	}
+	h2 {
+		font-size: 2.2rem;
+		line-height: 1.15;
+		margin: 0 0 24px;
 	}
 	.container {
 		max-width: 960px;
 		margin: 0 auto;
 		padding: 0 20px;
 	}
+	/* Same box as the top nav, so content edges line up with the nav's name and links. */
+	.nav-width {
+		width: min(1100px, 100% - 48px);
+		margin-inline: auto;
+		padding-inline: 32px;
+	}
+	@media (max-width: 600px) {
+		.nav-width {
+			width: calc(100% - 24px);
+			padding-inline: 20px;
+		}
+	}
+
+	/* Frosted-glass surface, reused by the nav and cards */
+	.glass {
+		background: var(--glass);
+		-webkit-backdrop-filter: blur(24px) saturate(160%);
+		backdrop-filter: blur(24px) saturate(160%);
+		border: 1px solid var(--glass-border);
+		box-shadow: var(--glass-shadow);
+	}
+
+	/* The nav is a clearer glass than the cards: less white tint, more blur, and a faint bright edge */
+	.nav.glass {
+		background: rgba(255, 255, 255, 0.3);
+		-webkit-backdrop-filter: blur(30px) saturate(180%);
+		backdrop-filter: blur(30px) saturate(180%);
+		border: 1px solid rgba(255, 255, 255, 0.55);
+		box-shadow:
+			0 8px 32px rgba(0, 0, 0, 0.06),
+			inset 0 1px 0 rgba(255, 255, 255, 0.6);
+	}
+
+	.nav-wrap {
+		position: fixed;
+		inset: 24px 24px auto;
+		z-index: 10;
+	}
 	.nav {
+		max-width: 1100px;
+		margin: 0 auto;
+		height: 64px;
+		padding: 0 32px;
+		border-radius: 999px;
 		display: flex;
 		justify-content: space-between;
 		align-items: center;
-		padding-top: 24px;
-		padding-bottom: 24px;
+		gap: 16px;
+	}
+	.brand {
+		color: var(--fg);
+		text-decoration: none;
+		text-transform: uppercase;
+		white-space: nowrap;
+		font-weight: 400;
+		font-size: 0.95rem;
+		letter-spacing: 0.18em;
 	}
 	.nav nav {
 		display: flex;
-		gap: 20px;
+		gap: 32px;
 	}
-	.nav a {
+	.nav nav a {
 		color: var(--fg);
+		opacity: 0.8;
 		text-decoration: none;
+		font-size: 1rem;
+		transition: opacity 0.15s;
 	}
-	.brand {
-		font-weight: 700;
+	.nav nav a:hover {
+		opacity: 1;
 	}
+	@media (max-width: 600px) {
+		.nav-wrap {
+			inset: 12px 12px auto;
+		}
+		.nav {
+			height: 56px;
+			padding: 0 20px;
+		}
+		.brand {
+			font-size: 0.78rem;
+			letter-spacing: 0.1em;
+		}
+		.nav nav {
+			gap: 12px;
+		}
+		.nav nav a {
+			font-size: 0.8rem;
+		}
+	}
+	/* Links never wrap. Where five don't fit beside the name, "Home" goes first (the name links home),
+	   then the name tightens, then it becomes initials. */
+	.nav nav a {
+		white-space: nowrap;
+	}
+	.brand .short {
+		display: none;
+	}
+	@media (max-width: 760px) {
+		.nav nav a:first-child {
+			display: none;
+		}
+	}
+	@media (max-width: 520px) {
+		.nav {
+			padding: 0 14px;
+			gap: 10px;
+		}
+		.nav nav {
+			gap: 10px;
+		}
+		.nav nav a {
+			font-size: 0.74rem;
+		}
+		.brand {
+			font-size: 0.7rem;
+			letter-spacing: 0.06em;
+			white-space: nowrap;
+		}
+	}
+	@media (max-width: 359px) {
+		.brand .full {
+			display: none;
+		}
+		.brand .short {
+			display: inline;
+			font-size: 0.85rem;
+			letter-spacing: 0.1em;
+		}
+	}
+
 	.footer {
+		margin-top: 48px;
+		padding: 32px 0;
+		border-top: 1px solid rgba(90, 50, 30, 0.08);
+		text-align: center;
+	}
+	.copyright {
 		color: var(--muted);
-		font-size: 0.9rem;
-		padding-top: 48px;
-		padding-bottom: 32px;
+		font-size: 0.85rem;
+		margin: 0;
 	}
 </style>

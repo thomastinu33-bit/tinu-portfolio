@@ -1,0 +1,478 @@
+---
+// The previous tracker creation flow, drawn with its real routes: the type you pick
+// decides which steps come next, and every path merges at "Enter competitors".
+// Wires are drawn from the boxes' real positions (see the script), in a neutral palette.
+import Plus from '@lucide/astro/icons/plus';
+import TriangleAlert from '@lucide/astro/icons/triangle-alert';
+
+const methods = ['Let Evertune generate', 'Give instruction', 'Enter topics'];
+---
+
+<div class="oldflow">
+	<div class="tree">
+		<svg class="wires" aria-hidden="true">
+			<defs>
+				<marker id="oldflow-arrow" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto">
+					<path d="M1 1 L9 5 L1 9 z" fill="#b9b9b9"></path>
+				</marker>
+			</defs>
+		</svg>
+
+		<div class="cell n1" data-node="n1">
+			<div class="node main">
+				<span class="num">1</span>
+				<div>
+					<b>Enter brand details</b>
+					<small>Brand, location and language</small>
+				</div>
+			</div>
+		</div>
+
+		<div class="cell n2" data-node="n2">
+			<div class="node main">
+				<span class="num">2</span>
+				<div>
+					<b>Pick a type</b>
+					<small>Five to choose from</small>
+				</div>
+			</div>
+			<span class="flag side"><TriangleAlert size={14} strokeWidth={1.75} aria-hidden="true" />Hard to choose</span>
+		</div>
+
+		<ul class="options">
+			<li class="cell t-pca" data-node="pca">
+				<div class="node opt">
+					<b>Product Category Analysis</b>
+					<small>the old standard template</small>
+				</div>
+				<span class="route">Straight to Enter competitors</span>
+			</li>
+			<li class="cell t-own" data-node="own">
+				<div class="node opt">
+					<b>Run My Own</b>
+				</div>
+				<span class="route">Straight to Review prompts</span>
+			</li>
+			<li class="cell t-sug" data-node="sug">
+				<div class="node opt">
+					<b>Suggested prompts</b>
+				</div>
+				<span class="route">Then Pick how to start</span>
+			</li>
+			<li class="cell t-pitch" data-node="pitch">
+				<div class="node opt">
+					<b>Pitch report</b>
+					<small>same, with a prompt limit</small>
+				</div>
+				<span class="route">Same as Suggested prompts</span>
+			</li>
+			<li class="cell t-word" data-node="word">
+				<div class="node opt">
+					<b>Word association</b>
+				</div>
+				<span class="route">Straight to Enter competitors</span>
+			</li>
+		</ul>
+
+		<div class="cell n3" data-node="n3">
+			<div class="node main">
+				<span class="num">3</span>
+				<div>
+					<b>Pick how to start</b>
+					<ul class="pills">
+						{methods.map((m) => <li>{m}</li>)}
+					</ul>
+				</div>
+			</div>
+		</div>
+
+		<div class="cell n4" data-node="n4">
+			<div class="node main">
+				<span class="num">4</span>
+				<div>
+					<b>Review prompts</b>
+					<small>Edit topics and prompts</small>
+					<span class="add"><Plus size={14} strokeWidth={1.75} aria-hidden="true" />Add topic or prompt</span>
+					<span class="flag"><TriangleAlert size={14} strokeWidth={1.75} aria-hidden="true" />Hard to add more</span>
+				</div>
+			</div>
+		</div>
+
+		<div class="cell n5" data-node="n5">
+			<div class="node main wide">
+				<span class="num">5</span>
+				<div>
+					<b>Enter competitors</b>
+				</div>
+			</div>
+		</div>
+
+		<div class="chain">
+			<div class="cell" data-node="n6">
+				<div class="node main">
+					<span class="num">6</span>
+					<div><b>Select models</b></div>
+				</div>
+			</div>
+			<div class="cell" data-node="n7">
+				<div class="node main">
+					<span class="num">7</span>
+					<div><b>Select refresh cadence</b></div>
+				</div>
+			</div>
+			<div class="cell" data-node="n8">
+				<div class="node main">
+					<span class="num">8</span>
+					<div>
+						<b>Review everything</b>
+						<small>including prompt usage</small>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+
+</div>
+
+<script>
+	const root = document.querySelector<HTMLElement>('.oldflow');
+	if (root) {
+		const tree = root.querySelector<HTMLElement>('.tree')!;
+		const svg = root.querySelector<SVGSVGElement>('.wires')!;
+		const small = matchMedia('(max-width: 760px)');
+		const NS = 'http://www.w3.org/2000/svg';
+
+		// from, to, how to draw it: a fan (shared bracket), a straight drop, or a short sideways arrow
+		const edges: [string, string, 'fan' | 'drop' | 'side'][] = [
+			['n1', 'n2', 'drop'],
+			['n2', 'pca', 'fan'],
+			['n2', 'own', 'fan'],
+			['n2', 'sug', 'fan'],
+			['n2', 'pitch', 'fan'],
+			['n2', 'word', 'fan'],
+			['pca', 'n5', 'drop'],
+			['word', 'n5', 'drop'],
+			['own', 'n4', 'drop'],
+			['sug', 'n3', 'drop'],
+			['pitch', 'n3', 'drop'],
+			['n3', 'n4', 'drop'],
+			['n4', 'n5', 'drop'],
+			['n5', 'n6', 'drop'],
+			['n6', 'n7', 'side'],
+			['n7', 'n8', 'side'],
+		];
+
+		const box = (key: string) => {
+			const el = tree.querySelector<HTMLElement>(`[data-node="${key}"] > .node`)!;
+			const t = tree.getBoundingClientRect();
+			const r = el.getBoundingClientRect();
+			return { l: r.left - t.left, r: r.right - t.left, t: r.top - t.top, b: r.bottom - t.top, cx: (r.left + r.right) / 2 - t.left, cy: (r.top + r.bottom) / 2 - t.top };
+		};
+		const clamp = (v: number, lo: number, hi: number) => Math.min(Math.max(v, lo), hi);
+
+		const draw = () => {
+			svg.querySelectorAll('path.wire').forEach((p) => p.remove());
+			root.classList.toggle('wired', !small.matches);
+			if (small.matches) return;
+
+			const t = tree.getBoundingClientRect();
+			svg.setAttribute('width', String(t.width));
+			svg.setAttribute('height', String(t.height));
+			svg.setAttribute('viewBox', `0 0 ${t.width} ${t.height}`);
+
+			const R = 10;
+			edges.forEach(([from, to, mode]) => {
+				const a = box(from);
+				const b = box(to);
+				let d: string;
+				if (mode === 'side') {
+					d = `M ${a.r + 4} ${a.cy} H ${b.l - 4}`;
+				} else if (mode === 'fan') {
+					const mid = a.b + (b.t - a.b) / 2;
+					const dir = Math.sign(b.cx - a.cx);
+					d =
+						dir === 0
+							? `M ${a.cx} ${a.b} V ${b.t - 3}`
+							: `M ${a.cx} ${a.b} V ${mid - R} Q ${a.cx} ${mid} ${a.cx + dir * R} ${mid} H ${b.cx - dir * R} Q ${b.cx} ${mid} ${b.cx} ${mid + R} V ${b.t - 3}`;
+				} else {
+					// Straight down at the x where the narrower box sits inside the wider one
+					const narrow = a.r - a.l <= b.r - b.l ? a : b;
+					const lo = Math.max(a.l, b.l) + 14;
+					const hi = Math.min(a.r, b.r) - 14;
+					const x = lo <= hi ? clamp(narrow.cx, lo, hi) : narrow.cx;
+					d = `M ${x} ${a.b} V ${b.t - 3}`;
+				}
+				const path = document.createElementNS(NS, 'path');
+				path.setAttribute('d', d);
+				path.setAttribute('class', 'wire');
+				path.setAttribute('marker-end', 'url(#oldflow-arrow)');
+				svg.appendChild(path);
+			});
+		};
+
+		draw();
+		document.fonts?.ready.then(draw);
+		new ResizeObserver(draw).observe(tree);
+		small.addEventListener('change', draw);
+	}
+</script>
+
+<style>
+	.oldflow {
+		margin-top: 32px;
+		padding: clamp(18px, 3vw, 36px);
+		border-radius: 20px;
+		background: #f6f6f6;
+		border: 1px solid #ececec;
+		font-family: var(--font-sans);
+	}
+	.tree {
+		position: relative;
+		display: grid;
+		grid-template-columns: repeat(5, 1fr);
+		column-gap: 14px;
+		row-gap: 58px;
+	}
+	.wires {
+		position: absolute;
+		top: 0;
+		left: 0;
+		z-index: 0;
+		overflow: visible;
+		pointer-events: none;
+	}
+	.wires :global(path.wire) {
+		fill: none;
+		stroke: #c4c4c4;
+		stroke-width: 2;
+		stroke-linecap: round;
+	}
+	.cell {
+		position: relative;
+		z-index: 1;
+		display: flex;
+		flex-direction: column;
+	}
+	.cell > .node {
+		flex: 1;
+	}
+
+	/* Where each box sits on the grid */
+	.n1 {
+		grid-column: 2 / 5;
+		grid-row: 1;
+	}
+	.n2 {
+		grid-column: 2 / 5;
+		grid-row: 2;
+	}
+	.options {
+		display: contents;
+		list-style: none;
+		margin: 0;
+		padding: 0;
+	}
+	.t-pca {
+		grid-column: 1;
+		grid-row: 3;
+	}
+	.t-own {
+		grid-column: 2;
+		grid-row: 3;
+	}
+	.t-sug {
+		grid-column: 3;
+		grid-row: 3;
+	}
+	.t-pitch {
+		grid-column: 4;
+		grid-row: 3;
+	}
+	.t-word {
+		grid-column: 5;
+		grid-row: 3;
+	}
+	.n3 {
+		grid-column: 3 / 5;
+		grid-row: 4;
+	}
+	.n4 {
+		grid-column: 2 / 5;
+		grid-row: 5;
+	}
+	.n5 {
+		grid-column: 1 / 6;
+		grid-row: 6;
+	}
+	.chain {
+		grid-column: 1 / 6;
+		grid-row: 7;
+		display: grid;
+		grid-template-columns: repeat(3, 1fr);
+		gap: 56px;
+		width: 82%;
+		margin: 0 auto;
+	}
+
+	/* Boxes */
+	.node {
+		display: flex;
+		align-items: flex-start;
+		gap: 12px;
+		padding: 12px 16px;
+		border-radius: 12px;
+		background: #fff;
+		border: 1px solid #e3e3e3;
+		box-shadow: 0 4px 14px rgba(0, 0, 0, 0.04);
+		line-height: 1.3;
+	}
+	.node > div {
+		min-width: 0;
+	}
+	.node b {
+		display: block;
+		font-weight: 500;
+		font-size: 1rem;
+	}
+	.node small {
+		display: block;
+		margin-top: 2px;
+		font-size: 0.8rem;
+		color: var(--muted);
+	}
+	.node.main.wide {
+		justify-content: center;
+		align-items: center;
+	}
+	.chain .node {
+		align-items: center;
+	}
+	.n1 .node,
+	.n2 .node {
+		justify-content: center;
+		align-items: center;
+	}
+	.num {
+		flex-shrink: 0;
+		display: grid;
+		place-items: center;
+		width: 28px;
+		height: 28px;
+		border-radius: 8px;
+		background: #efefef;
+		color: #555;
+		font-size: 0.85rem;
+		font-weight: 500;
+	}
+	.node.opt {
+		flex-direction: column;
+		align-items: center;
+		justify-content: center;
+		gap: 0;
+		text-align: center;
+		padding: 12px 8px;
+		box-shadow: none;
+	}
+	.node.opt b {
+		font-size: 0.9rem;
+	}
+	.pills {
+		list-style: none;
+		margin: 8px 0 0;
+		padding: 0;
+		display: flex;
+		flex-direction: column;
+		gap: 6px;
+	}
+	.pills li {
+		font-size: 0.85rem;
+		padding: 5px 10px;
+		border-radius: 8px;
+		background: #f3f3f3;
+		border: 1px solid #e8e8e8;
+	}
+	.add {
+		display: inline-flex;
+		align-items: center;
+		gap: 6px;
+		margin-top: 8px;
+		padding: 4px 10px;
+		border-radius: 8px;
+		border: 1px dashed #c4c4c4;
+		font-size: 0.85rem;
+	}
+	.flag {
+		display: inline-flex;
+		align-items: center;
+		gap: 6px;
+		padding: 4px 10px;
+		border-radius: 999px;
+		font-size: 0.8rem;
+		color: #3b3b3b;
+		background: #e9e9e9;
+		white-space: nowrap;
+	}
+	.flag.side {
+		position: absolute;
+		top: 50%;
+		left: calc(100% + 14px);
+		translate: 0 -50%;
+	}
+	.n4 .flag {
+		margin: 8px 0 0 10px;
+	}
+
+	/* Where each type leads, in words (used when there are no wires) */
+	.route {
+		display: none;
+		margin-top: 6px;
+		font-size: 0.8rem;
+		color: var(--muted);
+	}
+	.oldflow:not(.wired) .route {
+		display: block;
+	}
+
+
+	/* Small screens: no wires, a simple stack where each option says where it leads */
+	@media (max-width: 760px) {
+		.tree {
+			display: flex;
+			flex-direction: column;
+			gap: 12px;
+		}
+		.wires {
+			display: none;
+		}
+		.options {
+			display: flex;
+			flex-direction: column;
+			gap: 8px;
+			margin: 0 0 0 20px;
+			padding-left: 16px;
+			border-left: 2px solid #d6d6d6;
+		}
+		.node.opt {
+			align-items: flex-start;
+			text-align: left;
+		}
+		.flag.side {
+			position: static;
+			translate: none;
+			align-self: flex-start;
+			margin-top: 8px;
+		}
+		.chain {
+			display: flex;
+			flex-direction: column;
+			gap: 12px;
+			width: auto;
+			margin: 0;
+		}
+		.n1 .node,
+		.n2 .node,
+		.node.main.wide {
+			justify-content: flex-start;
+		}
+	}
+</style>

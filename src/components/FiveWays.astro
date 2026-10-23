@@ -1,0 +1,101 @@
+---
+// The old "What kind of questions do you want to ask?" screen, with everything dimmed except
+// the five ways to create prompts, which get a number each.
+// Positions are measured on the image itself (1575 x 860) and drawn as percentages so they
+// stay aligned at any size.
+import { Image } from 'astro:assets';
+import screen from '../assets/evertune/old-question-picker.png';
+
+const W = 1575;
+const H = 860;
+const pct = (v: number, total: number) => `${((v / total) * 100).toFixed(3)}%`;
+
+// The block that holds the five cards
+const hl = { x: 26, y: 94, w: 1525, h: 428 };
+
+// Each card's box, in reading order: its number sits in the card's top-right corner
+const cards = [
+	{ n: 1, name: 'Product Category Analysis', x: 40, y: 108, w: 483 },
+	{ n: 2, name: 'Suggested Prompts', x: 547, y: 108, w: 483 },
+	{ n: 3, name: 'Run My Own Prompts', x: 1054, y: 108, w: 483 },
+	{ n: 4, name: 'Word Association', x: 40, y: 320, w: 483 },
+	{ n: 5, name: 'Pitch Report', x: 547, y: 320, w: 483 },
+];
+---
+
+<figure class="five">
+	<div class="scroll">
+		<div class="fig">
+			<Image
+				class="pic"
+				src={screen}
+				alt="The old New Tracker screen asking what kind of questions you want to ask, with five options: Product Category Analysis, Suggested Prompts, Run My Own Prompts, Word Association and Pitch Report."
+				widths={[800, 1200, 1575]}
+				sizes="(max-width: 900px) 100vw, 860px"
+			/>
+
+			<!-- Dim everything except the five cards -->
+			<span class="dim" style={`left:0;top:0;width:100%;height:${pct(hl.y, H)}`}></span>
+			<span class="dim" style={`left:0;top:${pct(hl.y + hl.h, H)};width:100%;bottom:0`}></span>
+			<span class="dim" style={`left:0;top:${pct(hl.y, H)};width:${pct(hl.x, W)};height:${pct(hl.h, H)}`}></span>
+			<span class="dim" style={`left:${pct(hl.x + hl.w, W)};top:${pct(hl.y, H)};right:0;height:${pct(hl.h, H)}`}></span>
+
+			{
+				cards.map((c) => (
+					<span
+						class="num"
+						title={c.name}
+						style={`left:${pct(c.x + c.w - 14, W)};top:${pct(c.y + 14, H)}`}
+					>
+						{c.n}
+					</span>
+				))
+			}
+		</div>
+	</div>
+</figure>
+
+<style>
+	.five {
+		margin: 32px 0 0;
+	}
+	.scroll {
+		overflow-x: auto;
+		border-radius: 16px;
+		border: 1px solid #e3e3e3;
+		background: #fff;
+	}
+	.fig {
+		position: relative;
+		container-type: inline-size;
+	}
+	.fig :global(.pic) {
+		display: block;
+		width: 100%;
+		height: auto;
+	}
+	.dim {
+		position: absolute;
+		background: rgba(244, 244, 244, 0.8);
+		pointer-events: none;
+	}
+	.num {
+		position: absolute;
+		translate: -100% 0;
+		display: grid;
+		place-items: center;
+		width: clamp(18px, 2.2cqw, 32px);
+		height: clamp(18px, 2.2cqw, 32px);
+		border-radius: 50%;
+		background: #2b2b2b;
+		color: #fff;
+		font-size: clamp(0.65rem, 1.3cqw, 0.9rem);
+		font-weight: 500;
+	}
+	/* On phones the screen keeps a readable size and scrolls sideways inside its frame */
+	@media (max-width: 720px) {
+		.fig {
+			min-width: 720px;
+		}
+	}
+</style>

@@ -1,0 +1,13 @@
+# Netlify build settings. The site is a static Astro build.
+[build]
+  command = "npm run build"
+  publish = "dist"
+
+[build.environment]
+  NODE_VERSION = "24"
+
+# Long-lived caching for the fingerprinted assets Astro generates
+[[headers]]
+  for = "/_astro/*"
+  [headers.values]
+    Cache-Control = "public, max-age=31536000, immutable"

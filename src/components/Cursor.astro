@@ -1,0 +1,67 @@
+---
+// A soft peach glow that drifts after the mouse, like light on the page.
+// The normal pointer stays. Only runs on devices with a mouse, and stays off
+// for visitors who prefer reduced motion.
+---
+
+<div class="cursor-glow" aria-hidden="true"></div>
+
+<script>
+	const glow = document.querySelector<HTMLElement>('.cursor-glow');
+	const canHover = matchMedia('(hover: hover) and (pointer: fine)').matches;
+	const reduceMotion = matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+	if (glow && canHover && !reduceMotion) {
+		let mouseX = innerWidth / 2;
+		let mouseY = innerHeight / 2;
+		let glowX = mouseX;
+		let glowY = mouseY;
+
+		addEventListener('pointermove', (e) => {
+			mouseX = e.clientX;
+			mouseY = e.clientY;
+			glow.classList.add('is-visible');
+		});
+		document.addEventListener('pointerleave', () => glow.classList.remove('is-visible'));
+
+		// Ease slowly toward the mouse so the glow drifts rather than tracks.
+		const follow = () => {
+			glowX += (mouseX - glowX) * 0.07;
+			glowY += (mouseY - glowY) * 0.07;
+			glow.style.transform = `translate(${glowX}px, ${glowY}px)`;
+			requestAnimationFrame(follow);
+		};
+		requestAnimationFrame(follow);
+	}
+</script>
+
+<style is:global>
+	.cursor-glow {
+		position: fixed;
+		top: 0;
+		left: 0;
+		z-index: 5;
+		pointer-events: none;
+		opacity: 0;
+		transition: opacity 0.8s ease;
+		/* Multiply tints the white page peach while leaving dark text untouched. */
+		mix-blend-mode: multiply;
+	}
+	.cursor-glow::before {
+		content: '';
+		position: absolute;
+		width: 520px;
+		height: 520px;
+		translate: -50% -50%;
+		border-radius: 50%;
+		background: radial-gradient(
+			circle,
+			rgba(255, 196, 166, 0.45) 0%,
+			rgba(255, 214, 190, 0.2) 35%,
+			rgba(255, 230, 215, 0) 70%
+		);
+	}
+	.cursor-glow.is-visible {
+		opacity: 1;
+	}
+</style>

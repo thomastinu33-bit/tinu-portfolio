@@ -1,0 +1,226 @@
+---
+// One affinity diagram, drawn as a board of sticky notes grouped by theme, with two more sheets
+// peeking out behind it so it reads as "one of many". The quotes are short, verbatim excerpts from
+// customer calls (company names left out).
+const themes = [
+	{
+		name: 'Workflow',
+		tone: 'green',
+		notes: [
+			'…my workflow with the portal is initially, I just relied on the emails…',
+			'I do like this trending products on the top of the page just to get a sense of is there something that I should be focusing on…',
+		],
+	},
+	{
+		name: 'Discoverability',
+		tone: 'yellow',
+		notes: [
+			'Notifications like knowing when the reports are coming out, maybe like calendaring, definitely.',
+			'…if I’m in a very deep in an email kind of potentially go through a note, if I’m not, it’s more like a skimming.',
+			'…I will go back, you know, one or two reports back just to get a sense of what was written.',
+		],
+	},
+	{
+		name: 'Deep-dive',
+		tone: 'purple',
+		notes: [
+			'I can Zoom in on this chart which is helpful.',
+			'…just visually for me to see two year growth rates across time… it just helps you absorb it better than graphs.',
+			'…every time you send an update, I’m just literally copy pasting and the raw data.',
+			'…it’s very ad hoc and manual.',
+		],
+	},
+	{
+		name: 'Personalization',
+		tone: 'blue',
+		notes: [
+			'In order to make it useful, you should make it, you know, more customized.',
+			'I would encourage you to have something where you can say this is my focus list.',
+			'I have probably 10 names that I care the most and then I have like 50 other names that I think I don’t know them enough.',
+		],
+	},
+];
+---
+
+<figure class="affinity">
+	<div class="stack">
+		<div class="board" role="group" aria-label="An affinity diagram of customer quotes, grouped by theme">
+			<header class="board-head">
+				<span class="kind">Affinity diagram</span>
+				<span class="source">Customer calls</span>
+			</header>
+			<div class="themes">
+				{
+					themes.map((t) => (
+						<section class={`theme ${t.tone}`}>
+							<h4>{t.name}</h4>
+							<ul>
+								{t.notes.map((n) => (
+									<li>{n}</li>
+								))}
+							</ul>
+						</section>
+					))
+				}
+			</div>
+		</div>
+	</div>
+	<figcaption>One of the many affinity diagrams built from customer calls. Quotes are excerpts.</figcaption>
+</figure>
+
+<style>
+	.affinity {
+		margin: 32px 0 0;
+		--green: #c7ecd2;
+		--yellow: #fdeba8;
+		--purple: #e1d1f8;
+		--blue: #c6e0fa;
+	}
+	/* The two sheets behind the board */
+	.stack {
+		position: relative;
+		padding: 0 30px 30px 0;
+	}
+	.stack::before,
+	.stack::after {
+		content: '';
+		position: absolute;
+		border-radius: 20px;
+		border: 1px solid #e3e3e3;
+		background: #f4f4f4;
+	}
+	.stack::before {
+		inset: 24px 0 0 24px;
+		background: #efefef;
+	}
+	.stack::after {
+		inset: 12px 12px 12px 12px;
+		background: #f7f7f7;
+	}
+	.board {
+		position: relative;
+		z-index: 1;
+		padding: clamp(16px, 3vw, 30px);
+		border-radius: 20px;
+		background: #fbfbfb;
+		border: 1px solid #e3e3e3;
+		box-shadow: 0 14px 34px rgba(0, 0, 0, 0.07);
+	}
+	.board-head {
+		display: flex;
+		justify-content: space-between;
+		align-items: baseline;
+		gap: 12px;
+		margin-bottom: clamp(14px, 2.5vw, 24px);
+		padding-bottom: 14px;
+		border-bottom: 1px solid #ececec;
+		font-size: 0.78rem;
+		letter-spacing: 0.12em;
+		text-transform: uppercase;
+	}
+	.kind {
+		color: var(--fg);
+	}
+	.source {
+		color: var(--muted);
+	}
+	.themes {
+		display: grid;
+		grid-template-columns: repeat(4, minmax(0, 1fr));
+		gap: clamp(14px, 2vw, 26px);
+		align-items: start;
+	}
+	.theme h4 {
+		margin: 0 0 14px;
+		font-family: var(--font-serif);
+		font-weight: 500;
+		font-size: 1.35rem;
+		line-height: 1.1;
+		display: flex;
+		align-items: center;
+		gap: 10px;
+	}
+	.theme h4::before {
+		content: '';
+		width: 10px;
+		height: 10px;
+		border-radius: 3px;
+		background: var(--tone);
+		box-shadow: inset 0 0 0 1px rgba(0, 0, 0, 0.12);
+	}
+	.theme.green {
+		--tone: var(--green);
+	}
+	.theme.yellow {
+		--tone: var(--yellow);
+	}
+	.theme.purple {
+		--tone: var(--purple);
+	}
+	.theme.blue {
+		--tone: var(--blue);
+	}
+	.theme ul {
+		list-style: none;
+		margin: 0;
+		padding: 0;
+		display: grid;
+		gap: 12px;
+	}
+	/* Sticky notes: a touch of tilt, a lifted shadow and a folded corner */
+	.theme li {
+		position: relative;
+		padding: 14px 14px 16px;
+		background: var(--tone);
+		color: #2b2b2b;
+		font-size: 0.86rem;
+		line-height: 1.45;
+		border-radius: 3px 3px 3px 14px / 3px 3px 3px 6px;
+		box-shadow:
+			0 1px 1px rgba(0, 0, 0, 0.1),
+			0 8px 14px -6px rgba(0, 0, 0, 0.18);
+	}
+	.theme li:nth-child(odd) {
+		transform: rotate(-0.8deg);
+	}
+	.theme li:nth-child(even) {
+		transform: rotate(0.7deg);
+	}
+	.theme li:nth-child(3n) {
+		transform: rotate(-0.3deg);
+	}
+	.theme li::after {
+		content: '';
+		position: absolute;
+		right: 0;
+		bottom: 0;
+		width: 14px;
+		height: 14px;
+		background: linear-gradient(135deg, rgba(0, 0, 0, 0.1) 50%, rgba(255, 255, 255, 0.5) 50%);
+		border-top-left-radius: 4px;
+	}
+	figcaption {
+		margin-top: 12px;
+		color: var(--muted);
+		font-size: 0.9rem;
+	}
+	@media (max-width: 900px) {
+		.themes {
+			grid-template-columns: repeat(2, minmax(0, 1fr));
+		}
+	}
+	@media (max-width: 520px) {
+		.stack {
+			padding: 0 16px 16px 0;
+		}
+		.stack::before {
+			inset: 14px 0 0 14px;
+		}
+		.stack::after {
+			inset: 7px 7px 7px 7px;
+		}
+		.themes {
+			grid-template-columns: 1fr;
+		}
+	}
+</style>

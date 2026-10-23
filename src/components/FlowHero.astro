@@ -1,0 +1,328 @@
+---
+import { base } from '../lib/base';
+// A project hero: a walkthrough video in a window frame, split into chapters. The steps underneath
+// show where you are (with a thin progress line) and jump to a chapter when clicked. It plays on
+// its own while on screen, muted and looping, with a pause button.
+import Play from '@lucide/astro/icons/play';
+import Pause from '@lucide/astro/icons/pause';
+import type { FlowVideo } from '../data/site';
+
+interface Props {
+	video: FlowVideo;
+}
+
+const { video } = Astro.props;
+const src = `${base}/${video.src}`;
+const poster = `${base}/${video.poster}`;
+const steps = video.steps;
+---
+
+<div class="flow" data-flow>
+	<div class="panel">
+		<div class="window">
+			<div class="chrome" aria-hidden="true"><span></span><span></span><span></span></div>
+			<div class="stage">
+				<video
+					muted
+					loop
+					playsinline
+					preload="metadata"
+					poster={poster}
+					aria-label="Walkthrough of creating a tracker: start, generate, refine and run"
+				>
+					<source src={src} type="video/mp4" />
+				</video>
+				<button type="button" class="toggle" aria-label="Pause the walkthrough">
+					<span class="i-pause"><Pause size={16} strokeWidth={2} aria-hidden="true" /></span>
+					<span class="i-play"><Play size={16} strokeWidth={2} aria-hidden="true" /></span>
+				</button>
+			</div>
+		</div>
+	</div>
+
+	<ol class="steps" role="tablist" aria-label="Walkthrough chapters">
+		{
+			steps.map((step, i) => (
+				<li>
+					<button
+						type="button"
+						role="tab"
+						class:list={{ 'is-active': i === 0 }}
+						aria-selected={i === 0 ? 'true' : 'false'}
+						data-at={step.at}
+						data-caption={step.caption}
+					>
+						<span class="num">{i + 1}</span>
+						<span class="label">{step.label}</span>
+					</button>
+				</li>
+			))
+		}
+	</ol>
+	<p class="caption" aria-live="polite">{steps[0].caption}</p>
+</div>
+
+<script>
+	const reduceMotion = matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+	document.querySelectorAll<HTMLElement>('[data-flow]').forEach((flow) => {
+		const video = flow.querySelector<HTMLVideoElement>('video')!;
+		const tabs = [...flow.querySelectorAll<HTMLButtonElement>('[data-at]')];
+		const caption = flow.querySelector<HTMLElement>('.caption')!;
+		const toggle = flow.querySelector<HTMLButtonElement>('.toggle')!;
+		const starts = tabs.map((t) => Number(t.dataset.at));
+
+		let current = -1;
+		let wantPlay = !reduceMotion; // false once someone pauses it, or if they prefer reduced motion
+		let raf = 0;
+
+		const chapterAt = (t: number) => starts.reduce((acc, s, n) => (t >= s - 0.03 ? n : acc), 0);
+
+		const setChapter = (i: number) => {
+			current = i;
+			tabs.forEach((tab, n) => {
+				tab.classList.toggle('is-active', n === i);
+				tab.setAttribute('aria-selected', String(n === i));
+				if (n !== i) tab.style.removeProperty('--p');
+			});
+			caption.textContent = tabs[i].dataset.caption ?? '';
+		};
+
+		const sync = () => {
+			const t = video.currentTime;
+			const i = chapterAt(t);
+			if (i !== current) setChapter(i);
+			const end = starts[i + 1] ?? (Number.isFinite(video.duration) ? video.duration : starts[i] + 1);
+			const p = Math.min(Math.max((t - starts[i]) / Math.max(end - starts[i], 0.1), 0), 1);
+			tabs[i].style.setProperty('--p', p.toFixed(3));
+		};
+		const loop = () => {
+			sync();
+			raf = requestAnimationFrame(loop);
+		};
+
+		const showState = () => {
+			const paused = video.paused;
+			toggle.classList.toggle('is-paused', paused);
+			toggle.setAttribute('aria-label', paused ? 'Play the walkthrough' : 'Pause the walkthrough');
+		};
+		video.addEventListener('play', () => {
+			cancelAnimationFrame(raf);
+			raf = requestAnimationFrame(loop);
+			showState();
+		});
+		video.addEventListener('pause', () => {
+			cancelAnimationFrame(raf);
+			sync();
+			showState();
+		});
+		video.addEventListener('seeked', sync);
+		video.addEventListener('loadedmetadata', sync);
+
+		const play = () => video.play().catch(() => showState());
+
+		tabs.forEach((tab, i) => {
+			tab.addEventListener('click', () => {
+				video.currentTime = starts[i];
+				sync();
+				wantPlay = true;
+				play();
+			});
+		});
+		toggle.addEventListener('click', () => {
+			if (video.paused) {
+				wantPlay = true;
+				play();
+			} else {
+				wantPlay = false;
+				video.pause();
+			}
+		});
+
+		// Play while at least half of it is on screen
+		new IntersectionObserver(
+			([entry]) => {
+				if (entry.isIntersecting && wantPlay) play();
+				else video.pause();
+			},
+			{ threshold: 0.5 },
+		).observe(flow);
+
+		showState();
+	});
+</script>
+
+<style>
+	.flow {
+		margin-top: 28px;
+	}
+	.panel {
+		padding: clamp(16px, 4vw, 44px);
+		border-radius: 20px;
+		background: #f6f6f6;
+		border: 1px solid #ececec;
+	}
+	.window {
+		border-radius: 12px;
+		overflow: hidden;
+		background: #fff;
+		border: 1px solid #e3e3e3;
+		box-shadow:
+			0 30px 60px -20px rgba(0, 0, 0, 0.18),
+			0 8px 20px rgba(0, 0, 0, 0.06);
+	}
+	.chrome {
+		display: flex;
+		gap: 6px;
+		padding: 10px 14px;
+		background: #f3f3f3;
+		border-bottom: 1px solid rgba(0, 0, 0, 0.06);
+	}
+	.chrome span {
+		width: 9px;
+		height: 9px;
+		border-radius: 50%;
+		background: #d9d9d9;
+	}
+	.stage {
+		position: relative;
+		aspect-ratio: 1440 / 862;
+		background: #fff;
+	}
+	.stage video {
+		display: block;
+		width: 100%;
+		height: 100%;
+		object-fit: cover;
+	}
+	.toggle {
+		all: unset;
+		box-sizing: border-box;
+		position: absolute;
+		right: 14px;
+		bottom: 14px;
+		display: grid;
+		place-items: center;
+		width: 36px;
+		height: 36px;
+		border-radius: 50%;
+		cursor: pointer;
+		color: #fff;
+		background: rgba(30, 30, 30, 0.62);
+		-webkit-backdrop-filter: blur(8px);
+		backdrop-filter: blur(8px);
+		opacity: 0.8;
+		transition:
+			opacity 0.2s,
+			background 0.2s;
+	}
+	.toggle:hover,
+	.toggle:focus-visible {
+		opacity: 1;
+		background: rgba(30, 30, 30, 0.85);
+	}
+	.toggle:focus-visible {
+		outline: 2px solid var(--accent);
+		outline-offset: 2px;
+	}
+	.toggle .i-play {
+		display: none;
+	}
+	.toggle.is-paused .i-play {
+		display: grid;
+	}
+	.toggle.is-paused .i-pause {
+		display: none;
+	}
+	.steps {
+		list-style: none;
+		margin: 24px 0 0;
+		padding: 0;
+		display: grid;
+		grid-template-columns: repeat(auto-fit, minmax(130px, 1fr));
+		gap: 10px;
+	}
+	.steps button {
+		all: unset;
+		box-sizing: border-box;
+		position: relative;
+		width: 100%;
+		display: flex;
+		align-items: center;
+		gap: 12px;
+		padding: 10px 12px 12px;
+		border-radius: 10px;
+		cursor: pointer;
+		color: var(--muted);
+		border: 1px solid transparent;
+		transition:
+			background 0.2s,
+			color 0.2s,
+			border-color 0.2s;
+	}
+	.steps button:hover {
+		color: var(--fg);
+	}
+	.steps button:focus-visible {
+		outline: 2px solid var(--accent);
+		outline-offset: 2px;
+	}
+	.num {
+		flex-shrink: 0;
+		display: grid;
+		place-items: center;
+		width: 30px;
+		height: 30px;
+		border-radius: 8px;
+		font-size: 0.85rem;
+		background: #efefef;
+		color: #555;
+		transition:
+			background 0.2s,
+			color 0.2s;
+	}
+	.label {
+		font-size: 1rem;
+	}
+	.steps button.is-active {
+		color: var(--fg);
+		border-color: #e3e3e3;
+		background: #fff;
+		box-shadow: 0 4px 14px rgba(0, 0, 0, 0.06);
+	}
+	.steps button.is-active .num {
+		background: #2b2b2b;
+		color: #fff;
+	}
+	/* A thin line that fills as the chapter plays */
+	.steps button.is-active::after {
+		content: '';
+		position: absolute;
+		left: 12px;
+		right: 12px;
+		bottom: 5px;
+		height: 2px;
+		border-radius: 2px;
+		background: #2b2b2b;
+		transform-origin: left;
+		transform: scaleX(var(--p, 0));
+		opacity: 0.55;
+	}
+	.caption {
+		margin: 16px 0 0;
+		min-height: 1.6em; /* one line; room for two on narrow screens (below) */
+		padding-inline: 12px; /* lines up with the first step */
+		text-align: left;
+		color: var(--muted);
+	}
+	@media (max-width: 900px) {
+		.caption {
+			min-height: 3.2em;
+		}
+	}
+	@media (max-width: 600px) {
+		.steps {
+			grid-template-columns: repeat(2, 1fr);
+		}
+	}
+</style>

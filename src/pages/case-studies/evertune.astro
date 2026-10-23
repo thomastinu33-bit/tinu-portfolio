@@ -1,0 +1,238 @@
+---
+import { base } from '../../lib/base';
+import Layout from '../../layouts/Layout.astro';
+import FlowHero from '../../components/FlowHero.astro';
+import OldFlow from '../../components/OldFlow.astro';
+import FiveWays from '../../components/FiveWays.astro';
+import PasswordGate from '../../components/PasswordGate.astro';
+import { site, projects } from '../../data/site';
+import Check from '@lucide/astro/icons/check';
+
+const project = projects.find((p) => p.slug === 'evertune')!;
+---
+
+<Layout title={`${project.title} · ${site.name}`} description={project.summary}>
+	<div id="gated" class="gated">
+	<article class="container study">
+		<a class="back" href={`${base}/#work`}>← All case studies</a>
+
+		<ul class="tags">
+			{project.tags.map((t) => <li>{t}</li>)}
+		</ul>
+		<h1>{project.title}</h1>
+
+		<section>
+			<h2>Overview</h2>
+			<p>
+				Evertune customers have more than one way to create the prompts that measure their AI visibility.
+				They can start from a standard template, or use Evertune’s agent to create prompts based on how
+				people actually prompt LLMs.
+			</p>
+		</section>
+
+		<section>
+			<h2>Context</h2>
+			<p>
+				At first, there was only one way to create prompts: the standard template. As Evertune grew, customer
+				feedback showed that people wanted to run their own sets of prompts, so a new type of analysis was
+				added.
+			</p>
+			<p>
+				Before long, there were five different ways to create prompts. Each was added to meet a specific
+				customer need, but over time the prompt creation experience became unwieldy and hard to use.
+			</p>
+			<p>
+				Very soon, new users started saying that the prompt creation flow took too much time and was hard to
+				use.
+			</p>
+			<FiveWays />
+		</section>
+
+		<section>
+			<h2>The problem</h2>
+			<p>
+				Getting to a set of prompts took many steps, and customers, especially new users, struggled to pick the
+				right type of tracker. There were five main types, and one of them had three steps of its own. It was
+				confusing before anyone had created a single prompt.
+			</p>
+			<OldFlow />
+		</section>
+
+		<section>
+			<h2>The insight</h2>
+			<p>
+				After collecting user feedback and analyzing how customers use the platform, it became clear that:
+			</p>
+			<ol class="points">
+				<li><span class="n">1</span><span>Users primarily preferred Evertune’s suggested prompts.</span></li>
+				<li>
+					<span class="n">2</span><span
+						>Pitch Report was only available to agencies, and it was essentially Suggested Prompts with a prompt limit.</span
+					>
+				</li>
+				<li>
+					<span class="n">3</span><span>Only 10–15% of users had access to Product Category Analysis and Word Association.</span>
+				</li>
+			</ol>
+		</section>
+
+		<section>
+			<h2>The new experience</h2>
+			<p>
+				I wanted the design to align with Evertune’s long-term vision of an agentic platform experience.
+				After learning more about the tools our customers already used, a chat-to-canvas flow felt like a
+				natural fit.
+			</p>
+			<p>
+				With the new agent experience, there is nothing to choose up front. Users begin prompt creation
+				in a simple chat, use Evertune’s agent to modify the topics and prompts, and adjust the settings
+				before running.
+			</p>
+			<div class="bleed">
+				<FlowHero video={project.flow!} />
+			</div>
+		</section>
+
+		<section>
+			<h2>The impact</h2>
+			<p class="pull">
+				New customers find it much easier and more intuitive to create trackers and run prompts.
+			</p>
+			<ul class="wins">
+				<li><Check size={20} strokeWidth={1.75} aria-hidden="true" />No onboarding steps needed</li>
+				<li>
+					<Check size={20} strokeWidth={1.75} aria-hidden="true" />No white-glove service from our customer success team
+				</li>
+			</ul>
+		</section>
+	</article>
+	</div>
+
+	<PasswordGate mode="immediate" />
+</Layout>
+
+<style>
+	.study {
+		max-width: 900px;
+		padding-top: 140px;
+		padding-bottom: 40px;
+	}
+	.back {
+		display: inline-block;
+		color: var(--muted);
+		text-decoration: none;
+		margin-bottom: 28px;
+	}
+	.back:hover {
+		color: var(--accent);
+	}
+	h1 {
+		font-family: var(--font-serif);
+		font-weight: 400;
+		font-size: clamp(2.2rem, 5vw, 3.4rem);
+		line-height: 1.1;
+		letter-spacing: -0.01em;
+		margin: 16px 0 12px;
+	}
+	section {
+		margin-top: 56px;
+	}
+	section p {
+		max-width: 62ch;
+		font-size: 1.1rem;
+		color: var(--fg);
+	}
+	.tags {
+		list-style: none;
+		padding: 0;
+		margin: 0;
+		display: flex;
+		flex-wrap: wrap;
+		gap: 8px;
+	}
+	.tags li {
+		font-size: 0.8rem;
+		color: var(--muted);
+		border: 1px solid #e3e3e3;
+		border-radius: 999px;
+		padding: 2px 10px;
+	}
+	/* The new-experience hero breaks out of the text column so the screens read larger */
+	.bleed {
+		position: relative;
+		left: 50%;
+		/* As wide as the page allows, but never taller than the room below the floating nav
+		   (about 110px) once the step buttons are counted: the video is 1440:862, so its
+		   height follows its width. */
+		width: min(1400px, calc(100vw - 48px), max(560px, calc((100vh - 300px) * 1.6705 + 66px)));
+		width: min(1400px, calc(100vw - 48px), max(560px, calc((100svh - 300px) * 1.6705 + 66px)));
+		transform: translateX(-50%);
+	}
+	.bleed :global(.panel) {
+		padding: clamp(14px, 2.4vw, 32px);
+	}
+	@media (max-width: 960px) {
+		.bleed {
+			left: 0;
+			width: 100%;
+			transform: none;
+		}
+	}
+	.points {
+		list-style: none;
+		margin: 24px 0 0;
+		padding: 0;
+		display: grid;
+		gap: 16px;
+		max-width: 62ch;
+		font-size: 1.1rem;
+	}
+	.points li {
+		display: flex;
+		align-items: flex-start;
+		gap: 14px;
+	}
+	.points .n {
+		flex-shrink: 0;
+		display: grid;
+		place-items: center;
+		width: 28px;
+		height: 28px;
+		margin-top: 1px;
+		border-radius: 8px;
+		background: #efefef;
+		color: #555;
+		font-size: 0.85rem;
+		font-weight: 500;
+	}
+	section p.pull {
+		font-family: var(--font-serif);
+		font-size: clamp(1.6rem, 3.4vw, 2.3rem);
+		line-height: 1.25;
+		max-width: 28ch;
+		margin: 0 0 24px;
+	}
+	.wins {
+		list-style: none;
+		margin: 0;
+		padding: 0;
+		display: grid;
+		gap: 12px;
+		font-size: 1.1rem;
+	}
+	.wins li {
+		display: flex;
+		align-items: center;
+		gap: 12px;
+	}
+	.wins :global(svg) {
+		flex-shrink: 0;
+		padding: 5px;
+		box-sizing: content-box;
+		width: 20px;
+		height: 20px;
+		border-radius: 8px;
+		background: #efefef;
+		color: #555;
+	}
+</style>
