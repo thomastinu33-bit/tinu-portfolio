@@ -63,8 +63,8 @@ export const principles = [
 	},
 	{
 		icon: 'prototype',
-		title: 'Make ideas real early',
-		body: 'I shape ideas in Figma, then build working prototypes with Claude and Codex, so teams can click through a decision before committing to it.',
+		title: 'Exploring solutions',
+		body: 'I use different tools to shape ideas. Sometimes it’s Figma, and sometimes it’s building prototypes with Claude and Codex and gathering feedback.',
 	},
 	{
 		icon: 'system',
