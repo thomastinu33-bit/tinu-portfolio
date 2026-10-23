@@ -1,0 +1,347 @@
+---
+import Layout from '../layouts/Layout.astro';
+import Download from '@lucide/astro/icons/download';
+import Mail from '@lucide/astro/icons/mail';
+import ArrowUpRight from '@lucide/astro/icons/arrow-up-right';
+import { site } from '../data/site';
+import { resume } from '../data/resume';
+
+const base = import.meta.env.BASE_URL;
+---
+
+<Layout title={`Resume · ${site.name}`} description={`${site.name}'s resume: ${site.role}.`}>
+	<main class="container sheet">
+		<header class="top">
+			<div>
+				<p class="eyebrow">Resume</p>
+				<h1>{site.name}</h1>
+			</div>
+			<div class="actions">
+				<a class="btn" href={`${base}/${site.resume}`} download>
+					<Download size={16} strokeWidth={1.75} aria-hidden="true" />
+					Download PDF
+				</a>
+			</div>
+		</header>
+
+		<p class="summary">{resume.summary}</p>
+
+		<ul class="contact">
+			<li>
+				<a href={`mailto:${site.email}`}>
+					<Mail size={15} strokeWidth={1.75} aria-hidden="true" />
+					{site.email}
+				</a>
+			</li>
+			<li>
+				<a href={resume.linkedin.href} target="_blank" rel="noopener">
+					{resume.linkedin.label}
+					<ArrowUpRight size={15} strokeWidth={1.75} aria-hidden="true" />
+				</a>
+			</li>
+			<li class="where-now">{site.location}</li>
+		</ul>
+
+		<section class="block">
+			<h2>Experience</h2>
+			<div class="entries">
+				{
+					resume.experience.map((j) => (
+						<article class="entry">
+							<div class="head">
+								<h3>{j.role}</h3>
+								<span class="when">{j.when}</span>
+							</div>
+							<p class="where">
+								{j.company} <span aria-hidden="true">·</span> {j.place}
+							</p>
+							<ul class="bullets">
+								{j.bullets.map((b) => (
+									<li>{b}</li>
+								))}
+							</ul>
+						</article>
+					))
+				}
+			</div>
+		</section>
+
+		<section class="block">
+			<h2>Education</h2>
+			<div class="entries">
+				{
+					resume.education.map((e) => (
+						<article class="entry">
+							<h3>{e.degree}</h3>
+							<p class="where">
+								{e.school} <span aria-hidden="true">·</span> {e.place} <span aria-hidden="true">·</span> {e.when}
+							</p>
+						</article>
+					))
+				}
+			</div>
+		</section>
+
+		<section class="block">
+			<h2>Skills &amp; expertise</h2>
+			<ul class="skills">
+				{resume.skills.map((s) => <li>{s}</li>)}
+			</ul>
+		</section>
+	</main>
+</Layout>
+
+<style>
+	.sheet {
+		max-width: 900px;
+		padding-top: 130px;
+		padding-bottom: 72px;
+	}
+	.top {
+		display: flex;
+		align-items: flex-end;
+		justify-content: space-between;
+		gap: 20px;
+		flex-wrap: wrap;
+	}
+	.eyebrow {
+		margin: 0 0 6px;
+		font-size: 0.78rem;
+		letter-spacing: 0.14em;
+		text-transform: uppercase;
+		color: var(--muted);
+	}
+	h1 {
+		margin: 0;
+		font-family: var(--font-serif);
+		font-weight: 400;
+		font-size: clamp(2.6rem, 6vw, 4rem);
+		line-height: 1;
+		letter-spacing: -0.015em;
+	}
+	.btn {
+		display: inline-flex;
+		align-items: center;
+		gap: 8px;
+		padding: 10px 18px;
+		border-radius: 999px;
+		background: #2b2b2b;
+		color: #fff;
+		text-decoration: none;
+		font-size: 0.92rem;
+		transition: background 0.2s;
+	}
+	.btn:hover,
+	.btn:focus-visible {
+		background: #000;
+	}
+	.summary {
+		margin: 30px 0 0;
+		max-width: 58ch;
+		font-family: var(--font-serif);
+		font-size: clamp(1.3rem, 2.4vw, 1.65rem);
+		line-height: 1.4;
+		color: var(--fg);
+	}
+	.contact {
+		list-style: none;
+		margin: 22px 0 0;
+		padding: 0 0 26px;
+		display: flex;
+		flex-wrap: wrap;
+		gap: 8px 26px;
+		border-bottom: 1px solid #ececec;
+		font-size: 0.95rem;
+	}
+	.contact a {
+		display: inline-flex;
+		align-items: center;
+		gap: 6px;
+		color: var(--fg);
+		text-underline-offset: 4px;
+	}
+	.contact a:hover {
+		color: var(--accent);
+	}
+	.contact svg {
+		color: var(--muted);
+	}
+	.where-now {
+		color: var(--muted);
+	}
+
+	/* Sections: a small label on the left, the content on the right */
+	.block {
+		display: grid;
+		grid-template-columns: 170px minmax(0, 1fr);
+		gap: 12px 32px;
+		padding: 34px 0;
+		border-bottom: 1px solid #ececec;
+	}
+	.block:last-of-type {
+		border-bottom: 0;
+	}
+	.block h2 {
+		margin: 4px 0 0;
+		font-family: var(--font-sans);
+		font-weight: 400;
+		font-size: 0.78rem;
+		letter-spacing: 0.14em;
+		text-transform: uppercase;
+		color: var(--muted);
+	}
+	.entries {
+		display: grid;
+		gap: 34px;
+	}
+	.head {
+		display: flex;
+		justify-content: space-between;
+		align-items: baseline;
+		gap: 16px;
+		flex-wrap: wrap;
+	}
+	h3 {
+		margin: 0;
+		font-size: clamp(1.35rem, 2.4vw, 1.65rem);
+		line-height: 1.2;
+	}
+	.when {
+		font-size: 0.85rem;
+		color: var(--muted);
+		white-space: nowrap;
+		font-variant-numeric: lining-nums;
+	}
+	.where {
+		margin: 4px 0 0;
+		color: var(--muted);
+		font-size: 0.98rem;
+	}
+	.bullets {
+		list-style: none;
+		margin: 14px 0 0;
+		padding: 0;
+		display: grid;
+		gap: 8px;
+	}
+	.bullets li {
+		position: relative;
+		padding-left: 18px;
+		font-size: 0.98rem;
+		line-height: 1.55;
+	}
+	.bullets li::before {
+		content: '';
+		position: absolute;
+		left: 2px;
+		top: 0.7em;
+		width: 5px;
+		height: 5px;
+		border-radius: 50%;
+		background: #bdbdbd;
+	}
+	.skills {
+		list-style: none;
+		margin: 0;
+		padding: 0;
+		display: flex;
+		flex-wrap: wrap;
+		gap: 8px;
+	}
+	.skills li {
+		padding: 5px 13px;
+		border-radius: 999px;
+		background: #f6f6f6;
+		border: 1px solid #ececec;
+		font-size: 0.86rem;
+		color: #444;
+	}
+
+	@media (max-width: 720px) {
+		.block {
+			grid-template-columns: 1fr;
+			gap: 14px;
+		}
+		.block h2 {
+			margin-top: 0;
+		}
+		.when {
+			white-space: normal;
+		}
+	}
+
+	/* Print / Save as PDF: just the resume, compact, black on white */
+	@media print {
+		:global(.nav-wrap),
+		.actions {
+			display: none !important;
+		}
+		:global(body) {
+			background: #fff !important;
+			font-size: 11px;
+		}
+		.sheet {
+			max-width: none;
+			padding: 0;
+		}
+		.eyebrow {
+			display: none;
+		}
+		h1 {
+			font-size: 30px;
+		}
+		.summary {
+			font-size: 12.5px;
+			line-height: 1.4;
+			margin-top: 10px;
+			max-width: none;
+		}
+		.contact {
+			margin-top: 10px;
+			padding-bottom: 10px;
+			font-size: 11px;
+		}
+		.block {
+			grid-template-columns: 110px minmax(0, 1fr);
+			padding: 12px 0;
+			gap: 6px 18px;
+		}
+		.block h2 {
+			font-size: 9px;
+		}
+		.entries {
+			gap: 12px;
+		}
+		.entry {
+			break-inside: avoid;
+		}
+		h3 {
+			font-size: 14px;
+		}
+		.when,
+		.where {
+			font-size: 10px;
+		}
+		.bullets {
+			margin-top: 6px;
+			gap: 3px;
+		}
+		.bullets li {
+			font-size: 10.5px;
+			line-height: 1.38;
+			padding-left: 14px;
+		}
+		.skills {
+			gap: 4px;
+		}
+		.skills li {
+			font-size: 9.5px;
+			padding: 2px 8px;
+			border-color: #ccc;
+			background: #fff;
+		}
+		:global(footer) {
+			display: none;
+		}
+	}
+</style>
