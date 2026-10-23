@@ -146,9 +146,6 @@ const strengthIcons = { component: Component, prototype: MousePointerClick, rese
 		<div class="about-panel">
 			<div class="about-card">
 				<p class="about-lead">{site.about.lead}</p>
-				<ul class="facts">
-					{site.about.facts.map((f) => <li>{f}</li>)}
-				</ul>
 				<div class="about-story">
 					{site.about.story.map((para) => <p>{para}</p>)}
 				</div>
@@ -439,24 +436,8 @@ const strengthIcons = { component: Component, prototype: MousePointerClick, rese
 		letter-spacing: -0.01em;
 		font-variant-numeric: lining-nums;
 	}
-	.facts {
-		list-style: none;
-		margin: 20px 0 0;
-		padding: 0;
-		display: flex;
-		flex-wrap: wrap;
-		gap: 8px;
-	}
-	.facts li {
-		padding: 4px 12px;
-		border-radius: 999px;
-		background: #f6f6f6;
-		border: 1px solid #ececec;
-		font-size: 0.82rem;
-		color: #555;
-	}
 	.about-story {
-		margin-top: 26px;
+		margin-top: 22px;
 		padding-top: 24px;
 		border-top: 1px solid #ececec;
 		display: grid;
