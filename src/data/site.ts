@@ -3,7 +3,7 @@
 import type { ImageMetadata } from 'astro';
 import evertuneCover from '../assets/evertune/cover.jpg';
 import ydCover from '../assets/yd/cover.png';
-import portrait from '../assets/about/portrait.webp';
+import portrait from '../assets/about/portrait-blur.webp';
 
 
 export const site = {

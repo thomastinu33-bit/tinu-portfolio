@@ -34,7 +34,7 @@ export const resume = {
 			place: 'New York',
 			when: 'Aug 2021 – Jan 2025',
 			bullets: [
-				'Led design of the Investor Platform, driving 97% adoption, 12x engagement and major retention gains through key feature launches.',
+				'Led design of the Investor Platform, driving 97% adoption, 2x engagement and major retention gains through key feature launches.',
 				'Partnered with engineers to build the Investor Platform Design System and define data visualization guidelines, streamlining handoffs, enhancing usability and reducing annotation time.',
 				'Mentored new designers and ran critiques and workshops to foster collaboration and elevate team quality.',
 			],
