@@ -583,6 +583,12 @@ export const studies: Study[] = [
 				type: 'text',
 				text: 'Users were able to quickly see how their brand was performing and take next step actions.',
 			},
+			{
+				type: 'image',
+				src: 'evertune-brand-overview/01',
+				alt: 'The Evertune brand overview page (placeholder).',
+				caption: 'Placeholder: the brand overview page.',
+			},
 		],
 	},
 ];
