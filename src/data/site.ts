@@ -1,6 +1,8 @@
 // Edit this file to update the text on your portfolio.
 
 import type { ImageMetadata } from 'astro';
+import { studies } from './studies';
+import { studyImage } from '../lib/studyImages';
 import evertuneCover from '../assets/evertune/cover.jpg';
 import ydCover from '../assets/yd/cover.png';
 import portrait from '../assets/about/portrait-soft.webp';
@@ -148,4 +150,13 @@ export const projects: Project[] = [
 		},
 		tags: ['YipitData', 'B2B SaaS', 'Design Systems', 'Research'],
 	},
+	// Case studies written in src/data/studies.ts
+	...studies.map((st) => ({
+		title: st.title,
+		summary: st.summary,
+		slug: st.slug,
+		highlights: st.highlights,
+		tags: st.tags,
+		cover: { image: studyImage(st.cover.src), alt: st.cover.alt, bare: st.cover.bare },
+	})),
 ];

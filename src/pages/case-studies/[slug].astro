@@ -1,0 +1,262 @@
+---
+import { Image } from 'astro:assets';
+import { base } from '../../lib/base';
+import Layout from '../../layouts/Layout.astro';
+import PasswordGate from '../../components/PasswordGate.astro';
+import { site } from '../../data/site';
+import { studies } from '../../data/studies';
+import { studyImage } from '../../lib/studyImages';
+
+export function getStaticPaths() {
+	return studies.map((study) => ({ params: { slug: study.slug }, props: { study } }));
+}
+
+const { study } = Astro.props;
+---
+<Layout title={`${study.title} · ${site.name}`} description={study.summary}>
+	<div id="gated" class="gated">
+	<article class="container study">
+		<a class="back" href={`${base}/#work`}>← All case studies</a>
+
+		<ul class="tags">
+			{study.tags.map((t) => <li>{t}</li>)}
+		</ul>
+		<h1>{study.title}</h1>
+		<p class="lead">{study.summary}</p>
+		{
+			study.hero && (
+				<figure class="hero-shot">
+					<Image src={studyImage(study.cover.src)} alt={study.cover.alt} widths={[700, 1100, 1600]} sizes="(max-width: 940px) 100vw, 900px" />
+				</figure>
+			)
+		}
+
+		<div class="blocks">
+			{
+				study.blocks.map((b) => {
+					switch (b.type) {
+						case 'heading':
+							return <h2>{b.text}</h2>;
+						case 'text':
+							return <p class="text">{b.text}</p>;
+						case 'list':
+							return (
+								<ul class="list">
+									{b.items.map((i) => (
+										<li>{i}</li>
+									))}
+								</ul>
+							);
+						case 'image':
+							return (
+								<figure>
+									<Image src={studyImage(b.src)} alt={b.alt} widths={[700, 1100, 1600]} sizes="(max-width: 940px) 100vw, 900px" />
+									{b.caption && <figcaption>{b.caption}</figcaption>}
+								</figure>
+							);
+						case 'row':
+							return (
+								<figure>
+									<div class="row" style={`--n: ${b.images.length}`}>
+										{b.images.map((im) => (
+											<Image src={studyImage(im.src)} alt={im.alt} widths={[400, 700, 1000]} sizes="(max-width: 940px) 50vw, 300px" />
+										))}
+									</div>
+									{b.caption && <figcaption>{b.caption}</figcaption>}
+								</figure>
+							);
+						case 'logos':
+							return (
+								<div class="logos">
+									{b.images.map((im) => (
+										<Image src={studyImage(im.src)} alt={im.alt} widths={[300, 600]} sizes="240px" />
+									))}
+								</div>
+							);
+						case 'stats':
+							return (
+								<dl class="stats">
+									{b.items.map((i) => (
+										<div>
+											<dt>{i.value}</dt>
+											<dd>{i.label}</dd>
+										</div>
+									))}
+								</dl>
+							);
+						case 'quotes':
+							return (
+								<div class="quotes">
+									{b.items.map((q) => (
+										<blockquote>{q}</blockquote>
+									))}
+								</div>
+							);
+					}
+				})
+			}
+		</div>
+	</article>
+	</div>
+
+	<PasswordGate mode="immediate" />
+</Layout>
+
+<style>
+	.study {
+		max-width: 900px;
+		padding-top: 140px;
+		padding-bottom: 40px;
+	}
+	.back {
+		display: inline-block;
+		color: var(--muted);
+		text-decoration: none;
+		margin-bottom: 28px;
+	}
+	.back:hover {
+		color: var(--accent);
+	}
+	h1 {
+		font-family: var(--font-serif);
+		font-weight: 400;
+		font-size: clamp(2.2rem, 5vw, 3.4rem);
+		line-height: 1.1;
+		letter-spacing: -0.01em;
+		margin: 16px 0 12px;
+	}
+	.lead {
+		max-width: 62ch;
+		font-size: 1.15rem;
+		color: var(--muted);
+		margin: 0;
+	}
+	.tags {
+		list-style: none;
+		padding: 0;
+		margin: 0;
+		display: flex;
+		flex-wrap: wrap;
+		gap: 8px;
+	}
+	.tags li {
+		font-size: 0.8rem;
+		color: var(--muted);
+		border: 1px solid #e3e3e3;
+		border-radius: 999px;
+		padding: 2px 10px;
+	}
+	.hero-shot {
+		margin-top: 40px;
+	}
+	.hero-shot :global(img) {
+		border: 0;
+		background: none;
+	}
+	.blocks {
+		display: grid;
+		gap: 24px;
+		margin-top: 48px;
+	}
+	.blocks h2 {
+		margin: 32px 0 -8px;
+	}
+	.blocks h2:first-child {
+		margin-top: 0;
+	}
+	.text,
+	.list {
+		max-width: 62ch;
+		margin: 0;
+		font-size: 1.1rem;
+		color: var(--fg);
+	}
+	.list {
+		padding-left: 1.2em;
+		display: grid;
+		gap: 8px;
+	}
+	figure {
+		margin: 0;
+	}
+	figure :global(img) {
+		display: block;
+		width: 100%;
+		height: auto;
+		border-radius: 16px;
+		background: #f6f6f6;
+		border: 1px solid #ececec;
+	}
+	figcaption {
+		margin-top: 10px;
+		max-width: 62ch;
+		font-size: 0.92rem;
+		color: var(--muted);
+	}
+	.row {
+		display: grid;
+		grid-template-columns: repeat(min(var(--n), 3), minmax(0, 1fr));
+		gap: 12px;
+	}
+	.logos {
+		display: flex;
+		flex-wrap: wrap;
+		align-items: center;
+		gap: 24px 48px;
+	}
+	.logos :global(img) {
+		height: 56px;
+		width: auto;
+	}
+	.stats {
+		margin: 0;
+		display: grid;
+		grid-template-columns: repeat(3, minmax(0, 1fr));
+		gap: 12px;
+	}
+	.stats div {
+		padding: 20px 22px;
+		border-radius: 16px;
+		background: #f6f6f6;
+		border: 1px solid #ececec;
+	}
+	.stats dt {
+		font-family: var(--font-serif);
+		font-size: clamp(2rem, 4vw, 2.8rem);
+		line-height: 1;
+	}
+	.stats dd {
+		margin: 8px 0 0;
+		color: var(--muted);
+		font-size: 0.95rem;
+	}
+	.quotes {
+		display: grid;
+		grid-template-columns: repeat(2, minmax(0, 1fr));
+		gap: 12px;
+	}
+	blockquote {
+		margin: 0;
+		padding: 24px;
+		border-radius: 16px;
+		background: #f6f6f6;
+		border: 1px solid #ececec;
+		font-family: var(--font-serif);
+		font-size: 1.25rem;
+		line-height: 1.4;
+	}
+	@media (max-width: 720px) {
+		.stats {
+			grid-template-columns: 1fr;
+		}
+		.quotes {
+			grid-template-columns: 1fr;
+		}
+		.row {
+			grid-template-columns: repeat(2, minmax(0, 1fr));
+		}
+		.logos :global(img) {
+			height: 44px;
+		}
+	}
+</style>
