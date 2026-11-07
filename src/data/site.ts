@@ -62,7 +62,7 @@ export const principles = [
 	{
 		icon: 'craft',
 		title: 'Sweat the details',
-		body: 'I fine-tune layout shifts, typography, spacing, motion and interactions, and I maintain the design system in code so those details hold up as the product grows and ships.',
+		body: 'I fine-tune responsive layouts, typography, spacing and interactions, and I maintain the design system in code so those details hold up as the product grows and ships.',
 	},
 	{
 		icon: 'improve',
