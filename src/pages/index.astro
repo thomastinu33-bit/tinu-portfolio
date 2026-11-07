@@ -60,9 +60,7 @@ const principleIcons = { build: MousePointerClick, team: UsersRound, craft: Rule
 								<Icon size={20} strokeWidth={1.5} aria-hidden="true" />
 							</span>
 							<h3>{pr.title}</h3>
-							<ul class="points">
-								{pr.points.map((pt) => <li>{pt}</li>)}
-							</ul>
+							<p>{pr.body}</p>
 						</li>
 					);
 				})
@@ -342,31 +340,10 @@ const principleIcons = { build: MousePointerClick, team: UsersRound, craft: Rule
 		font-size: clamp(1.4rem, 2.4vw, 1.8rem);
 		line-height: 1.2;
 	}
-	.principles .points {
-		list-style: none;
+	.principles p {
 		margin: 0;
-		padding: 0;
-		display: grid;
-		gap: 12px;
-	}
-	.principles .points li {
-		position: relative;
-		padding: 0 0 0 18px;
-		border: 0;
-		border-radius: 0;
-		background: none;
 		color: var(--muted);
 		line-height: 1.55;
-	}
-	.principles .points li::before {
-		content: '';
-		position: absolute;
-		left: 2px;
-		top: 0.7em;
-		width: 5px;
-		height: 5px;
-		border-radius: 50%;
-		background: #b5b5b5;
 	}
 	@media (max-width: 720px) {
 		.principles {

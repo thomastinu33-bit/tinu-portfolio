@@ -52,31 +52,22 @@ export const principles = [
 	{
 		icon: 'build',
 		title: 'Design end to end',
-		points: [
-			'Design core product experiences end to end, from early exploration through launch and iteration',
-			'Explore multiple directions quickly through sketches, flows, prototypes, and high-fidelity designs',
-		],
+		body: 'I design core product experiences from early exploration through launch and iteration, exploring several directions quickly through sketches, flows, prototypes and high-fidelity designs.',
 	},
 	{
 		icon: 'team',
 		title: 'Partner with the team',
-		points: [
-			'Work closely with product managers and engineers to translate strategy and ambiguous problems into clear, thoughtful solutions',
-			'Balance user needs, technical constraints, and business goals while keeping a high bar for craft',
-		],
+		body: 'I work closely with product managers and engineers to turn strategy and ambiguous problems into clear, thoughtful solutions, balancing user needs, technical constraints and business goals while keeping a high bar for craft.',
 	},
 	{
 		icon: 'craft',
 		title: 'Sweat the details',
-		points: ['Sweat the details and fine tune layout shifts, typography, spacing, motion, and interactions'],
+		body: 'I fine-tune layout shifts, typography, spacing, motion and interactions, and I maintain the design system in code so those details hold up as the product grows and ships.',
 	},
 	{
 		icon: 'improve',
 		title: 'Keep improving',
-		points: [
-			'Use user feedback, qualitative insights, and product intuition to refine and improve the product over time',
-			'Contribute to and help evolve the product\u2019s design language, systems, and product vision',
-		],
+		body: 'I use user feedback, qualitative insights and product intuition to keep refining the product, and I help evolve its design language, systems and vision along the way.',
 	},
 ] as const;
 
