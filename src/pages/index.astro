@@ -492,11 +492,28 @@ const principleIcons = { build: MousePointerClick, team: UsersRound, craft: Rule
 		grid-template-columns: repeat(2, minmax(0, 1fr));
 		gap: 16px;
 	}
+	/* Each card takes one of the soft colours from the landing page */
 	.principles li {
 		padding: clamp(20px, 3vw, 30px);
 		border-radius: 20px;
-		background: #f6f6f6;
-		border: 1px solid #ececec;
+		background: var(--tint, #f6f6f6);
+		border: 1px solid var(--tint-edge, #ececec);
+	}
+	.principles li:nth-child(1) {
+		--tint: #fff0e8;
+		--tint-edge: #fbdfd0;
+	}
+	.principles li:nth-child(2) {
+		--tint: #f1edff;
+		--tint-edge: #e1d9fb;
+	}
+	.principles li:nth-child(3) {
+		--tint: #ffeef4;
+		--tint-edge: #fad9e5;
+	}
+	.principles li:nth-child(4) {
+		--tint: #eaf4ff;
+		--tint-edge: #d3e6fa;
 	}
 	.p-badge {
 		display: grid;
