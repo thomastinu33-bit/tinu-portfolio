@@ -62,7 +62,7 @@ export const principles = [
 		title: 'Partner with the team',
 		points: [
 			'Work closely with product managers and engineers to translate strategy and ambiguous problems into clear, thoughtful solutions',
-			'Balance building good product focused on user needs, technical constraints, and business goals while keeping a high bar for craft',
+			'Balance user needs, technical constraints, and business goals while keeping a high bar for craft',
 		],
 	},
 	{
