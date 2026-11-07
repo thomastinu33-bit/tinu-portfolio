@@ -50,24 +50,33 @@ export type FlowVideo = { src: string; poster: string; steps: FlowStep[] };
 // `icon` must match one of the icons imported in src/pages/index.astro.
 export const principles = [
 	{
-		icon: 'listen',
-		title: 'Start with customers',
-		body: 'I begin by listening: customer calls, feedback and how people actually use the product. The research shapes the problem before any screen is drawn.',
-	},
-	{
-		icon: 'prototype',
-		title: 'Exploring solutions',
-		body: 'I use different tools to shape ideas. Sometimes it’s Figma, and sometimes it’s building prototypes with Claude and Codex and gathering feedback.',
-	},
-	{
-		icon: 'system',
-		title: 'Build systems, not just screens',
-		body: 'I build and maintain design systems in canvas and code, so what is designed and what ships stay in step as products grow.',
+		icon: 'build',
+		title: 'Design end to end',
+		points: [
+			'Design core product experiences end to end, from early exploration through launch and iteration',
+			'Explore multiple directions quickly through sketches, flows, prototypes, and high-fidelity designs',
+		],
 	},
 	{
 		icon: 'team',
-		title: 'Work closely with the team',
-		body: 'I work side by side with PMs and engineers, and I keep talking to users after launch, so each decision is grounded in what people need.',
+		title: 'Partner with the team',
+		points: [
+			'Work closely with product managers and engineers to translate strategy and ambiguous problems into clear, thoughtful solutions',
+			'Balance building good product focused on user needs, technical constraints, and business goals while keeping a high bar for craft',
+		],
+	},
+	{
+		icon: 'craft',
+		title: 'Sweat the details',
+		points: ['Sweat the details and fine tune layout shifts, typography, spacing, motion, and interactions'],
+	},
+	{
+		icon: 'improve',
+		title: 'Keep improving',
+		points: [
+			'Use user feedback, qualitative insights, and product intuition to refine and improve the product over time',
+			'Contribute to and help evolve the product\u2019s design language, systems, and product vision',
+		],
 	},
 ] as const;
 
