@@ -160,3 +160,62 @@ export const projects: Project[] = [
 		cover: { image: studyImage(st.cover.src), alt: st.cover.alt, bare: st.cover.bare },
 	})),
 ];
+
+// "Experience": the home page lists these as a timeline, newest first. `projects` names the case studies
+// (by slug, from the list above) shown as cards under each company. Leave it empty for a company without one.
+export type Job = {
+	company: string;
+	role: string;
+	when: string;
+	summary: string;
+	projects: string[];
+};
+
+export const experience: Job[] = [
+	{
+		company: 'Evertune',
+		role: 'Product Designer',
+		when: 'Aug 2025 – Present',
+		summary:
+			'Designing Evertune\u2019s AI-native platform end to end across GEO and Ads, and creating unified agent experiences so customers can understand and improve how their brand shows up in AI answers.',
+		projects: ['evertune'],
+	},
+	{
+		company: 'Qloo',
+		role: 'Senior Product Designer',
+		when: 'Jan 2025 – Aug 2025',
+		summary:
+			'Led design for Insights by Qloo\u2122, creating AI-powered features that help customers pull valuable insights out of a data-heavy platform.',
+		projects: [],
+	},
+	{
+		company: 'YipitData',
+		role: 'Senior Interaction Designer',
+		when: 'Aug 2021 – Jan 2025',
+		summary:
+			'Led the design of the Investor Platform from 0 to 1, moving YipitData\u2019s research from email to the web, and built its design system and data visualization guidelines with engineers.',
+		projects: [
+			'yipitdata',
+			'yipitdata-homepage',
+			'yipitdata-key-metrics',
+			'yipitdata-data-visualization',
+			'yipitdata-preferences',
+		],
+	},
+	{
+		company: 'Area23, an IPG Health company',
+		role: 'UX/UI Intern',
+		when: 'Jun 2020 – Aug 2020',
+		summary:
+			'Designed user flows and interactive experiences for healthcare professionals across devices, working with art directors and engineers on brand-consistent, feasible solutions.',
+		projects: ['area23'],
+	},
+	{
+		company: 'Fincent (formerly Design Capital)',
+		role: 'UX Designer',
+		when: 'Jun 2018 – Jul 2019',
+		summary:
+			'Led information architecture and UX for Lemoney, a finance platform for small businesses, from user research to a validated proof of concept.',
+		projects: ['lemoney'],
+	},
+];
