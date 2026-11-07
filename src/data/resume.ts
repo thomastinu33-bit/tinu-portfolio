@@ -11,10 +11,10 @@ export const resume = {
 			place: 'New York',
 			when: 'Aug 2025 – Present',
 			bullets: [
-				'Spearheaded the end-to-end design for GEO and Ads experiences on the platform, integrating AI-driven workflows to shape a more agentic-first user experience.',
-				'Leveraged Claude and Figma to rapidly conceptualize, generate and iterate on interactive prototypes.',
-				'Partnered closely with product managers and engineers to scope, build and ship new platform features.',
-				'Synthesized user feedback to continuously refine feature iterations and elevate overall product usability.',
+				'Design core experiences end to end for Evertune\u2019s AI-native platform, from early exploration through launch and iteration.',
+				'Create unified agent experiences across the agents we use for GEO and Ads, so customers can check visibility, build GEO strategies and plan ad campaigns without complexity.',
+				'Explore directions quickly in Figma, Claude and Codex, and partner with PMs and engineers to turn ambiguous problems into clear solutions.',
+				'Sweat the details of responsive layouts and interactions, and evolve the design language and systems, including in code.',
 			],
 		},
 		{

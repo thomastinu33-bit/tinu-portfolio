@@ -1,6 +1,8 @@
 // Edit this file to update the text on your portfolio.
 
 import type { ImageMetadata } from 'astro';
+import { studies } from './studies';
+import { studyImage } from '../lib/studyImages';
 import evertuneCover from '../assets/evertune/cover.jpg';
 import ydCover from '../assets/yd/cover.png';
 import portrait from '../assets/about/portrait-soft.webp';
@@ -10,13 +12,13 @@ export const site = {
 	name: 'Tinu Thomas',
 	role: 'Product Designer',
 	// Used for the page's search/share description.
-	tagline: 'Product designer turning complex problems into simple, user-centered designs.',
+	tagline: 'Product designer turning complex problems into simple, user-centered solutions.',
 	// The lines that rotate under "Hi, I'm …" on the home page.
 	intro: [
 		"I'm a product designer",
 		'I currently design at Evertune AI',
 		"I've been designing for B2B SaaS platforms since 2021",
-		'I turn complex problems into simple, user-centered designs',
+		'I turn complex problems into simple, user-centered solutions',
 	],
 	about: {
 		// `position` keeps the face in frame when the picture is cropped to the panel.
@@ -41,13 +43,6 @@ export const site = {
 };
 
 // The "what I do" strip right below the intro: a short title plus a light one-line phrase.
-// `icon` must match one of the icons imported in src/pages/index.astro.
-export const strengths = [
-	{ icon: 'research', title: 'User research', note: 'from early discovery to shipped features' },
-	{ icon: 'prototype', title: 'Prototypes', note: 'shaped in Figma, brought to life with Claude & Codex' },
-	{ icon: 'component', title: 'Design systems', note: 'built and maintained in canvas and code' },
-] as const;
-
 // A walkthrough video split into chapters: each step names a chapter, says what happens in it,
 // and gives the second where it starts. Files live in `public/`.
 export type FlowStep = { label: string; caption: string; at: number };
@@ -57,24 +52,24 @@ export type FlowVideo = { src: string; poster: string; steps: FlowStep[] };
 // `icon` must match one of the icons imported in src/pages/index.astro.
 export const principles = [
 	{
-		icon: 'listen',
-		title: 'Start with customers',
-		body: 'I begin by listening: customer calls, feedback and how people actually use the product. The research shapes the problem before any screen is drawn.',
-	},
-	{
-		icon: 'prototype',
-		title: 'Exploring solutions',
-		body: 'I use different tools to shape ideas. Sometimes it’s Figma, and sometimes it’s building prototypes with Claude and Codex and gathering feedback.',
-	},
-	{
-		icon: 'system',
-		title: 'Build systems, not just screens',
-		body: 'I build and maintain design systems in canvas and code, so what is designed and what ships stay in step as products grow.',
+		icon: 'build',
+		title: 'Design end to end',
+		body: 'I design core product experiences from early exploration through launch and iteration, exploring several directions quickly through sketches, flows, prototypes and high-fidelity designs.',
 	},
 	{
 		icon: 'team',
-		title: 'Work closely with the team',
-		body: 'I work side by side with PMs and engineers, and I keep talking to users after launch, so each decision is grounded in what people need.',
+		title: 'Partner with the team',
+		body: 'I work closely with product managers and engineers to turn strategy and ambiguous problems into clear, thoughtful solutions, balancing user needs, technical constraints and business goals while keeping a high bar for craft.',
+	},
+	{
+		icon: 'craft',
+		title: 'Sweat the details',
+		body: 'I fine-tune responsive layouts, typography, spacing and interactions, and I maintain the design system in code so those details hold up as the product grows and ships.',
+	},
+	{
+		icon: 'improve',
+		title: 'Keep improving',
+		body: 'I use user feedback, qualitative insights and product intuition to keep refining the product, and I help evolve its design language, systems and vision along the way.',
 	},
 ] as const;
 
@@ -154,5 +149,65 @@ export const projects: Project[] = [
 			bare: true,
 		},
 		tags: ['YipitData', 'B2B SaaS', 'Design Systems', 'Research'],
+	},
+	// Case studies written in src/data/studies.ts
+	...studies.map((st) => ({
+		title: st.title,
+		summary: st.summary,
+		slug: st.slug,
+		highlights: st.highlights,
+		tags: st.tags,
+		cover: { image: studyImage(st.cover.src), alt: st.cover.alt, bare: st.cover.bare },
+	})),
+];
+
+// "Experience": the home page lists these as a timeline, newest first. `projects` names the case studies
+// (by slug, from the list above) shown as cards under each company. Leave it empty for a company without one.
+export type Job = {
+	company: string;
+	role: string;
+	when: string;
+	summary: string;
+	projects: string[];
+};
+
+export const experience: Job[] = [
+	{
+		company: 'Evertune',
+		role: 'Product Designer',
+		when: 'Aug 2025 – Present',
+		summary:
+			'Designing Evertune\u2019s AI-native platform end to end across GEO and Ads, and creating unified agent experiences so customers can understand and improve how their brand shows up in AI answers.',
+		projects: ['evertune'],
+	},
+	{
+		company: 'YipitData',
+		role: 'Senior Interaction Designer',
+		when: 'Aug 2021 – Jan 2025',
+		summary:
+			'Led the design of the Investor Platform from 0 to 1, moving YipitData\u2019s research from email to the web, and built its design system and data visualization guidelines with engineers.',
+		projects: [
+			'yipitdata',
+			'yipitdata-homepage',
+			'yipitdata-key-metrics',
+			'yipitdata-data-visualization',
+			'yipitdata-preferences',
+		],
+	},
+	{
+		company: 'Area23, an IPG Health company',
+		role: 'UX/UI Intern',
+		when: 'Jun 2020 – Aug 2020',
+		summary:
+			'Designed user flows and interactive experiences for healthcare professionals across devices, working with art directors and engineers on brand-consistent, feasible solutions.',
+		projects: ['area23'],
+	},
+	{
+		company: 'Fincent (formerly Design Capital)',
+		role: 'UX Designer',
+		when: 'Jun 2018 – Jul 2019',
+		summary:
+			'Led information architecture and UX for Lemoney, a finance platform for small businesses, from user research to a validated proof of concept.',
+		projects: ['lemoney'],
 	},
 ];
