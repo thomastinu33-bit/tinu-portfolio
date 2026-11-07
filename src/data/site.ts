@@ -12,13 +12,13 @@ export const site = {
 	name: 'Tinu Thomas',
 	role: 'Product Designer',
 	// Used for the page's search/share description.
-	tagline: 'Product designer turning complex problems into simple, user-centered designs.',
+	tagline: 'Product designer turning complex problems into simple, user-centered solutions.',
 	// The lines that rotate under "Hi, I'm …" on the home page.
 	intro: [
 		"I'm a product designer",
 		'I currently design at Evertune AI',
 		"I've been designing for B2B SaaS platforms since 2021",
-		'I turn complex problems into simple, user-centered designs',
+		'I turn complex problems into simple, user-centered solutions',
 	],
 	about: {
 		// `position` keeps the face in frame when the picture is cropped to the panel.

@@ -170,7 +170,7 @@ const principleIcons = { build: MousePointerClick, team: UsersRound, craft: Rule
 	const seen = document.querySelector<HTMLElement>('.rotator .seen');
 	const rest = document.querySelector<HTMLElement>('.rotator .rest');
 	const TYPE_MS = 55; // per letter
-	const NEXT_MS = 100; // after a line is complete, before the next one starts
+	const NEXT_MS = 1800; // how long a finished line stays before the next one starts
 	const reduceMotion = matchMedia('(prefers-reduced-motion: reduce)').matches;
 
 	if (typed && seen && rest && lines.length) {
