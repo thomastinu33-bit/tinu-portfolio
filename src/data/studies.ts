@@ -557,7 +557,7 @@ export const studies: Study[] = [
 	},
 	{
 		slug: 'evertune-brand-overview',
-		title: 'Helping Evertune customers see how their brand shows up in AI answers at a glance',
+		title: 'Designing the Evertune brand overview',
 		company: 'Evertune',
 		tags: ['Evertune AI', 'B2B SaaS', 'Product Design'],
 		summary:
