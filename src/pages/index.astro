@@ -3,18 +3,16 @@ import { base } from '../lib/base';
 import Layout from '../layouts/Layout.astro';
 import { Image } from 'astro:assets';
 import PasswordGate from '../components/PasswordGate.astro';
-import { site, projects, strengths, principles } from '../data/site';
+import { site, projects, principles } from '../data/site';
 import Mail from '@lucide/astro/icons/mail';
 import MapPin from '@lucide/astro/icons/map-pin';
 import ArrowUpRight from '@lucide/astro/icons/arrow-up-right';
 import Component from '@lucide/astro/icons/component';
 import MousePointerClick from '@lucide/astro/icons/mouse-pointer-click';
-import ScanSearch from '@lucide/astro/icons/scan-search';
 import Ear from '@lucide/astro/icons/ear';
 import UsersRound from '@lucide/astro/icons/users-round';
 
 const principleIcons = { listen: Ear, prototype: MousePointerClick, system: Component, team: UsersRound };
-const strengthIcons = { component: Component, prototype: MousePointerClick, research: ScanSearch };
 ---
 
 <Layout>
@@ -49,20 +47,20 @@ const strengthIcons = { component: Component, prototype: MousePointerClick, rese
 		</div>
 	</section>
 
-	<section class="strengths nav-width" aria-label="What I do">
-		<ul>
+	<section id="how-i-work" class="nav-width">
+		<h2>How I work</h2>
+		<p class="how-lead">Four habits that show up in every project.</p>
+		<ul class="principles">
 			{
-				strengths.map((s) => {
-					const Icon = strengthIcons[s.icon];
+				principles.map((pr) => {
+					const Icon = principleIcons[pr.icon];
 					return (
 						<li>
-							<span class="badge">
+							<span class="p-badge">
 								<Icon size={20} strokeWidth={1.5} aria-hidden="true" />
 							</span>
-							<div>
-								<h3>{s.title}</h3>
-								<p>{s.note}</p>
-							</div>
+							<h3>{pr.title}</h3>
+							<p>{pr.body}</p>
 						</li>
 					);
 				})
@@ -70,7 +68,7 @@ const strengthIcons = { component: Component, prototype: MousePointerClick, rese
 		</ul>
 	</section>
 
-	<!-- Everything below the strip is private until the password is entered (see the script at the bottom). -->
+	<!-- Everything below is private until the password is entered (see the script at the bottom). -->
 	<div id="gate-sentinel" aria-hidden="true"></div>
 	<div id="gated" class="gated">
 	<section id="work" class="nav-width">
@@ -118,27 +116,6 @@ const strengthIcons = { component: Component, prototype: MousePointerClick, rese
 				))
 			}
 		</div>
-	</section>
-
-	<section id="how-i-work" class="nav-width">
-		<h2>How I work</h2>
-		<p class="how-lead">Four habits that show up in every project.</p>
-		<ul class="principles">
-			{
-				principles.map((pr) => {
-					const Icon = principleIcons[pr.icon];
-					return (
-						<li>
-							<span class="p-badge">
-								<Icon size={20} strokeWidth={1.5} aria-hidden="true" />
-							</span>
-							<h3>{pr.title}</h3>
-							<p>{pr.body}</p>
-						</li>
-					);
-				})
-			}
-		</ul>
 	</section>
 
 	<section id="about" class="nav-width">
@@ -306,24 +283,6 @@ const strengthIcons = { component: Component, prototype: MousePointerClick, rese
 		clip-path: inset(50%);
 		white-space: nowrap;
 	}
-	/* "What I do" strip */
-	.strengths {
-		padding-block: 48px;
-		border-bottom: 1px solid rgba(90, 50, 30, 0.08);
-	}
-	.strengths ul {
-		list-style: none;
-		margin: 0;
-		padding: 0;
-		display: grid;
-		grid-template-columns: repeat(3, 1fr);
-		gap: 32px;
-	}
-	.strengths li {
-		display: flex;
-		align-items: center;
-		gap: 16px;
-	}
 	.badge {
 		flex-shrink: 0;
 		display: grid;
@@ -334,22 +293,6 @@ const strengthIcons = { component: Component, prototype: MousePointerClick, rese
 		background: #fbede5;
 		border: 1px solid rgba(200, 130, 95, 0.18);
 		color: #b0694a;
-	}
-	.strengths h3 {
-		margin: 0;
-		font-size: 1.6rem;
-		line-height: 1.15;
-	}
-	.strengths p {
-		margin: 2px 0 0;
-		color: var(--muted);
-		line-height: 1.4;
-	}
-	@media (max-width: 820px) {
-		.strengths ul {
-			grid-template-columns: 1fr;
-			gap: 24px;
-		}
 	}
 	#work h2 {
 		text-align: center;

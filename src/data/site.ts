@@ -41,13 +41,6 @@ export const site = {
 };
 
 // The "what I do" strip right below the intro: a short title plus a light one-line phrase.
-// `icon` must match one of the icons imported in src/pages/index.astro.
-export const strengths = [
-	{ icon: 'research', title: 'User research', note: 'from early discovery to shipped features' },
-	{ icon: 'prototype', title: 'Prototypes', note: 'shaped in Figma, brought to life with Claude & Codex' },
-	{ icon: 'component', title: 'Design systems', note: 'built and maintained in canvas and code' },
-] as const;
-
 // A walkthrough video split into chapters: each step names a chapter, says what happens in it,
 // and gives the second where it starts. Files live in `public/`.
 export type FlowStep = { label: string; caption: string; at: number };
