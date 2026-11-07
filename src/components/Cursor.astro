@@ -14,8 +14,8 @@
 
 	if (canvas && ctx && canHover && !reduceMotion) {
 		// Soft, saturated pastels: gold, rose, violet, sky, mint. They need some colour to show on a light page.
-		const colors = ['#f3b94d', '#f28fb5', '#a48cff', '#7cc0ff', '#6fd6b8', '#ffd27a'];
-		const MAX = 260;
+		const colors = ['#f0c27a', '#f3a9c3', '#b7a6f5', '#9ccbf5'];
+		const MAX = 90;
 
 		type Dust = {
 			x: number;
@@ -48,30 +48,36 @@
 			dust.push({
 				x: x + (Math.random() - 0.5) * 10,
 				y: y + (Math.random() - 0.5) * 10,
-				vx: (Math.random() - 0.5) * 0.7,
+				vx: (Math.random() - 0.5) * 0.4,
 				vy: Math.random() * 0.4 - 0.2,
-				size: 1.8 + Math.random() * 3.6,
-				life: 900 + Math.random() * 900,
+				size: 1.4 + Math.random() * 2.6,
+				life: 700 + Math.random() * 700,
 				age: 0,
 				color: colors[(Math.random() * colors.length) | 0],
-				star: Math.random() < 0.4,
+				star: Math.random() < 0.2,
 				phase: Math.random() * Math.PI * 2,
 			});
 		};
 
+		// Leave a sparkle each time the mouse has travelled about 22px, so slow movement stays light and a flick
+		// leaves a thin trail rather than a cloud.
 		let lastX = -1;
 		let lastY = -1;
 		addEventListener('pointermove', (e) => {
-			if (lastX >= 0) {
-				// A sparkle every ~14px along the way, so a fast flick leaves a trail instead of gaps.
-				const dx = e.clientX - lastX;
-				const dy = e.clientY - lastY;
-				const steps = Math.min(Math.floor(Math.hypot(dx, dy) / 14) + 1, 8);
-				for (let i = 1; i <= steps; i++) spawn(lastX + (dx * i) / steps, lastY + (dy * i) / steps);
+			if (lastX < 0) {
+				lastX = e.clientX;
+				lastY = e.clientY;
 			}
-			lastX = e.clientX;
-			lastY = e.clientY;
-			start();
+			const dx = e.clientX - lastX;
+			const dy = e.clientY - lastY;
+			const dist = Math.hypot(dx, dy);
+			if (dist >= 22) {
+				const steps = Math.min(Math.floor(dist / 22), 4);
+				for (let i = 1; i <= steps; i++) spawn(lastX + (dx * i) / steps, lastY + (dy * i) / steps);
+				lastX = e.clientX;
+				lastY = e.clientY;
+				start();
+			}
 		});
 		document.addEventListener('pointerleave', () => {
 			lastX = -1;
@@ -108,12 +114,12 @@
 				const twinkle = 0.65 + 0.35 * Math.sin(d.age / 90 + d.phase);
 				const alpha = (k < 0.15 ? k / 0.15 : 1 - (k - 0.15) / 0.85) * twinkle;
 				ctx.fillStyle = d.color;
-				ctx.globalAlpha = alpha * 0.28;
+				ctx.globalAlpha = alpha * 0.16;
 				ctx.beginPath();
-				ctx.arc(d.x, d.y, d.size * 2.4, 0, Math.PI * 2);
+				ctx.arc(d.x, d.y, d.size * 2.2, 0, Math.PI * 2);
 				ctx.fill();
 				ctx.globalAlpha = alpha;
-				if (d.star) star(d.x, d.y, d.size * 2.7 * (1 - k * 0.4));
+				if (d.star) star(d.x, d.y, d.size * 2.4 * (1 - k * 0.4));
 				else {
 					ctx.beginPath();
 					ctx.arc(d.x, d.y, d.size * 0.7, 0, Math.PI * 2);
