@@ -190,6 +190,15 @@ const navLinks = [
 	.nav nav a:hover {
 		opacity: 1;
 	}
+	/* A bigger invisible tap area around each link, without changing the layout */
+	.nav nav a {
+		position: relative;
+	}
+	.nav nav a::after {
+		content: '';
+		position: absolute;
+		inset: -14px -5px;
+	}
 	@media (max-width: 600px) {
 		.nav-wrap {
 			inset: 12px 12px auto;

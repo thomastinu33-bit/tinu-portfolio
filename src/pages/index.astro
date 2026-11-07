@@ -226,8 +226,11 @@ const principleIcons = { build: MousePointerClick, team: UsersRound, craft: Rule
 	}
 	@media (max-width: 600px) {
 		.hero-meta {
-			bottom: 24px;
+			bottom: max(24px, env(safe-area-inset-bottom));
 			font-size: 0.85rem;
+		}
+		a.meta-link {
+			padding-block: 10px;
 		}
 	}
 	.hero .container {
