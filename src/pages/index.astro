@@ -7,6 +7,7 @@ import { site, projects, principles, experience } from '../data/site';
 import Mail from '@lucide/astro/icons/mail';
 import MapPin from '@lucide/astro/icons/map-pin';
 import ArrowUpRight from '@lucide/astro/icons/arrow-up-right';
+import ChevronDown from '@lucide/astro/icons/chevron-down';
 import Ruler from '@lucide/astro/icons/ruler';
 import MousePointerClick from '@lucide/astro/icons/mouse-pointer-click';
 import Ear from '@lucide/astro/icons/ear';
@@ -17,14 +18,25 @@ const principleIcons = { build: MousePointerClick, team: UsersRound, craft: Rule
 
 <Layout>
 	<section class="hero">
+		<!-- Soft drifting colour and a little grain behind the intro -->
+		<div class="aura" aria-hidden="true">
+			<span class="blob b1"></span>
+			<span class="blob b2"></span>
+			<span class="blob b3"></span>
+			<span class="blob b4"></span>
+			<span class="grain"></span>
+		</div>
 		<div class="container hero-inner">
-			<h1 class="greeting">Hi, I'm {site.name}</h1>
+			<h1 class="greeting"><span>Hi, I'm {site.name}</span></h1>
 			<!-- All lines share one grid cell, so the hero keeps the height of the longest line and never jumps. -->
 			<p class="rotator" aria-hidden="true">
 				{site.intro.map((line, i) => <span class:list={{ 'is-active': i === 0 }}>{line}</span>)}
 			</p>
 			<p class="sr-only">{site.intro.join('. ')}.</p>
 		</div>
+		<a class="scroll-cue" href="#how-i-work" aria-label="Scroll to How I work">
+			<ChevronDown size={20} strokeWidth={1.5} aria-hidden="true" />
+		</a>
 		<div id="contact" class="hero-meta nav-width">
 			<div class="touch">
 				<span class="meta-label">Get in touch</span>
@@ -173,7 +185,9 @@ const principleIcons = { build: MousePointerClick, team: UsersRound, craft: Rule
 		align-items: center;
 		position: relative;
 		padding: 112px 0 140px;
-		background: var(--gradient);
+		background: linear-gradient(180deg, #fffaf6 0%, #ffffff 100%);
+		overflow: hidden;
+		isolation: isolate;
 	}
 	/* Contact details pinned to the bottom corners of the first screen */
 	.hero-meta {
@@ -241,21 +255,33 @@ const principleIcons = { build: MousePointerClick, team: UsersRound, craft: Rule
 		text-align: center;
 	}
 	.greeting {
+		margin: 0 0 22px;
 		font-family: var(--font-sans);
-		font-weight: 300;
-		letter-spacing: 0.01em;
-		font-size: clamp(1.4rem, 3vw, 1.9rem);
-		color: var(--muted);
-		margin: 0 0 6px;
+		font-weight: 400;
+	}
+	/* The greeting sits in a small frosted pill */
+	.greeting span {
+		display: inline-block;
+		padding: 8px 20px;
+		border-radius: 999px;
+		background: rgba(255, 255, 255, 0.55);
+		border: 1px solid rgba(255, 255, 255, 0.8);
+		-webkit-backdrop-filter: blur(14px);
+		backdrop-filter: blur(14px);
+		box-shadow: 0 6px 24px rgba(160, 110, 90, 0.1);
+		font-size: 0.82rem;
+		letter-spacing: 0.16em;
+		text-transform: uppercase;
+		color: #6b6460;
 	}
 	.rotator {
 		display: grid;
-		max-width: 30ch;
+		max-width: 22ch;
 		margin: 0 auto;
 		font-family: var(--font-serif);
 		font-weight: 400;
-		font-size: clamp(2rem, 4.6vw, 3.2rem);
-		line-height: 1.1;
+		font-size: clamp(2.4rem, 6vw, 4.6rem);
+		line-height: 1.06;
 		letter-spacing: -0.01em;
 		font-variant-numeric: lining-nums;
 	}
@@ -276,6 +302,122 @@ const principleIcons = { build: MousePointerClick, team: UsersRound, craft: Rule
 		.rotator span {
 			transform: none;
 			transition: none;
+		}
+	}
+	/* Soft colour behind the intro: slow, blurred blobs and a light grain, fading into the page below */
+	.aura {
+		position: absolute;
+		inset: 0;
+		z-index: -1;
+		pointer-events: none;
+	}
+	.aura::after {
+		content: '';
+		position: absolute;
+		inset: auto 0 0;
+		height: 220px;
+		background: linear-gradient(180deg, rgba(255, 255, 255, 0), #fff);
+	}
+	.blob {
+		position: absolute;
+		border-radius: 50%;
+		filter: blur(70px);
+		opacity: 0.7;
+		animation: drift 22s ease-in-out infinite alternate;
+	}
+	.b1 {
+		top: -12%;
+		left: -6%;
+		width: 46vw;
+		height: 46vw;
+		background: #ffd9c7;
+	}
+	.b2 {
+		top: 4%;
+		right: -8%;
+		width: 40vw;
+		height: 40vw;
+		background: #e4dcff;
+		animation-duration: 28s;
+		animation-delay: -6s;
+	}
+	.b3 {
+		bottom: -10%;
+		left: 24%;
+		width: 38vw;
+		height: 38vw;
+		background: #ffe3ee;
+		animation-duration: 25s;
+		animation-delay: -12s;
+	}
+	.b4 {
+		top: 38%;
+		right: 14%;
+		width: 24vw;
+		height: 24vw;
+		background: #d9ecff;
+		opacity: 0.6;
+		animation-duration: 31s;
+		animation-delay: -3s;
+	}
+	@keyframes drift {
+		from {
+			transform: translate3d(0, 0, 0) scale(1);
+		}
+		to {
+			transform: translate3d(5vw, 4vh, 0) scale(1.12);
+		}
+	}
+	.grain {
+		position: absolute;
+		inset: 0;
+		opacity: 0.22;
+		mix-blend-mode: multiply;
+		background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 0.45 0 0 0 0 0.4 0 0 0 0 0.38 0 0 0 0.55 0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+	}
+	.scroll-cue {
+		position: absolute;
+		left: 50%;
+		bottom: 96px;
+		display: grid;
+		place-items: center;
+		width: 44px;
+		height: 44px;
+		border-radius: 50%;
+		color: var(--fg);
+		background: rgba(255, 255, 255, 0.55);
+		border: 1px solid rgba(255, 255, 255, 0.85);
+		-webkit-backdrop-filter: blur(14px);
+		backdrop-filter: blur(14px);
+		box-shadow: 0 8px 24px rgba(160, 110, 90, 0.12);
+		transform: translateX(-50%);
+		animation: bob 3.2s ease-in-out infinite;
+	}
+	.scroll-cue:focus-visible {
+		outline: 2px solid var(--accent);
+		outline-offset: 4px;
+	}
+	@keyframes bob {
+		50% {
+			transform: translate(-50%, 6px);
+		}
+	}
+	@media (max-width: 600px) {
+		.scroll-cue {
+			bottom: 160px;
+		}
+		.b1,
+		.b2,
+		.b3,
+		.b4 {
+			width: 95vw;
+			height: 95vw;
+		}
+	}
+	@media (prefers-reduced-motion: reduce) {
+		.blob,
+		.scroll-cue {
+			animation: none;
 		}
 	}
 	.sr-only {
