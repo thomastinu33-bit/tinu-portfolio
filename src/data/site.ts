@@ -181,14 +181,6 @@ export const experience: Job[] = [
 		projects: ['evertune'],
 	},
 	{
-		company: 'Qloo',
-		role: 'Senior Product Designer',
-		when: 'Jan 2025 – Aug 2025',
-		summary:
-			'Led design for Insights by Qloo\u2122, creating AI-powered features that help customers pull valuable insights out of a data-heavy platform.',
-		projects: [],
-	},
-	{
 		company: 'YipitData',
 		role: 'Senior Interaction Designer',
 		when: 'Aug 2021 – Jan 2025',
