@@ -178,7 +178,7 @@ export const experience: Job[] = [
 		when: 'Aug 2025 – Present',
 		summary:
 			'Designing Evertune\u2019s AI-native platform end to end across GEO and Ads, and creating unified agent experiences so customers can understand and improve how their brand shows up in AI answers.',
-		projects: ['evertune'],
+		projects: ['evertune', 'evertune-brand-overview'],
 	},
 	{
 		company: 'YipitData',

@@ -555,4 +555,34 @@ export const studies: Study[] = [
 			},
 		],
 	},
+	{
+		slug: 'evertune-brand-overview',
+		title: 'Designing the Evertune brand overview page',
+		company: 'Evertune',
+		tags: ['Evertune AI', 'B2B SaaS', 'Product Design'],
+		summary:
+			'The brand overview page is where customers see how their AI visibility is doing across every prompt they have run, and what to do next.',
+		highlights: ['~97.5% of visitors return', '~21% of app users visit', '~8.6s median time on page'],
+		cover: { src: 'evertune-brand-overview/01', alt: 'The Evertune platform.' },
+		blocks: [
+			{ type: 'heading', text: 'Context' },
+			{
+				type: 'text',
+				text: 'I designed the brand overview page, where users analyze how their AI visibility is doing across all the prompts they have run.',
+			},
+			{ type: 'heading', text: 'Impact' },
+			{
+				type: 'stats',
+				items: [
+					{ value: '~21%', label: 'Of app users visit the brand overview' },
+					{ value: '~97.5%', label: 'Of visitors return' },
+					{ value: '~8.6s', label: 'Median time on page' },
+				],
+			},
+			{
+				type: 'text',
+				text: 'Users were able to quickly see how their brand was performing and take next step actions.',
+			},
+		],
+	},
 ];
