@@ -587,11 +587,9 @@ const principleIcons = { build: MousePointerClick, team: UsersRound, craft: Rule
 		z-index: -1;
 		pointer-events: none;
 		background:
-			radial-gradient(40% 55% at 12% 20%, rgba(255, 205, 180, 0.75), transparent 70%),
-			radial-gradient(38% 50% at 88% 18%, rgba(205, 190, 255, 0.7), transparent 70%),
-			radial-gradient(40% 55% at 20% 88%, rgba(255, 200, 222, 0.7), transparent 70%),
-			radial-gradient(40% 55% at 86% 86%, rgba(185, 220, 255, 0.75), transparent 70%);
-		filter: blur(20px);
+			radial-gradient(38% 50% at 10% 15%, rgba(255, 220, 200, 0.4), transparent 70%),
+			radial-gradient(36% 50% at 92% 90%, rgba(216, 208, 255, 0.38), transparent 70%);
+		filter: blur(24px);
 	}
 	.principles li {
 		padding: clamp(20px, 3vw, 30px);
@@ -602,9 +600,24 @@ const principleIcons = { build: MousePointerClick, team: UsersRound, craft: Rule
 		backdrop-filter: blur(22px) saturate(160%);
 		box-shadow:
 			inset 0 1px 0 rgba(255, 255, 255, 0.95),
-			0 18px 44px -18px rgba(140, 110, 170, 0.28);
+			0 18px 44px -18px rgba(140, 110, 170, 0.2);
+		transition:
+			transform 0.35s cubic-bezier(0.2, 0.7, 0.2, 1),
+			box-shadow 0.35s ease,
+			background 0.35s ease;
+	}
+	.principles li:hover {
+		transform: translateY(-6px);
+		background: linear-gradient(140deg, rgba(255, 255, 255, 0.9) 0%, rgba(255, 248, 243, 0.55) 100%);
+		box-shadow:
+			inset 0 1px 0 #fff,
+			0 28px 56px -20px rgba(150, 110, 170, 0.35);
+	}
+	.principles li:hover .p-badge {
+		transform: rotate(-6deg) scale(1.08);
 	}
 	.p-badge {
+		transition: transform 0.35s cubic-bezier(0.2, 0.7, 0.2, 1);
 		display: grid;
 		place-items: center;
 		width: 44px;
@@ -629,6 +642,12 @@ const principleIcons = { build: MousePointerClick, team: UsersRound, craft: Rule
 	@media (max-width: 720px) {
 		.principles {
 			grid-template-columns: 1fr;
+		}
+	}
+	@media (prefers-reduced-motion: reduce), (hover: none) {
+		.principles li:hover,
+		.principles li:hover .p-badge {
+			transform: none;
 		}
 	}
 
