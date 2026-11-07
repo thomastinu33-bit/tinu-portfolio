@@ -568,7 +568,7 @@ export const studies: Study[] = [
 			{ type: 'heading', text: 'Context' },
 			{
 				type: 'text',
-				text: 'I designed the brand overview page, where users analyze how their AI visibility is doing across all the prompts they have run.',
+				text: 'As customers kept using Evertune and running more prompts to understand their AI visibility, it became harder to go through every category and every tracker to see how they were performing, especially against their competitors. There was a growing need for an aggregated view, so customers could see how their brand was doing overall. I designed the brand overview page to give them that view across all the prompts they have run.',
 			},
 			{ type: 'heading', text: 'Impact' },
 			{
