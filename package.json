@@ -13,6 +13,7 @@
   },
   "dependencies": {
     "@lucide/astro": "^1.50.0",
+    "@phosphor-icons/core": "^2.1.1",
     "astro": "^7.4.1"
   }
 }

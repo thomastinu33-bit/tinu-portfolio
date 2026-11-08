@@ -1,0 +1,16 @@
+---
+// Phosphor icons (https://phosphoricons.com). Use: <Icon name="house" size={20} /> (weight: thin | light | regular | bold | fill)
+interface Props {
+	name: string;
+	size?: number;
+	weight?: 'thin' | 'light' | 'regular' | 'bold' | 'fill';
+	class?: string;
+}
+const { name, size = 20, weight = 'regular', class: cls = '' } = Astro.props;
+const files = import.meta.glob('/node_modules/@phosphor-icons/core/assets/*/*.svg', { query: '?raw', import: 'default', eager: true }) as Record<string, string>;
+const file = weight === 'regular' ? `${name}.svg` : `${name}-${weight}.svg`;
+const raw = files[`/node_modules/@phosphor-icons/core/assets/${weight}/${file}`];
+if (!raw) throw new Error(`Icon not found: ${name} (${weight})`);
+const svg = raw.replace('<svg ', `<svg width="${size}" height="${size}" class="icon ${cls}" aria-hidden="true" focusable="false" `);
+---
+<Fragment set:html={svg} />

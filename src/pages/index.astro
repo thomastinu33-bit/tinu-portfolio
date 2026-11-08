@@ -1,17 +1,12 @@
 ---
+import Icon from '../components/Icon.astro';
 import { base } from '../lib/base';
 import Layout from '../layouts/Layout.astro';
 import { Image } from 'astro:assets';
 import PasswordGate from '../components/PasswordGate.astro';
 import { site, projects, principles, experience } from '../data/site';
-import ArrowUpRight from '@lucide/astro/icons/arrow-up-right';
-import ChevronDown from '@lucide/astro/icons/chevron-down';
-import Ruler from '@lucide/astro/icons/ruler';
-import MousePointerClick from '@lucide/astro/icons/mouse-pointer-click';
-import Ear from '@lucide/astro/icons/ear';
-import UsersRound from '@lucide/astro/icons/users-round';
 
-const principleIcons = { build: MousePointerClick, team: UsersRound, craft: Ruler, improve: Ear };
+const principleIcons = { build: 'cursor-click', team: 'users-three', craft: 'ruler', improve: 'ear' };
 ---
 
 <Layout>
@@ -35,7 +30,7 @@ const principleIcons = { build: MousePointerClick, team: UsersRound, craft: Rule
 			<p class="sr-only">{site.intro.join('. ')}.</p>
 		</div>
 		<a class="scroll-cue" href="#how-i-work" aria-label="Scroll to How I work">
-			<ChevronDown size={20} strokeWidth={1.5} aria-hidden="true" />
+			<Icon name="caret-down" size={20} aria-hidden="true" />
 		</a>
 	</section>
 
@@ -44,11 +39,10 @@ const principleIcons = { build: MousePointerClick, team: UsersRound, craft: Rule
 		<ul class="principles">
 			{
 				principles.map((pr) => {
-					const Icon = principleIcons[pr.icon];
 					return (
 						<li>
 							<span class="p-badge">
-								<Icon size={20} strokeWidth={1.5} aria-hidden="true" />
+								<Icon name={principleIcons[pr.icon]} size={22} weight="light" />
 							</span>
 							<h3>{pr.title}</h3>
 							<p>{pr.body}</p>
@@ -100,7 +94,7 @@ const principleIcons = { build: MousePointerClick, team: UsersRound, craft: Rule
 													{p.highlights?.[0] && <span class="stat">{p.highlights[0]}</span>}
 												</div>
 												<span class="arrow" aria-hidden="true">
-													<ArrowUpRight size={18} strokeWidth={1.5} />
+													<Icon name="arrow-up-right" size={18} />
 												</span>
 											</div>
 										</a>

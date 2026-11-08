@@ -1,9 +1,7 @@
 ---
+import Icon from '../components/Icon.astro';
 import { base } from '../lib/base';
 import { site } from '../data/site';
-import Mail from '@lucide/astro/icons/mail';
-import MapPin from '@lucide/astro/icons/map-pin';
-import ArrowUpRight from '@lucide/astro/icons/arrow-up-right';
 
 interface Props {
 	title?: string;
@@ -13,11 +11,11 @@ interface Props {
 const { title = `${site.name} · ${site.role}`, description = site.tagline } = Astro.props;
 
 const navLinks = [
-	{ label: 'Home', href: `${base}/` },
-	{ label: 'How I work', href: `${base}/#how-i-work` },
-	{ label: 'Experience', href: `${base}/#work` },
-	{ label: 'About', href: `${base}/#about` },
-	{ label: 'Resume', href: `${base}/resume/` },
+	{ label: 'Home', icon: 'house', href: `${base}/` },
+	{ label: 'How I work', icon: 'lightbulb', href: `${base}/#how-i-work` },
+	{ label: 'Experience', icon: 'briefcase', href: `${base}/#work` },
+	{ label: 'About', icon: 'user', href: `${base}/#about` },
+	{ label: 'Resume', icon: 'file-text', href: `${base}/resume/` },
 ];
 ---
 
@@ -46,15 +44,18 @@ const navLinks = [
 	</head>
 	<body>
 		<header class="nav-wrap">
-			<div class="nav glass">
-				<a class="brand" href={`${base}/`} aria-label={`${site.name}, home`}>
-					<span class="full">{site.name}</span>
-					<span class="short" aria-hidden="true">{site.name.split(' ').map((w) => w[0]).join('')}</span>
-				</a>
-				<nav aria-label="Main">
-					{navLinks.map((l) => <a href={l.href}>{l.label}</a>)}
-				</nav>
-			</div>
+			<a class="brand" href={`${base}/`} aria-label={`${site.name}, home`}>{site.name}</a>
+			<!-- A small dock of icons; hovering (or tabbing into) it opens up the labels -->
+			<nav class="dock" aria-label="Main">
+				{
+					navLinks.map((l) => (
+						<a href={l.href} aria-label={l.label}>
+							<Icon name={l.icon} size={20} weight="light" />
+							<span class="label">{l.label}</span>
+						</a>
+					))
+				}
+			</nav>
 		</header>
 		<main>
 			<slot />
@@ -64,18 +65,18 @@ const navLinks = [
 				<div class="touch">
 					<span class="meta-label">Get in touch</span>
 					<a class="meta-link" href={`mailto:${site.email}`}>
-						<Mail size={16} strokeWidth={1.75} aria-hidden="true" />
+						<Icon name="envelope-simple" size={16} aria-hidden="true" />
 						{site.email}
 					</a>
 					<a class="meta-link" href={site.linkedin} target="_blank" rel="noopener">
 						LinkedIn
-						<ArrowUpRight size={16} strokeWidth={1.75} aria-hidden="true" />
+						<Icon name="arrow-up-right" size={16} aria-hidden="true" />
 					</a>
 				</div>
 				<div class="location">
 					<span class="meta-label">Based in</span>
 					<span class="meta-link">
-						<MapPin size={16} strokeWidth={1.75} aria-hidden="true" />
+						<Icon name="map-pin" size={16} aria-hidden="true" />
 						{site.location}
 					</span>
 				</div>
@@ -161,122 +162,94 @@ const navLinks = [
 		box-shadow: var(--glass-shadow);
 	}
 
-	/* The nav is a clearer glass than the cards: less white tint, more blur, and a faint bright edge */
-	.nav.glass {
-		background: rgba(255, 255, 255, 0.3);
-		-webkit-backdrop-filter: blur(30px) saturate(180%);
-		backdrop-filter: blur(30px) saturate(180%);
-		border: 1px solid rgba(255, 255, 255, 0.55);
-		box-shadow:
-			0 8px 32px rgba(0, 0, 0, 0.06),
-			inset 0 1px 0 rgba(255, 255, 255, 0.6);
-	}
-
+	/* Top nav: a collapsed dock of icons, centred. Hover or focus opens it to show the labels. */
 	.nav-wrap {
 		position: fixed;
-		inset: 24px 24px auto;
+		inset: 20px 0 auto;
 		z-index: 10;
-	}
-	.nav {
-		max-width: 1280px;
-		margin: 0 auto;
-		height: 64px;
-		padding: 0 32px;
-		border-radius: 999px;
 		display: flex;
-		justify-content: space-between;
-		align-items: center;
-		gap: 16px;
+		justify-content: center;
+		pointer-events: none;
 	}
 	.brand {
+		position: absolute;
+		top: 50%;
+		transform: translateY(-50%);
+		left: max(24px, calc(50% - 640px + 32px));
+		pointer-events: auto;
 		color: var(--fg);
 		text-decoration: none;
 		text-transform: uppercase;
 		white-space: nowrap;
 		font-weight: 400;
-		font-size: 0.95rem;
+		font-size: 0.9rem;
 		letter-spacing: 0.18em;
 	}
-	.nav nav {
+	.dock {
+		pointer-events: auto;
 		display: flex;
-		gap: 32px;
+		align-items: center;
+		gap: 2px;
+		padding: 6px;
+		border-radius: 999px;
+		background: rgba(255, 255, 255, 0.45);
+		-webkit-backdrop-filter: blur(26px) saturate(180%);
+		backdrop-filter: blur(26px) saturate(180%);
+		border: 1px solid rgba(255, 255, 255, 0.7);
+		box-shadow:
+			0 8px 32px rgba(0, 0, 0, 0.07),
+			inset 0 1px 0 rgba(255, 255, 255, 0.7);
 	}
-	.nav nav a {
+	.dock a {
+		position: relative;
+		display: flex;
+		align-items: center;
+		height: 44px;
+		padding: 0 12px;
+		border-radius: 999px;
 		color: var(--fg);
-		opacity: 0.8;
 		text-decoration: none;
-		font-size: 1rem;
-		transition: opacity 0.15s;
+		white-space: nowrap;
+		font-size: 0.95rem;
+		transition: background 0.2s ease;
 	}
-	.nav nav a:hover {
+	.dock a:hover,
+	.dock a:focus-visible {
+		background: rgba(255, 255, 255, 0.85);
+	}
+	.dock .label {
+		max-width: 0;
+		opacity: 0;
+		overflow: hidden;
+		margin-left: 0;
+		transition:
+			max-width 0.35s cubic-bezier(0.2, 0.7, 0.2, 1),
+			margin-left 0.35s cubic-bezier(0.2, 0.7, 0.2, 1),
+			opacity 0.25s ease;
+	}
+	@media (hover: hover) {
+		.dock:hover .label {
+			max-width: 120px;
+			margin-left: 8px;
+			opacity: 1;
+		}
+	}
+	.dock:focus-within .label {
+		max-width: 120px;
+		margin-left: 8px;
 		opacity: 1;
 	}
-	/* A bigger invisible tap area around each link, without changing the layout */
-	.nav nav a {
-		position: relative;
-	}
-	.nav nav a::after {
-		content: '';
-		position: absolute;
-		inset: -14px -5px;
-	}
-	@media (max-width: 600px) {
+	@media (max-width: 700px) {
+		.brand {
+			display: none;
+		}
 		.nav-wrap {
-			inset: 12px 12px auto;
-		}
-		.nav {
-			height: 56px;
-			padding: 0 20px;
-		}
-		.brand {
-			font-size: 0.78rem;
-			letter-spacing: 0.1em;
-		}
-		.nav nav {
-			gap: 12px;
-		}
-		.nav nav a {
-			font-size: 0.8rem;
+			inset: 12px 0 auto;
 		}
 	}
-	/* Links never wrap. Where five don't fit beside the name, "Home" goes first (the name links home),
-	   then the name tightens, then it becomes initials. */
-	.nav nav a {
-		white-space: nowrap;
-	}
-	.brand .short {
-		display: none;
-	}
-	@media (max-width: 760px) {
-		.nav nav a:first-child {
-			display: none;
-		}
-	}
-	@media (max-width: 520px) {
-		.nav {
-			padding: 0 14px;
-			gap: 10px;
-		}
-		.nav nav {
-			gap: 10px;
-		}
-		.nav nav a {
-			font-size: 0.74rem;
-		}
-		.brand {
-			font-size: 0.7rem;
-			letter-spacing: 0.06em;
-			white-space: nowrap;
-		}
-	}
-	@media (max-width: 359px) {
-		.brand .full {
-			display: none;
-		}
-		.brand .short {
-			display: inline;
-			font-size: 0.85rem;
-			letter-spacing: 0.1em;
+	@media (prefers-reduced-motion: reduce) {
+		.dock .label {
+			transition: none;
 		}
 	}
 
@@ -330,7 +303,7 @@ const navLinks = [
 	a.meta-link:hover svg {
 		color: var(--accent);
 	}
-	a.meta-link:hover svg.lucide-arrow-up-right {
+	a.meta-link:hover svg.arrow-ne {
 		transform: translate(2px, -2px);
 	}
 	@media (max-width: 600px) {

@@ -1,4 +1,5 @@
 ---
+import Icon from '../../components/Icon.astro';
 import { base } from '../../lib/base';
 import Layout from '../../layouts/Layout.astro';
 import FlowHero from '../../components/FlowHero.astro';
@@ -6,7 +7,6 @@ import OldFlow from '../../components/OldFlow.astro';
 import FiveWays from '../../components/FiveWays.astro';
 import PasswordGate from '../../components/PasswordGate.astro';
 import { site, projects } from '../../data/site';
-import Check from '@lucide/astro/icons/check';
 
 const project = projects.find((p) => p.slug === 'evertune')!;
 ---
@@ -99,9 +99,9 @@ const project = projects.find((p) => p.slug === 'evertune')!;
 				New customers find it much easier and more intuitive to create trackers and run prompts.
 			</p>
 			<ul class="wins">
-				<li><Check size={20} strokeWidth={1.75} aria-hidden="true" />No onboarding steps needed</li>
+				<li><Icon name="check" size={20} aria-hidden="true" />No onboarding steps needed</li>
 				<li>
-					<Check size={20} strokeWidth={1.75} aria-hidden="true" />No white-glove service from our customer success team
+					<Icon name="check" size={20} aria-hidden="true" />No white-glove service from our customer success team
 				</li>
 			</ul>
 		</section>
