@@ -334,7 +334,11 @@ const principleIcons = { build: 'cursor-click', team: 'users-three', craft: 'rul
 			size();
 			draw(0);
 		});
-		new IntersectionObserver(([e]) => (e.isIntersecting ? start() : stop())).observe(hero);
+		new IntersectionObserver(([e]) => {
+			// off screen: stop the game and freeze the drifting colour too, so nothing animates unseen
+			hero.classList.toggle('paused', !e.isIntersecting);
+			e.isIntersecting ? start() : stop();
+		}).observe(hero);
 	}
 </script>
 
@@ -515,6 +519,9 @@ const principleIcons = { build: 'cursor-click', team: 'users-three', craft: 'rul
 		inset: auto 0 0;
 		height: 220px;
 		background: linear-gradient(180deg, rgba(255, 255, 255, 0), #fff);
+	}
+	.hero.paused .blob {
+		animation-play-state: paused;
 	}
 	.blob {
 		position: absolute;
