@@ -90,12 +90,24 @@ const { study } = Astro.props;
 						case 'gallery':
 							return (
 								<div class="gallery">
-									{b.items.map((g) => (
-										<figure>
-											<Image src={studyImage(g.src)} alt={g.alt} widths={[600, 1000, 1500]} sizes="(max-width: 720px) 100vw, 470px" />
-											<figcaption>{g.caption}</figcaption>
-										</figure>
-									))}
+									<ul class="track">
+										{b.items.map((g) => (
+											<li>
+												<figure>
+													<Image src={studyImage(g.src)} alt={g.alt} widths={[700, 1100, 1500]} sizes="(max-width: 720px) 90vw, 700px" />
+													<figcaption>{g.caption}</figcaption>
+												</figure>
+											</li>
+										))}
+									</ul>
+									<div class="g-nav">
+										<button class="g-prev" type="button" aria-label="Previous">
+											<Icon name="caret-left" size={18} weight="bold" />
+										</button>
+										<button class="g-next" type="button" aria-label="Next">
+											<Icon name="caret-right" size={18} weight="bold" />
+										</button>
+									</div>
 								</div>
 							);
 						case 'research':
@@ -181,6 +193,23 @@ const { study } = Astro.props;
 </Layout>
 
 <script>
+	// Carousels: the arrows scroll one picture at a time and switch off at either end.
+	document.querySelectorAll<HTMLElement>('.gallery').forEach((g) => {
+		const track = g.querySelector<HTMLElement>('.track')!;
+		const prev = g.querySelector<HTMLButtonElement>('.g-prev')!;
+		const next = g.querySelector<HTMLButtonElement>('.g-next')!;
+		const step = () => (track.querySelector('li')?.getBoundingClientRect().width ?? 600) + 16;
+		const sync = () => {
+			prev.disabled = track.scrollLeft < 4;
+			next.disabled = track.scrollLeft > track.scrollWidth - track.clientWidth - 4;
+		};
+		prev.addEventListener('click', () => track.scrollBy({ left: -step(), behavior: 'smooth' }));
+		next.addEventListener('click', () => track.scrollBy({ left: step(), behavior: 'smooth' }));
+		track.addEventListener('scroll', sync, { passive: true });
+		addEventListener('resize', sync);
+		sync();
+	});
+
 	// Clips play while on screen and pause when off screen. The corner button (or a click on the clip) pauses and plays.
 	const still = matchMedia('(prefers-reduced-motion: reduce)').matches;
 	document.querySelectorAll<HTMLElement>('.clip-box').forEach((box) => {
@@ -480,16 +509,55 @@ const { study } = Astro.props;
 		line-height: 1.45;
 	}
 	/* Discovery: questions on the left, pain points on the right, on two quiet panels */
-	.gallery {
+	/* Design exploration: a row of screens you scroll through, one snapping into place at a time */
+	.track {
+		list-style: none;
+		margin: 0;
+		padding: 4px 2px 26px;
+		display: flex;
+		gap: 16px;
+		overflow-x: auto;
+		scroll-snap-type: x mandatory;
+		scrollbar-width: none;
+		overscroll-behavior-x: contain;
+	}
+	.track::-webkit-scrollbar {
+		display: none;
+	}
+	.track li {
+		flex: 0 0 min(720px, 84%);
+		scroll-snap-align: start;
+	}
+	.track figcaption {
+		margin-top: 12px;
+	}
+	.g-nav {
+		display: flex;
+		justify-content: flex-end;
+		gap: 8px;
+		margin-top: -6px;
+	}
+	.g-nav button {
 		display: grid;
-		grid-template-columns: repeat(2, minmax(0, 1fr));
-		gap: 28px 16px;
+		place-items: center;
+		width: 40px;
+		height: 40px;
+		padding: 0;
+		border-radius: 999px;
+		color: var(--fg);
+		cursor: pointer;
+		background: rgba(255, 255, 255, 0.7);
+		border: 1px solid #ececec;
+		box-shadow: 0 6px 18px -10px rgba(0, 0, 0, 0.25);
+		transition: background 0.2s ease, opacity 0.2s ease, transform 0.2s ease;
 	}
-	.gallery figure:last-child:nth-child(odd) {
-		grid-column: 1 / -1;
+	.g-nav button:hover:not(:disabled) {
+		background: #fff;
+		transform: scale(1.06);
 	}
-	.gallery figcaption {
-		margin-top: 10px;
+	.g-nav button:disabled {
+		opacity: 0.35;
+		cursor: default;
 	}
 	.research {
 		display: grid;
@@ -641,9 +709,11 @@ const { study } = Astro.props;
 		}
 	}
 	@media (max-width: 720px) {
-		.pains,
-		.gallery {
+		.pains {
 			grid-template-columns: 1fr;
+		}
+		.track li {
+			flex-basis: 88%;
 		}
 		.panel {
 			padding: 22px;
