@@ -13,6 +13,7 @@ const project = projects.find((p) => p.slug === 'evertune')!;
 
 <Layout title={`${project.title} · ${site.name}`} description={project.summary}>
 	<div id="gated" class="gated">
+	<div class="wash" aria-hidden="true"></div>
 	<article class="container study">
 		<a class="back" href={`${base}/#work`}>← All case studies</a>
 
@@ -112,6 +113,25 @@ const project = projects.find((p) => p.slug === 'evertune')!;
 </Layout>
 
 <style>
+	/* Soft colour behind the top of the page, like the landing page */
+	.wash {
+		position: absolute;
+		inset: 0 0 auto;
+		height: 720px;
+		z-index: -1;
+		pointer-events: none;
+		overflow: hidden;
+		background:
+			radial-gradient(42% 55% at 12% 12%, rgba(255, 214, 190, 0.6), transparent 70%),
+			radial-gradient(40% 55% at 88% 8%, rgba(214, 205, 255, 0.55), transparent 70%);
+		filter: blur(18px);
+		-webkit-mask-image: linear-gradient(#000 60%, transparent);
+		mask-image: linear-gradient(#000 60%, transparent);
+	}
+	.gated {
+		position: relative;
+		isolation: isolate;
+	}
 	.study {
 		max-width: 900px;
 		padding-top: 140px;
