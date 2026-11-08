@@ -130,7 +130,7 @@ export const projects: Project[] = [
 				{
 					label: 'Run',
 					caption: 'Pick the models and refresh cadence and watch the monthly prompt usage update, then run the tracker.',
-					at: 29.3,
+					at: 18.4,
 				},
 			],
 		},
