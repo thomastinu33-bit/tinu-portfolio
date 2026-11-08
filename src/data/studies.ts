@@ -595,6 +595,15 @@ export const studies: Study[] = [
 				type: 'text',
 				text: 'I started by partnering with the PM to understand exactly how customers wanted to understand their brand performance. Our customer success teams were already building reports for customers, so as part of our discovery process, we gathered all of those artifacts and evaluated them to uncover patterns in what they showed.',
 			},
+			{ type: 'heading', text: 'Designing for our users' },
+			{
+				type: 'text',
+				text: 'Discovery pointed to two main types of users. The first is the agency user, who analyzes multiple brands across multiple categories. For them, going through every tracker for every brand and aggregating the data by hand was slow and difficult.',
+			},
+			{
+				type: 'text',
+				text: 'The second is the in-house brand team, who looks across categories to see how their brand is performing against its competitors in each one, and which categories deserve their focus.',
+			},
 		],
 	},
 ];
