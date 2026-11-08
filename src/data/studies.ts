@@ -12,6 +12,8 @@ export type Block =
 	| { type: 'logos'; images: { src: string; alt: string }[] }
 	| { type: 'stats'; items: { value: string; label: string }[] }
 	| { type: 'quotes'; items: string[] }
+	// A row of numbered steps joined by arrows (wraps to two columns on small screens)
+	| { type: 'process'; steps: { icon: string; label: string; body?: string }[] }
 	// The Data Visualization Guidelines site, rebuilt in HTML and clickable (see GuidelinesSite)
 	| { type: 'guidelines'; caption?: string }
 	// A board of sticky notes grouped by theme (see AffinityBoard)
@@ -459,7 +461,16 @@ export const studies: Study[] = [
 			},
 			{ type: 'image', src: 'lemoney/01', alt: 'The Lemoney invoice screen.' },
 			{ type: 'heading', text: 'The design process' },
-			{ type: 'image', src: 'lemoney/process', alt: 'The steps of the design process.' },
+			{
+				type: 'process',
+				steps: [
+					{ icon: 'magnifying-glass', label: 'Research', body: 'Interviews with finance teams' },
+					{ icon: 'squares-four', label: 'Design IA', body: 'Outline the core modules' },
+					{ icon: 'users-three', label: 'Stakeholder review', body: 'Align with product and the team' },
+					{ icon: 'pen-nib', label: 'Design', body: 'Flows and screens' },
+					{ icon: 'desktop', label: 'Implementation', body: 'Hand off the proof of concept' },
+				],
+			},
 			{
 				type: 'text',
 				text: 'I conducted in-depth user research with bookkeepers, accountants, tax managers and finance managers from various organizations to better understand their workflows and pinpoint key pain points. This discovery phase gave us a clear outline of the essential modules for the product. I then shared these insights with stakeholders and collaborated closely with the product manager to define the goals for the proof of concept.',
