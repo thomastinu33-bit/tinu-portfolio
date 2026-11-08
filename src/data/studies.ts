@@ -345,6 +345,12 @@ export const studies: Study[] = [
 				type: 'text',
 				text: 'Recognizing this gap, I developed the Data Visualization Guidelines, a resource to help research teams design more effective, user-friendly dashboards. The guidelines also supported engineering by introducing streamlined components, reducing the need to build dashboards from scratch and improving overall efficiency.',
 			},
+			{
+				type: 'image',
+				src: 'yd-dataviz/03',
+				alt: 'The interactive example dashboard from the Data Visualization Guidelines, with filters above an aggregate chart, a market share chart and a top products chart.',
+				caption: 'The example dashboard in the guidelines: filters up top, with charts that follow the same layout, color and chart rules.',
+			},
 		],
 	},
 	{
