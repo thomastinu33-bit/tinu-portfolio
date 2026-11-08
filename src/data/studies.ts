@@ -689,7 +689,7 @@ export const studies: Study[] = [
 			},
 			{
 				type: 'text',
-				text: 'Along the way, I worked with engineering to understand our technical limitations and to define what belonged in the MVP. That shaped which ideas we kept for launch and which we saved for later.',
+				text: 'Along the way, the PM and I worked with engineering to understand our technical limitations and to define what belonged in the MVP. That shaped which ideas we kept for launch and which we saved for later.',
 			},
 		],
 	},
