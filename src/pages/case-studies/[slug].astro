@@ -499,24 +499,21 @@ const { study } = Astro.props;
 	}
 	.asks {
 		flex: 1;
-		display: flex;
-		flex-direction: column;
+		display: grid;
+		grid-auto-rows: 1fr;
+		gap: 12px;
 	}
-	/* the questions share the panel's height evenly, so both panels end on the same line */
+	/* the questions are cards too, sharing the panel's height evenly so both panels end on the same line */
 	.asks li {
-		flex: 1;
 		display: flex;
 		align-items: center;
-		padding: 14px 0;
-		font-family: var(--font-serif);
-		font-size: 1.3rem;
-		line-height: 1.35;
-	}
-	.asks li:first-child {
-		padding-top: 0;
-	}
-	.asks li:last-child {
-		padding-bottom: 0;
+		padding: 18px 22px;
+		border-radius: 18px;
+		background: #fff;
+		border: 1px solid #ececec;
+		font-size: 0.98rem;
+		line-height: 1.5;
+		color: #3d3d3d;
 	}
 	.pains {
 		flex: 1;
@@ -535,9 +532,6 @@ const { study } = Astro.props;
 		font-size: 0.98rem;
 		line-height: 1.5;
 		color: #3d3d3d;
-	}
-	.asks li + li {
-		border-top: 1px solid #ececec;
 	}
 	.personas {
 		display: grid;
