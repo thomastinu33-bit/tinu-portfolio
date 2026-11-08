@@ -44,17 +44,20 @@ const navLinks = [
 	</head>
 	<body>
 		<header class="nav-wrap">
-			<!-- A small dock of icons; hovering (or tabbing into) it opens up the labels -->
-			<nav class="dock" aria-label="Main">
-				{
-					navLinks.map((l) => (
-						<a href={l.href} aria-label={l.label}>
-							<Icon name={l.icon} size={20} weight="light" />
-							<span class="label">{l.label}</span>
-						</a>
-					))
-				}
-			</nav>
+			<!-- Full width at the top of the page. Scrolling collapses it to a small icon dock that opens again on hover. -->
+			<div class="dock">
+				<a class="brand" href={`${base}/`} aria-label={`${site.name}, home`}>{site.name}</a>
+				<nav class="links" aria-label="Main">
+					{
+						navLinks.map((l) => (
+							<a href={l.href} aria-label={l.label}>
+								<Icon name={l.icon} size={20} weight="light" />
+								<span class="label">{l.label}</span>
+							</a>
+						))
+					}
+				</nav>
+			</div>
 		</header>
 		<main>
 			<slot />
@@ -84,6 +87,16 @@ const navLinks = [
 				<p class="copyright">© {new Date().getFullYear()} {site.name}</p>
 			</div>
 		</footer>
+		<script is:inline>
+			(function () {
+				var root = document.documentElement;
+				var update = function () {
+					root.classList.toggle('nav-collapsed', window.scrollY > 40);
+				};
+				update();
+				window.addEventListener('scroll', update, { passive: true });
+			})();
+		</script>
 	</body>
 </html>
 
@@ -161,7 +174,8 @@ const navLinks = [
 		box-shadow: var(--glass-shadow);
 	}
 
-	/* Top nav: a collapsed dock of icons, centred. Hover or focus opens it to show the labels. */
+	/* Top nav: a full-width glass bar at the top of the page. Scrolling collapses it to a centred icon dock,
+	   and hovering (or tabbing into) the dock opens the labels again. */
 	.nav-wrap {
 		position: fixed;
 		inset: 20px 0 auto;
@@ -174,19 +188,42 @@ const navLinks = [
 		pointer-events: auto;
 		display: flex;
 		align-items: center;
-		gap: 2px;
-		padding: 6px;
+		justify-content: space-between;
+		overflow: hidden;
+		width: min(1280px, 100vw - 48px);
+		height: 64px;
+		padding: 0 20px 0 32px;
 		border-radius: 999px;
-		background: rgba(255, 255, 255, 0.45);
+		background: rgba(255, 255, 255, 0.4);
 		-webkit-backdrop-filter: blur(26px) saturate(180%);
 		backdrop-filter: blur(26px) saturate(180%);
 		border: 1px solid rgba(255, 255, 255, 0.7);
 		box-shadow:
 			0 8px 32px rgba(0, 0, 0, 0.07),
 			inset 0 1px 0 rgba(255, 255, 255, 0.7);
+		transition:
+			width 0.45s cubic-bezier(0.2, 0.7, 0.2, 1),
+			height 0.45s cubic-bezier(0.2, 0.7, 0.2, 1),
+			padding 0.45s cubic-bezier(0.2, 0.7, 0.2, 1);
 	}
-	.dock a {
-		position: relative;
+	.brand {
+		color: var(--fg);
+		text-decoration: none;
+		text-transform: uppercase;
+		white-space: nowrap;
+		font-weight: 400;
+		font-size: 0.95rem;
+		letter-spacing: 0.18em;
+		transition: opacity 0.25s ease, max-width 0.45s ease;
+		max-width: 240px;
+		overflow: hidden;
+	}
+	.links {
+		display: flex;
+		align-items: center;
+		gap: 2px;
+	}
+	.links a {
 		display: flex;
 		align-items: center;
 		height: 44px;
@@ -195,42 +232,94 @@ const navLinks = [
 		color: var(--fg);
 		text-decoration: none;
 		white-space: nowrap;
-		font-size: 0.95rem;
+		font-size: 1rem;
 		transition: background 0.2s ease;
 	}
-	.dock a:hover,
-	.dock a:focus-visible {
+	.links a:hover,
+	.links a:focus-visible {
 		background: rgba(255, 255, 255, 0.85);
 	}
-	.dock .label {
-		max-width: 0;
-		opacity: 0;
+	.label {
+		max-width: 120px;
+		margin-left: 8px;
+		opacity: 1;
 		overflow: hidden;
-		margin-left: 0;
 		transition:
 			max-width 0.35s cubic-bezier(0.2, 0.7, 0.2, 1),
 			margin-left 0.35s cubic-bezier(0.2, 0.7, 0.2, 1),
 			opacity 0.25s ease;
 	}
+
+	/* Collapsed: just the icons, in a small centred pill */
+	.nav-collapsed .dock {
+		width: 268px;
+		height: 56px;
+		padding: 0 6px;
+		justify-content: center;
+	}
+	.nav-collapsed .brand {
+		max-width: 0;
+		opacity: 0;
+		pointer-events: none;
+	}
+	.nav-collapsed .label {
+		max-width: 0;
+		margin-left: 0;
+		opacity: 0;
+	}
+	/* Hover / focus on the collapsed dock opens the labels */
 	@media (hover: hover) {
-		.dock:hover .label {
+		.nav-collapsed .dock:hover {
+			width: 580px;
+		}
+		.nav-collapsed .dock:hover .label {
 			max-width: 120px;
 			margin-left: 8px;
 			opacity: 1;
 		}
 	}
-	.dock:focus-within .label {
+	.nav-collapsed .dock:focus-within {
+		width: 580px;
+	}
+	.nav-collapsed .dock:focus-within .label {
 		max-width: 120px;
 		margin-left: 8px;
 		opacity: 1;
 	}
-	@media (max-width: 700px) {
+	@media (max-width: 760px) {
 		.nav-wrap {
 			inset: 12px 0 auto;
 		}
+		.dock {
+			width: calc(100vw - 24px);
+			height: 56px;
+			padding: 0 8px 0 20px;
+		}
+		.brand {
+			font-size: 0.74rem;
+			letter-spacing: 0.1em;
+		}
+		.links a {
+			padding: 0 10px;
+		}
+		.label {
+			max-width: 0;
+			margin-left: 0;
+			opacity: 0;
+		}
+		.nav-collapsed .dock:focus-within {
+			width: 268px;
+		}
+		.nav-collapsed .dock:focus-within .label {
+			max-width: 0;
+			margin-left: 0;
+			opacity: 0;
+		}
 	}
 	@media (prefers-reduced-motion: reduce) {
-		.dock .label {
+		.dock,
+		.label,
+		.brand {
 			transition: none;
 		}
 	}
