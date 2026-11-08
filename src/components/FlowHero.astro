@@ -32,8 +32,8 @@ const steps = video.steps;
 					<source src={src} type="video/mp4" />
 				</video>
 				<button type="button" class="toggle" aria-label="Pause the walkthrough">
-					<span class="i-pause"><Icon name="pause" size={16} aria-hidden="true" /></span>
-					<span class="i-play"><Icon name="play" size={16} aria-hidden="true" /></span>
+					<span class="i-pause"><Icon name="pause" size={18} weight="fill" aria-hidden="true" /></span>
+					<span class="i-play"><Icon name="play" size={18} weight="fill" aria-hidden="true" /></span>
 				</button>
 			</div>
 		</div>
@@ -202,33 +202,28 @@ const steps = video.steps;
 		bottom: 14px;
 		display: grid;
 		place-items: center;
-		width: 36px;
-		height: 36px;
-		border-radius: 50%;
+		width: 40px;
+		height: 40px;
+		border-radius: 999px;
 		cursor: pointer;
-		color: #fff;
-		background: rgba(30, 30, 30, 0.62);
-		-webkit-backdrop-filter: blur(8px);
-		backdrop-filter: blur(8px);
-		opacity: 0.8;
+		color: var(--fg);
+		background: rgba(255, 255, 255, 0.6);
+		border: 1px solid rgba(255, 255, 255, 0.8);
+		-webkit-backdrop-filter: blur(14px) saturate(160%);
+		backdrop-filter: blur(14px) saturate(160%);
+		box-shadow: 0 6px 18px -6px rgba(0, 0, 0, 0.25);
 		transition:
-			opacity 0.2s,
-			background 0.2s;
+			background 0.2s ease,
+			transform 0.2s ease;
 	}
 	.toggle:hover,
 	.toggle:focus-visible {
-		opacity: 1;
-		background: rgba(30, 30, 30, 0.85);
+		background: rgba(255, 255, 255, 0.9);
+		transform: scale(1.06);
 	}
 	.toggle:focus-visible {
 		outline: 2px solid var(--accent);
 		outline-offset: 2px;
-	}
-	@media (pointer: coarse) {
-		.toggle {
-			width: 44px;
-			height: 44px;
-		}
 	}
 	.toggle .i-play {
 		display: none;
