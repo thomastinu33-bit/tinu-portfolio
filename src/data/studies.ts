@@ -459,7 +459,7 @@ export const studies: Study[] = [
 			},
 			{ type: 'image', src: 'lemoney/01', alt: 'The Lemoney invoice screen.' },
 			{ type: 'heading', text: 'The design process' },
-			{ type: 'image', src: 'lemoney/02', alt: 'The steps of the design process.' },
+			{ type: 'image', src: 'lemoney/process', alt: 'The steps of the design process.' },
 			{
 				type: 'text',
 				text: 'I conducted in-depth user research with bookkeepers, accountants, tax managers and finance managers from various organizations to better understand their workflows and pinpoint key pain points. This discovery phase gave us a clear outline of the essential modules for the product. I then shared these insights with stakeholders and collaborated closely with the product manager to define the goals for the proof of concept.',
