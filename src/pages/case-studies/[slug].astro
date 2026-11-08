@@ -101,6 +101,7 @@ const { study } = Astro.props;
 										))}
 									</ul>
 									<div class="g-nav">
+										<span class="g-count" aria-live="polite">{`1 / ${b.items.length}`}</span>
 										<button class="g-prev" type="button" aria-label="Previous">
 											<Icon name="caret-left" size={18} weight="bold" />
 										</button>
@@ -199,7 +200,10 @@ const { study } = Astro.props;
 		const prev = g.querySelector<HTMLButtonElement>('.g-prev')!;
 		const next = g.querySelector<HTMLButtonElement>('.g-next')!;
 		const step = () => (track.querySelector('li')?.getBoundingClientRect().width ?? 600) + 16;
+		const count = g.querySelector<HTMLElement>('.g-count')!;
+		const total = track.querySelectorAll('li').length;
 		const sync = () => {
+			count.textContent = `${Math.min(total, Math.round(track.scrollLeft / step()) + 1)} / ${total}`;
 			prev.disabled = track.scrollLeft < 4;
 			next.disabled = track.scrollLeft > track.scrollWidth - track.clientWidth - 4;
 		};
@@ -513,7 +517,7 @@ const { study } = Astro.props;
 	.track {
 		list-style: none;
 		margin: 0;
-		padding: 4px 2px 26px;
+		padding: 6px 0 44px;
 		display: flex;
 		gap: 16px;
 		overflow-x: auto;
@@ -525,7 +529,7 @@ const { study } = Astro.props;
 		display: none;
 	}
 	.track li {
-		flex: 0 0 min(720px, 84%);
+		flex: 0 0 100%;
 		scroll-snap-align: start;
 	}
 	.track figcaption {
@@ -535,7 +539,15 @@ const { study } = Astro.props;
 		display: flex;
 		justify-content: flex-end;
 		gap: 8px;
-		margin-top: -6px;
+		align-items: center;
+		margin-top: -28px;
+	}
+	.g-count {
+		margin-right: 6px;
+		font-size: 0.85rem;
+		letter-spacing: 0.08em;
+		color: var(--muted);
+		font-variant-numeric: tabular-nums;
 	}
 	.g-nav button {
 		display: grid;
@@ -711,9 +723,6 @@ const { study } = Astro.props;
 	@media (max-width: 720px) {
 		.pains {
 			grid-template-columns: 1fr;
-		}
-		.track li {
-			flex-basis: 88%;
 		}
 		.panel {
 			padding: 22px;
