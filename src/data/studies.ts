@@ -573,7 +573,7 @@ export const studies: Study[] = [
 		summary:
 			'The brand overview page is where customers see how their AI visibility is doing across every prompt they have run, and what to do next.',
 		highlights: ['~97.5% of visitors return', '~31% of app users visit'],
-		cover: { src: 'evertune-brand-overview/01', alt: 'The Evertune platform.' },
+		cover: { src: 'evertune-brand-overview/cover-final', alt: 'The Evertune brand overview page: key metrics, a visibility timeline, a competitor table and scores by model.' },
 		blocks: [
 			{ type: 'heading', text: 'Context' },
 			{
