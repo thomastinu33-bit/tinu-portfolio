@@ -168,7 +168,7 @@ const principleIcons = { build: MousePointerClick, team: UsersRound, craft: Rule
 </Layout>
 
 <script>
-	// Soft Tetris pieces drift down behind the intro. They are translucent glass tiles in the page's pastels,
+	// Soft Tetris pieces drift down behind the intro. They are plain outlined tiles,
 	// they fade in and out, and they lean away gently from the cursor. Paused when off screen or when motion is reduced.
 	const cv = document.querySelector<HTMLCanvasElement>('.tetris');
 	const hero = document.querySelector<HTMLElement>('.hero');
@@ -183,7 +183,7 @@ const principleIcons = { build: MousePointerClick, team: UsersRound, craft: Rule
 			[[0, 0], [0, 1], [1, 1], [2, 1]], // J
 			[[2, 0], [0, 1], [1, 1], [2, 1]], // L
 		];
-		const COLORS = ['255,196,160', '196,182,255', '255,190,215', '170,215,245', '178,226,214'];
+		const COLORS = ['235,235,240'];
 		type Piece = { cells: number[][]; x: number; y: number; vy: number; rot: number; q: number; color: string; a: number; ph: number };
 		let w = 0, h = 0, cell = 28, pieces: Piece[] = [], raf = 0, running = false;
 		let mx = -9999, my = -9999;
@@ -231,15 +231,10 @@ const principleIcons = { build: MousePointerClick, team: UsersRound, craft: Rule
 				for (const [cx, cy] of cells) {
 					const X = p.x + cx * cell + ox;
 					const Y = p.y + cy * cell + oy;
-					const g = ctx.createLinearGradient(X, Y, X + cell, Y + cell);
-					g.addColorStop(0, `rgba(255,255,255,${alpha + 0.15})`);
-					g.addColorStop(1, `rgba(${p.color},${alpha})`);
-					ctx.fillStyle = g;
-					ctx.strokeStyle = `rgba(255,255,255,${Math.min(1, alpha + 0.3)})`;
+					ctx.strokeStyle = `rgba(110,110,125,${Math.min(1, alpha * 1.1)})`;
 					ctx.lineWidth = 1;
 					ctx.beginPath();
 					ctx.roundRect(X + 1.5, Y + 1.5, cell - 3, cell - 3, 6);
-					ctx.fill();
 					ctx.stroke();
 				}
 			}
