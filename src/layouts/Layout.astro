@@ -44,7 +44,6 @@ const navLinks = [
 	</head>
 	<body>
 		<header class="nav-wrap">
-			<a class="brand" href={`${base}/`} aria-label={`${site.name}, home`}>{site.name}</a>
 			<!-- A small dock of icons; hovering (or tabbing into) it opens up the labels -->
 			<nav class="dock" aria-label="Main">
 				{
@@ -171,20 +170,6 @@ const navLinks = [
 		justify-content: center;
 		pointer-events: none;
 	}
-	.brand {
-		position: absolute;
-		top: 50%;
-		transform: translateY(-50%);
-		left: max(24px, calc(50% - 640px + 32px));
-		pointer-events: auto;
-		color: var(--fg);
-		text-decoration: none;
-		text-transform: uppercase;
-		white-space: nowrap;
-		font-weight: 400;
-		font-size: 0.9rem;
-		letter-spacing: 0.18em;
-	}
 	.dock {
 		pointer-events: auto;
 		display: flex;
@@ -240,9 +225,6 @@ const navLinks = [
 		opacity: 1;
 	}
 	@media (max-width: 700px) {
-		.brand {
-			display: none;
-		}
 		.nav-wrap {
 			inset: 12px 0 auto;
 		}
