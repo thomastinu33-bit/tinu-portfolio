@@ -661,23 +661,23 @@ export const studies: Study[] = [
 				caption: 'Examples of some of the designs we explored',
 				items: [
 					{
-						src: 'evertune-brand-overview/explore-01',
+						src: 'evertune-brand-overview/explore-black-01',
 						alt: 'Early layout with brand scores shown as rings by model, above the competitor benchmarking.',
 					},
 					{
-						src: 'evertune-brand-overview/explore-02',
+						src: 'evertune-brand-overview/explore-black-02',
 						alt: 'Layout with an Insights and Recommendations panel beside the key metrics and brand scores.',
 					},
 					{
-						src: 'evertune-brand-overview/explore-03',
+						src: 'evertune-brand-overview/explore-black-03',
 						alt: 'Layout with the competitor benchmarking table opening in a side drawer over the overview.',
 					},
 					{
-						src: 'evertune-brand-overview/explore-04',
+						src: 'evertune-brand-overview/explore-black-04',
 						alt: 'Layout with competitors ranked as horizontal bars right under the key metrics.',
 					},
 					{
-						src: 'evertune-brand-overview/explore-05',
+						src: 'evertune-brand-overview/explore-black-05',
 						alt: 'Layout with competitors compared in a table with scores, visibility, position and source share.',
 					},
 				],
