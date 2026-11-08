@@ -74,9 +74,10 @@ const principleIcons = { build: 'cursor-click', team: 'users-three', craft: 'rul
 								<p class="role">{job.role}</p>
 								<p class="job-summary">{job.summary}</p>
 							</div>
+							<div class="carousel reveal">
 							<ul class="cards">
-								{cards.map((p, n) => (
-									<li class="reveal" style={`--i: ${n}`}>
+								{cards.map((p) => (
+									<li>
 										<a class="card" href={`${base}/case-studies/${p.slug}/`}>
 											<div class:list={['thumb', { bare: p.cover?.bare }]}>
 												{p.cover && (
@@ -87,11 +88,11 @@ const principleIcons = { build: 'cursor-click', team: 'users-three', craft: 'rul
 														sizes="(max-width: 820px) 90vw, 420px"
 													/>
 												)}
+												{p.highlights?.[0] && <span class="stat">{p.highlights[0]}</span>}
 											</div>
 											<div class="card-text">
 												<div class="card-copy">
 													<h4>{p.title}</h4>
-													{p.highlights?.[0] && <span class="stat">{p.highlights[0]}</span>}
 												</div>
 												<span class="arrow" aria-hidden="true">
 													<Icon name="arrow-up-right" size={18} />
@@ -101,6 +102,15 @@ const principleIcons = { build: 'cursor-click', team: 'users-three', craft: 'rul
 									</li>
 								))}
 							</ul>
+							<div class="carousel-nav" hidden>
+								<button type="button" class="c-prev" aria-label="Previous case study">
+									<Icon name="caret-left" size={18} />
+								</button>
+								<button type="button" class="c-next" aria-label="Next case study">
+									<Icon name="caret-right" size={18} />
+								</button>
+							</div>
+							</div>
 						</li>
 					);
 				})
@@ -400,6 +410,30 @@ const principleIcons = { build: 'cursor-click', team: 'users-three', craft: 'rul
 			setTimeout(typeLine, 400);
 		}
 	}
+</script>
+
+<script>
+	// Carousel arrows: step one card at a time, and only show them when the row actually scrolls.
+	document.querySelectorAll<HTMLElement>('.carousel').forEach((c) => {
+		const row = c.querySelector<HTMLElement>('.cards')!;
+		const nav = c.querySelector<HTMLElement>('.carousel-nav')!;
+		const prev = c.querySelector<HTMLButtonElement>('.c-prev')!;
+		const next = c.querySelector<HTMLButtonElement>('.c-next')!;
+		const step = () => {
+			const li = row.querySelector<HTMLElement>('li')!;
+			return li.getBoundingClientRect().width + parseFloat(getComputedStyle(row).columnGap || '20');
+		};
+		const update = () => {
+			nav.hidden = row.scrollWidth <= row.clientWidth + 2;
+			prev.disabled = row.scrollLeft <= 2;
+			next.disabled = row.scrollLeft + row.clientWidth >= row.scrollWidth - 2;
+		};
+		prev.addEventListener('click', () => row.scrollBy({ left: -step(), behavior: 'smooth' }));
+		next.addEventListener('click', () => row.scrollBy({ left: step(), behavior: 'smooth' }));
+		row.addEventListener('scroll', update, { passive: true });
+		addEventListener('resize', update);
+		update();
+	});
 </script>
 
 <script>
@@ -870,23 +904,10 @@ const principleIcons = { build: 'cursor-click', team: 'users-three', craft: 'rul
 	}
 
 	/* Experience: one row per company. The company and what I did sit on the left, its case studies on the right.
-	   Soft colour sits behind the section, each company has its own tint, and the cards are frosted glass. */
+	   The cards are plain white. */
 	#work {
 		position: relative;
 		isolation: isolate;
-	}
-	#work::before {
-		content: '';
-		position: absolute;
-		inset: 0;
-		z-index: -1;
-		pointer-events: none;
-		background:
-			radial-gradient(30% 14% at 6% 8%, rgba(255, 210, 188, 0.6), transparent 70%),
-			radial-gradient(30% 12% at 96% 30%, rgba(210, 196, 255, 0.55), transparent 70%),
-			radial-gradient(32% 12% at 4% 55%, rgba(255, 210, 188, 0.55), transparent 70%),
-			radial-gradient(30% 12% at 96% 78%, rgba(210, 196, 255, 0.55), transparent 70%);
-		filter: blur(30px);
 	}
 	.work-lead {
 		margin: -12px 0 0;
@@ -902,30 +923,14 @@ const principleIcons = { build: 'cursor-click', team: 'users-three', craft: 'rul
 		display: grid;
 		grid-template-columns: minmax(0, 0.8fr) minmax(0, 1.5fr);
 		gap: clamp(24px, 4vw, 64px);
-		padding-block: 52px;
+		padding-block: 40px;
 		border-top: 1px solid rgba(120, 100, 150, 0.14);
-		--tint-a: #ffe3d3;
-		--tint-b: #fff6f0;
-	}
-	.job:nth-child(2) {
-		--tint-a: #e2dbff;
-		--tint-b: #f6f3ff;
-	}
-	.job:nth-child(3) {
-		--tint-a: #ffe3d3;
-		--tint-b: #fff6f0;
-	}
-	.job:nth-child(4) {
-		--tint-a: #e2dbff;
-		--tint-b: #f6f3ff;
 	}
 	.job:last-child {
 		border-bottom: 1px solid rgba(120, 100, 150, 0.14);
 	}
 	.job-info {
 		align-self: start;
-		position: sticky;
-		top: 112px;
 	}
 	.job-when {
 		display: block;
@@ -951,13 +956,57 @@ const principleIcons = { build: 'cursor-click', team: 'users-three', craft: 'rul
 		max-width: 44ch;
 		line-height: 1.65;
 	}
+	/* The case studies for a company sit in one row you can swipe or step through */
+	.carousel {
+		min-width: 0;
+	}
 	.cards {
 		list-style: none;
-		margin: 0;
-		padding: 0;
+		margin: -14px -12px -18px;
+		padding: 14px 12px 34px;
+		display: flex;
+		gap: 16px;
+		overflow-x: auto;
+		scroll-snap-type: x mandatory;
+		scroll-padding-inline: 12px;
+		scrollbar-width: none;
+		-webkit-overflow-scrolling: touch;
+	}
+	.cards::-webkit-scrollbar {
+		display: none;
+	}
+	.cards li {
+		flex: 0 0 min(420px, 78%);
+		scroll-snap-align: start;
+	}
+	.carousel-nav {
+		display: flex;
+		justify-content: flex-end;
+		gap: 8px;
+		margin-top: -2px;
+	}
+	.carousel-nav[hidden] {
+		display: none;
+	}
+	.carousel-nav button {
 		display: grid;
-		grid-template-columns: repeat(2, minmax(0, 1fr));
-		gap: 20px;
+		place-items: center;
+		width: 40px;
+		height: 40px;
+		border-radius: 50%;
+		cursor: pointer;
+		color: var(--fg);
+		background: rgba(255, 255, 255, 0.7);
+		border: 1px solid rgba(120, 100, 150, 0.18);
+		transition: background 0.2s, opacity 0.2s, transform 0.2s;
+	}
+	.carousel-nav button:hover:not(:disabled) {
+		background: #fff;
+		transform: translateY(-2px);
+	}
+	.carousel-nav button:disabled {
+		opacity: 0.35;
+		cursor: default;
 	}
 	.card {
 		display: flex;
@@ -965,13 +1014,9 @@ const principleIcons = { build: 'cursor-click', team: 'users-three', craft: 'rul
 		height: 100%;
 		padding: 10px;
 		border-radius: 28px;
-		background: linear-gradient(140deg, rgba(255, 255, 255, 0.78) 0%, rgba(255, 255, 255, 0.34) 100%);
-		border: 1px solid rgba(255, 255, 255, 0.9);
-		-webkit-backdrop-filter: blur(18px) saturate(150%);
-		backdrop-filter: blur(18px) saturate(150%);
-		box-shadow:
-			inset 0 1px 0 rgba(255, 255, 255, 0.95),
-			0 18px 40px -22px rgba(120, 100, 160, 0.35);
+		background: #fff;
+		border: 1px solid #ececec;
+		box-shadow: 0 10px 28px -20px rgba(0, 0, 0, 0.18);
 		color: inherit;
 		text-decoration: none;
 		transition:
@@ -987,7 +1032,7 @@ const principleIcons = { build: 'cursor-click', team: 'users-three', craft: 'rul
 		aspect-ratio: 4 / 3;
 		overflow: hidden;
 		border-radius: 20px;
-		background: linear-gradient(150deg, var(--tint-a), var(--tint-b));
+		background: #f4f4f4;
 	}
 	.thumb :global(img) {
 		display: block;
@@ -1004,13 +1049,27 @@ const principleIcons = { build: 'cursor-click', team: 'users-three', craft: 'rul
 		padding: 9%;
 		box-sizing: border-box;
 	}
-	/* One result, as a quiet line under the title */
+	/* One result, as a glass pill on the picture */
 	.stat {
-		display: block;
-		margin-top: 6px;
-		font-size: 0.88rem;
-		line-height: 1.35;
-		color: var(--muted);
+		position: absolute;
+		left: 12px;
+		bottom: 12px;
+		max-width: calc(100% - 24px);
+		padding: 6px 13px;
+		border-radius: 999px;
+		background: rgba(255, 255, 255, 0.5);
+		border: 1px solid rgba(255, 255, 255, 0.85);
+		-webkit-backdrop-filter: blur(14px) saturate(170%);
+		backdrop-filter: blur(14px) saturate(170%);
+		box-shadow:
+			inset 0 1px 0 rgba(255, 255, 255, 0.9),
+			0 6px 16px -8px rgba(0, 0, 0, 0.3);
+		font-size: 0.8rem;
+		line-height: 1.3;
+		color: #2b2b2b;
+		overflow: hidden;
+		text-overflow: ellipsis;
+		white-space: nowrap;
 	}
 	.card-text {
 		display: flex;
@@ -1046,17 +1105,15 @@ const principleIcons = { build: 'cursor-click', team: 'users-three', craft: 'rul
 	@media (hover: hover) {
 		.card:hover {
 			transform: translateY(-6px);
-			box-shadow:
-				inset 0 1px 0 rgba(255, 255, 255, 0.95),
-				0 30px 50px -22px rgba(120, 100, 160, 0.45);
+			box-shadow: 0 18px 34px -16px rgba(255, 150, 100, 0.45);
 		}
 		.card:hover .thumb :global(img) {
 			transform: scale(1.05);
 		}
 		.card:hover .arrow {
-			background: var(--fg);
-			border-color: var(--fg);
-			color: #fff;
+			background: #ffd9c7;
+			border-color: #ffd9c7;
+			color: var(--fg);
 			transform: rotate(45deg);
 		}
 	}
@@ -1075,19 +1132,16 @@ const principleIcons = { build: 'cursor-click', team: 'users-three', craft: 'rul
 	@media (max-width: 960px) {
 		.job {
 			grid-template-columns: 1fr;
-			gap: 28px;
-			padding-block: 36px;
-		}
-		.job-info {
-			position: static;
+			gap: 18px;
+			padding-block: 28px;
 		}
 		.job-summary {
 			max-width: 62ch;
 		}
 	}
 	@media (max-width: 560px) {
-		.cards {
-			grid-template-columns: 1fr;
+		.cards li {
+			flex-basis: 86%;
 		}
 	}
 	@media (prefers-reduced-motion: reduce) {
