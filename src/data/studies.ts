@@ -654,7 +654,7 @@ export const studies: Study[] = [
 			{ type: 'heading', text: 'Design exploration' },
 			{
 				type: 'text',
-				text: 'Before settling on a final design, we explored several ways to arrange the page and gathered feedback on each round. We tried leading with brand scores as rings, putting insights and recommendations beside the data, opening competitor benchmarking in a side drawer, and showing competitors as ranked bars or as a table.',
+				text: 'The design came together through many rounds of iteration. We explored a wide range of layouts, gathered feedback on each one, and used it to refine the designs further.',
 			},
 			{
 				type: 'gallery',
@@ -688,7 +688,7 @@ export const studies: Study[] = [
 			},
 			{
 				type: 'text',
-				text: 'Each round of feedback narrowed the options until we landed on the final design.',
+				text: 'Along the way, I worked with engineering to understand our technical limitations and to define what belonged in the MVP. That shaped which ideas we kept for launch and which we saved for later.',
 			},
 		],
 	},
