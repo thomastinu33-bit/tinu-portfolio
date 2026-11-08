@@ -597,15 +597,6 @@ export const studies: Study[] = [
 				type: 'text',
 				text: 'I started by partnering with the PM to understand exactly how customers wanted to understand their brand performance. Our customer success teams were already building reports for customers, so as part of our discovery process, we gathered all of those artifacts and evaluated them to uncover patterns in what they showed.',
 			},
-			{ type: 'heading', text: 'Discovery with users and stakeholders' },
-			{
-				type: 'text',
-				text: 'Discovery started with the people already closest to our customers. Alongside the PM, I worked with our customer success teams to understand what they were reporting back to customers, and which questions came up again and again.',
-			},
-			{
-				type: 'text',
-				text: 'From there we turned to the users themselves, looking at how they wanted to understand their brand performance and where the platform made that harder than it should be. The patterns from both sides shaped what the brand overview needed to show.',
-			},
 			{ type: 'heading', text: 'Designing for our users' },
 			{
 				type: 'text',
@@ -627,6 +618,15 @@ export const studies: Study[] = [
 						body: 'They look across categories to see how their brand performs against competitors in each one, and which categories deserve their focus.',
 					},
 				],
+			},
+			{ type: 'heading', text: 'Discovery with users and stakeholders' },
+			{
+				type: 'text',
+				text: 'Discovery started with the people already closest to our customers. Alongside the PM, I worked with our customer success teams to understand what they were reporting back to customers, and which questions came up again and again.',
+			},
+			{
+				type: 'text',
+				text: 'From there we turned to the users themselves, looking at how they wanted to understand their brand performance and where the platform made that harder than it should be. The patterns from both sides shaped what the brand overview needed to show.',
 			},
 		],
 	},
