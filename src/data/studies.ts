@@ -12,6 +12,8 @@ export type Block =
 	| { type: 'logos'; images: { src: string; alt: string }[] }
 	| { type: 'stats'; items: { value: string; label: string }[] }
 	| { type: 'quotes'; items: string[] }
+	// Discovery: the questions we asked beside the pain points we heard
+	| { type: 'research'; questionsLabel: string; questions: string[]; painLabel: string; pains: string[] }
 	// Side-by-side cards describing the people a design is for
 	| { type: 'personas'; items: { label: string; icon: string; title: string; body: string }[] }
 	// A looping, muted video (files live in public/)
@@ -622,12 +624,31 @@ export const studies: Study[] = [
 			{ type: 'heading', text: 'Discovery with users and stakeholders' },
 			{
 				type: 'text',
-				text: 'Discovery started with the people already closest to our customers. Alongside the PM, I worked with our customer success teams to understand what they were reporting back to customers, and which questions came up again and again.',
+				text: 'To understand how customers analyze performance today, we spoke with users and the business teams that support them. The conversations had two parts: what we asked, and the pain points that came out of them.',
 			},
-			{
-				type: 'text',
-				text: 'From there we turned to the users themselves, looking at how they wanted to understand their brand performance and where the platform made that harder than it should be. The patterns from both sides shaped what the brand overview needed to show.',
+						{
+				type: 'research',
+				questionsLabel: 'Some of the questions we asked',
+				questions: [
+					"Walk me through how you analyze brand performance today.",
+					"What\u2019s the purpose of the aggregated performance metrics?",
+					"Which part of the process do you find time consuming?",
+					"Which part of the process do you wish you didn\u2019t have to do?",
+					"How do you do this for all your brands?",
+				],
+				painLabel: 'Some of the pain points we uncovered',
+				pains: [
+					"Going through multiple trackers, downloading the data and aggregating it all is very time consuming.",
+					"It\u2019s hard to go back and forth to see if my brand is performing well in one category versus another.",
+					"It\u2019s hard to identify which trackers I need to focus on.",
+					"The reports are generated for CMOs and other members of my team so that we can discuss strategies to improve our brand visibility.",
+					"If there was a way to view metrics across all trackers, see how I\u2019m doing versus my competitors and where I\u2019m being cited, that would be extremely helpful.",
+					"Is there a way to see how my owned content is being cited over time?",
+					"The process of aggregating data is very manual.",
+					"I\u2019ve had to create multiple reports of aggregated metrics for my clients, and it takes up a lot of my time.",
+				],
 			},
+
 		],
 	},
 ];

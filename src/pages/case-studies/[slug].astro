@@ -87,6 +87,27 @@ const { study } = Astro.props;
 									))}
 								</dl>
 							);
+						case 'research':
+							return (
+								<div class="research">
+									<section class="panel">
+										<h3>{b.questionsLabel}</h3>
+										<ul class="asks">
+											{b.questions.map((q) => (
+												<li>{`\u201c${q}\u201d`}</li>
+											))}
+										</ul>
+									</section>
+									<section class="panel">
+										<h3>{b.painLabel}</h3>
+										<ul class="pains">
+											{b.pains.map((t) => (
+												<li>{t}</li>
+											))}
+										</ul>
+									</section>
+								</div>
+							);
 						case 'personas':
 							return (
 								<div class="personas">
@@ -447,6 +468,64 @@ const { study } = Astro.props;
 		font-size: 0.95rem;
 		line-height: 1.45;
 	}
+	/* Discovery: questions on the left, pain points on the right, on two quiet panels */
+	.research {
+		display: grid;
+		grid-template-columns: minmax(0, 5fr) minmax(0, 7fr);
+		gap: 16px;
+		align-items: start;
+	}
+	.panel {
+		padding: 28px;
+		border-radius: 28px;
+		background: #fafafa;
+		border: 1px solid #ececec;
+	}
+	.panel h3 {
+		margin: 0 0 22px;
+		font-family: var(--font-sans);
+		font-weight: 400;
+		font-size: 0.76rem;
+		letter-spacing: 0.14em;
+		text-transform: uppercase;
+		color: var(--muted);
+	}
+	.asks,
+	.pains {
+		list-style: none;
+		margin: 0;
+		padding: 0;
+	}
+	.asks li {
+		font-family: var(--font-serif);
+		font-size: 1.3rem;
+		line-height: 1.35;
+		padding: 16px 0;
+	}
+	.asks li:first-child {
+		padding-top: 0;
+	}
+	.asks li:last-child {
+		padding-bottom: 0;
+	}
+	.asks li + li {
+		border-top: 1px solid #ececec;
+	}
+	.pains {
+		column-count: 2;
+		column-gap: 12px;
+	}
+	.pains li {
+		break-inside: avoid;
+		margin-bottom: 12px;
+		padding: 18px 20px;
+		border-radius: 18px;
+		background: #fff;
+		border: 1px solid #ececec;
+		font-size: 0.98rem;
+		line-height: 1.55;
+		color: #3d3d3d;
+	}
 	.personas {
 		display: grid;
 		grid-template-columns: repeat(2, minmax(0, 1fr));
@@ -527,7 +606,18 @@ const { study } = Astro.props;
 		font-size: 1.3rem;
 		line-height: 1.4;
 	}
+	@media (max-width: 860px) {
+		.research {
+			grid-template-columns: 1fr;
+		}
+	}
 	@media (max-width: 720px) {
+		.pains {
+			column-count: 1;
+		}
+		.panel {
+			padding: 22px;
+		}
 		.study {
 			padding-top: 110px;
 		}
