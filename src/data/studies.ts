@@ -706,6 +706,19 @@ export const studies: Study[] = [
 					'One customer uses it for weekly executive reporting, and the timeline is one of the most important screenshots brands share internally.',
 				],
 			},
+			{ type: 'heading', text: 'Next steps' },
+			{
+				type: 'text',
+				text: 'Within 90 days of launch, 31% of users were actively coming back to the brand overview. We think it could become one of the most valuable views in the platform, and the goal is that 90%+ of users never need to leave it. To make that possible, our next steps are to:',
+			},
+			{
+				type: 'list',
+				items: [
+					'Make sure the brand overview has all the capabilities of the tracker pages.',
+					'Make the GEO manager extremely easy to use.',
+					'Let users create their own custom dashboards.',
+				],
+			},
 		],
 	},
 ];
