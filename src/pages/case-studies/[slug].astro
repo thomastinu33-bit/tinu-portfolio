@@ -86,6 +86,22 @@ const { study } = Astro.props;
 									))}
 								</dl>
 							);
+						case 'video':
+							return (
+								<figure>
+									<video
+										class="clip"
+										src={`${base}/${b.src}`}
+										poster={`${base}/${b.poster}`}
+										muted
+										loop
+										playsinline
+										preload="metadata"
+										aria-label={b.caption}
+									/>
+									{b.caption && <figcaption>{b.caption}</figcaption>}
+								</figure>
+							);
 						case 'quotes':
 							return (
 								<div class="quotes">
@@ -103,6 +119,20 @@ const { study } = Astro.props;
 
 	<PasswordGate mode="immediate" />
 </Layout>
+
+<script>
+	// Clips play while they are on screen and pause when they are not; a click pauses or plays.
+	const clips = document.querySelectorAll<HTMLVideoElement>('video.clip');
+	const still = matchMedia('(prefers-reduced-motion: reduce)').matches;
+	clips.forEach((v) => {
+		if (!still) {
+			new IntersectionObserver(([e]) => (e.isIntersecting ? v.play().catch(() => {}) : v.pause()), { threshold: 0.4 }).observe(v);
+		} else {
+			v.controls = true;
+		}
+		v.addEventListener('click', () => (v.paused ? v.play() : v.pause()));
+	});
+</script>
 
 <style>
 	/* Soft colour behind the top of the page, like the landing page */
@@ -231,6 +261,16 @@ const { study } = Astro.props;
 		line-height: 1.55;
 		color: var(--muted);
 	}
+	.clip {
+		display: block;
+		width: 100%;
+		height: auto;
+		border-radius: 20px;
+		border: 1px solid #ececec;
+		background: #fff;
+		box-shadow: 0 24px 60px -24px rgba(0, 0, 0, 0.25);
+		cursor: pointer;
+	}
 	.row {
 		display: grid;
 		grid-template-columns: repeat(min(var(--n), 3), minmax(0, 1fr));
@@ -319,6 +359,8 @@ const { study } = Astro.props;
 	}
 	@media (prefers-reduced-motion: reduce), (hover: none) {
 		.stats div:hover,
-		blockquote:hover,
+		blockquote:hover {
+			transform: none;
+		}
 	}
 </style>

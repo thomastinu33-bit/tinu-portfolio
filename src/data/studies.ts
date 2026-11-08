@@ -11,7 +11,9 @@ export type Block =
 	| { type: 'row'; images: { src: string; alt: string }[]; caption?: string }
 	| { type: 'logos'; images: { src: string; alt: string }[] }
 	| { type: 'stats'; items: { value: string; label: string }[] }
-	| { type: 'quotes'; items: string[] };
+	| { type: 'quotes'; items: string[] }
+	// A looping, muted video (files live in public/)
+	| { type: 'video'; src: string; poster: string; caption?: string };
 
 export type Study = {
 	slug: string;
@@ -584,10 +586,11 @@ export const studies: Study[] = [
 				text: 'Users were able to quickly see how their brand was performing and take next step actions.',
 			},
 			{
-				type: 'image',
-				src: 'evertune-brand-overview/01',
-				alt: 'The Evertune brand overview page (placeholder).',
-				caption: 'Placeholder: the brand overview page.',
+				type: 'video',
+				src: 'evertune/brand-overview.mp4',
+				poster: 'evertune/brand-overview-poster.jpg',
+				caption:
+					'Scrolling the brand overview, exploring the first chart, asking \u201cWhy did my score change?\u201d and reading the agent\u2019s answer, then collapsing it to the side to keep exploring the data.',
 			},
 		],
 	},
