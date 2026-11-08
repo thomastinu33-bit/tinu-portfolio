@@ -594,7 +594,8 @@ export const studies: Study[] = [
 			{
 				type: 'list',
 				items: [
-					'Worked with Product to understand what customers needed from an aggregated view of their brand performance across every prompt they run.',
+					'Partnered with the PM to understand exactly how customers wanted to understand their brand performance. Our customer success teams were already building reports for customers, so we gathered those artifacts and looked for patterns in what they showed.',
+					'Turned those patterns into an aggregated view of performance across every prompt customers run.',
 					'Designed the brand overview page end to end, from the first exploration through the final high-fidelity designs.',
 					'Designed the timeline chart so customers can see how their visibility changes over time and explore the data in detail.',
 					'Connected the page to the agent: customers can ask \u201cWhy did my score change?\u201d, read the answer in context, then collapse the agent to the side and keep exploring.',
