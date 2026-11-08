@@ -473,9 +473,10 @@ const { study } = Astro.props;
 		display: grid;
 		grid-template-columns: minmax(0, 5fr) minmax(0, 7fr);
 		gap: 16px;
-		align-items: start;
 	}
 	.panel {
+		display: flex;
+		flex-direction: column;
 		padding: 28px;
 		border-radius: 28px;
 		background: #fafafa;
@@ -496,11 +497,20 @@ const { study } = Astro.props;
 		margin: 0;
 		padding: 0;
 	}
+	.asks {
+		flex: 1;
+		display: flex;
+		flex-direction: column;
+	}
+	/* the questions share the panel's height evenly, so both panels end on the same line */
 	.asks li {
+		flex: 1;
+		display: flex;
+		align-items: center;
+		padding: 14px 0;
 		font-family: var(--font-serif);
 		font-size: 1.3rem;
 		line-height: 1.35;
-		padding: 16px 0;
 	}
 	.asks li:first-child {
 		padding-top: 0;
@@ -508,23 +518,29 @@ const { study } = Astro.props;
 	.asks li:last-child {
 		padding-bottom: 0;
 	}
-	.asks li + li {
-		border-top: 1px solid #ececec;
-	}
 	.pains {
-		column-count: 2;
-		column-gap: 12px;
+		flex: 1;
+		display: flex;
+		flex-direction: column;
 	}
 	.pains li {
-		break-inside: avoid;
-		margin-bottom: 12px;
-		padding: 18px 20px;
-		border-radius: 18px;
-		background: #fff;
-		border: 1px solid #ececec;
-		font-size: 0.98rem;
+		flex: 1;
+		display: flex;
+		align-items: center;
+		padding: 14px 0;
+		font-size: 1rem;
 		line-height: 1.55;
 		color: #3d3d3d;
+	}
+	.pains li:first-child {
+		padding-top: 0;
+	}
+	.pains li:last-child {
+		padding-bottom: 0;
+	}
+	.asks li + li,
+	.pains li + li {
+		border-top: 1px solid #ececec;
 	}
 	.personas {
 		display: grid;
@@ -612,9 +628,6 @@ const { study } = Astro.props;
 		}
 	}
 	@media (max-width: 720px) {
-		.pains {
-			column-count: 1;
-		}
 		.panel {
 			padding: 22px;
 		}
