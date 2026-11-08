@@ -99,7 +99,7 @@ const { study } = Astro.props;
 											loop
 											playsinline
 											preload="metadata"
-											aria-label={b.caption}
+											aria-label={b.caption ?? 'Walkthrough video'}
 										/>
 										<div class="clip-ctrls">
 											<button class="clip-toggle" type="button" aria-label="Pause video">

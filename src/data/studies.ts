@@ -589,8 +589,6 @@ export const studies: Study[] = [
 				type: 'video',
 				src: 'evertune/brand-overview.mp4',
 				poster: 'evertune/brand-overview-poster.jpg',
-				caption:
-					'Scrolling the brand overview, exploring the first chart, asking \u201cWhy did my score change?\u201d and reading the agent\u2019s answer, then collapsing it to the side to keep exploring the data.',
 			},
 		],
 	},
