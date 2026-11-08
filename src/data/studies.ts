@@ -590,6 +590,16 @@ export const studies: Study[] = [
 				src: 'evertune/brand-overview.mp4',
 				poster: 'evertune/brand-overview-poster.jpg',
 			},
+			{ type: 'heading', text: 'What I did' },
+			{
+				type: 'list',
+				items: [
+					'Worked with Product to understand what customers needed from an aggregated view of their brand performance across every prompt they run.',
+					'Designed the brand overview page end to end, from the first exploration through the final high-fidelity designs.',
+					'Designed the timeline chart so customers can see how their visibility changes over time and explore the data in detail.',
+					'Connected the page to the agent: customers can ask \u201cWhy did my score change?\u201d, read the answer in context, then collapse the agent to the side and keep exploring.',
+				],
+			},
 		],
 	},
 ];
