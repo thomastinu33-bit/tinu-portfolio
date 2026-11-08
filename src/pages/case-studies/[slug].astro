@@ -97,7 +97,6 @@ const { study } = Astro.props;
 									{b.notes.map((n) => (
 										<p class="fb-note">{n}</p>
 									))}
-									<p class="fb-goal">{b.goal}</p>
 								</div>
 							);
 						case 'gallery':
@@ -547,17 +546,6 @@ const { study } = Astro.props;
 		font-size: 1rem;
 		line-height: 1.6;
 		color: #3d3d3d;
-	}
-	.fb-goal {
-		grid-column: 1 / -1;
-		margin: 0;
-		padding: 28px 32px;
-		border-radius: 22px;
-		background: #161616;
-		color: #f4f4f4;
-		font-family: var(--font-serif);
-		font-size: clamp(1.3rem, 2.4vw, 1.7rem);
-		line-height: 1.35;
 	}
 	.fb-quote {
 		position: relative;
