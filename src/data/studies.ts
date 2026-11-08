@@ -663,6 +663,10 @@ export const studies: Study[] = [
 				caption: 'Examples of some of the designs we explored',
 				items: [
 					{
+						src: 'evertune-brand-overview/explore-black-00',
+						alt: 'Early layout with a navigation prototype: the Insights & Actions panel opens beside the overview with summaries, priorities and suggested actions.',
+					},
+					{
 						src: 'evertune-brand-overview/explore-black-01',
 						alt: 'Early layout with brand scores shown as rings by model, above the competitor benchmarking.',
 					},
@@ -696,23 +700,23 @@ export const studies: Study[] = [
 			{
 				type: 'feedback',
 				quote: 'Really liking it \u2026 much more of a one stop shop versus having to click around so much in the platform.',
-				source: 'Vestmark',
+				source: 'Customer',
 				items: [
 					{
-						who: 'MilkPEP / GALE',
-						text: 'Called it a simple entry point that any team member can use, and chose to keep using it instead of moving to custom dashboards.',
+						who: 'A simple entry point',
+						text: 'One customer called it a simple entry point that any team member can use, and chose to keep using it instead of moving to custom dashboards.',
 					},
 					{
-						who: 'C2Next',
-						text: 'Said the strong visualizations make performance easy to communicate, and loved the donut charts. One screenshot captures several metrics at once, which Trend Analysis can\u2019t.',
+						who: 'Easy to communicate',
+						text: 'Customers said the strong visualizations make performance easy to communicate, and loved the donut charts. One screenshot captures several metrics at once, which Trend Analysis can\u2019t.',
 					},
 					{
-						who: 'At Home',
-						text: 'Uses the dashboard for weekly executive reporting. The timeline is one of the most important screenshots brands share internally.',
+						who: 'Executive reporting',
+						text: 'One customer uses the dashboard for weekly executive reporting. The timeline is one of the most important screenshots brands share internally.',
 					},
 					{
 						who: 'First walkthroughs',
-						text: 'Vestmark and At Home reacted well and started testing right away. Internally, we see it becoming one of the most valuable views in the platform, with the goal that 90%+ of users never need to leave it.',
+						text: 'Two customers reacted well to the first walkthroughs and started testing right away. Internally, we see it becoming one of the most valuable views in the platform, with the goal that 90%+ of users never need to leave it.',
 					},
 				],
 			},
