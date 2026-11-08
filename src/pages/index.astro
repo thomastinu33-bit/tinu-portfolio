@@ -168,8 +168,8 @@ const principleIcons = { build: MousePointerClick, team: UsersRound, craft: Rule
 </Layout>
 
 <script>
-	// Soft Tetris pieces drift down behind the intro. They are plain outlined tiles,
-	// they fade in and out, and they lean away gently from the cursor. Paused when off screen or when motion is reduced.
+	// A self-playing game of Tetris behind the intro, drawn as plain outlines. Pieces fall onto a stack, completed
+	// rows flash and disappear, and everything above drops down. Paused off screen; still when motion is reduced.
 	const cv = document.querySelector<HTMLCanvasElement>('.tetris');
 	const hero = document.querySelector<HTMLElement>('.hero');
 	if (cv && hero) {
@@ -183,27 +183,94 @@ const principleIcons = { build: MousePointerClick, team: UsersRound, craft: Rule
 			[[0, 0], [0, 1], [1, 1], [2, 1]], // J
 			[[2, 0], [0, 1], [1, 1], [2, 1]], // L
 		];
-		const COLORS = ['235,235,240'];
-		type Piece = { cells: number[][]; x: number; y: number; vy: number; rot: number; q: number; color: string; a: number; ph: number };
-		let w = 0, h = 0, cell = 28, pieces: Piece[] = [], raf = 0, running = false;
-		let mx = -9999, my = -9999;
 		const reduced = matchMedia('(prefers-reduced-motion: reduce)').matches;
-		const rotate = (cells: number[][], q: number) => {
-			let c = cells;
-			for (let i = 0; i < q; i++) c = c.map(([x, y]) => [-y, x]);
-			return c;
+		const LINE = '110,110,125';
+		let w = 0, h = 0, cell = 30, cols = 0, rows = 0, ox = 0, floorY = 0;
+		let grid: boolean[][] = [];
+		let raf = 0, running = false, last = 0;
+		type Piece = { cells: number[][]; tx: number; ty: number; x: number; y: number };
+		let piece: Piece | null = null;
+		// Rows being cleared: they flash, vanish, then the rows above slide down.
+		let clearing: { rows: number[]; t: number } | null = null;
+		let settle: { off: number[]; t: number } | null = null;
+
+		const norm = (cells: number[][]) => {
+			const mx = Math.min(...cells.map((c) => c[0])), my = Math.min(...cells.map((c) => c[1]));
+			return cells.map(([x, y]) => [x - mx, y - my]);
 		};
-		const make = (initial: boolean): Piece => ({
-			cells: SHAPES[Math.floor(Math.random() * SHAPES.length)],
-			x: Math.random() * w,
-			y: initial ? Math.random() * h : -cell * 4 - Math.random() * h * 0.3,
-			vy: 0.18 + Math.random() * 0.32,
-			rot: 0,
-			q: Math.floor(Math.random() * 4),
-			color: COLORS[Math.floor(Math.random() * COLORS.length)],
-			a: 0.28 + Math.random() * 0.32,
-			ph: Math.random() * 6.28,
-		});
+		const rotate = (cells: number[][]) => norm(cells.map(([x, y]) => [-y, x]));
+		const fits = (cells: number[][], x: number, y: number) =>
+			cells.every(([cx, cy]) => x + cx >= 0 && x + cx < cols && y + cy < rows && (y + cy < 0 || !grid[y + cy][x + cx]));
+
+		// Picks where a piece should land: it likes completing rows, and dislikes holes and tall stacks.
+		const plan = () => {
+			let best: { cells: number[][]; x: number; y: number; score: number } | null = null;
+			const base = SHAPES[Math.floor(Math.random() * SHAPES.length)];
+			let cells = norm(base);
+			for (let r = 0; r < 4; r++) {
+				for (let x = 0; x < cols; x++) {
+					if (!fits(cells, x, 0)) continue;
+					let y = 0;
+					while (fits(cells, x, y + 1)) y++;
+					const g = grid.map((row) => row.slice());
+					cells.forEach(([cx, cy]) => (g[y + cy][x + cx] = true));
+					let lines = 0, holes = 0, maxH = 0, bump = 0, prev = -1;
+					for (let rr = 0; rr < rows; rr++) if (g[rr].every(Boolean)) lines++;
+					for (let c = 0; c < cols; c++) {
+						let seen = false, height = 0;
+						for (let rr = 0; rr < rows; rr++) {
+							if (g[rr][c]) {
+								if (!seen) height = rows - rr;
+								seen = true;
+							} else if (seen) holes++;
+						}
+						maxH = Math.max(maxH, height);
+						if (prev >= 0) bump += Math.abs(height - prev);
+						prev = height;
+					}
+					const score = lines * 14 - holes * 10 - maxH * 0.8 - bump * 0.5 + y * 0.6 + Math.random() * 1.2;
+					if (!best || score > best.score) best = { cells, x, y, score };
+				}
+				cells = rotate(cells);
+			}
+			return best;
+		};
+		const spawn = () => {
+			const b = plan();
+			if (!b) {
+				grid = grid.map((row) => row.map(() => false)); // stack is full: start fresh
+				return;
+			}
+			const startX = Math.max(0, Math.min(cols - 4, Math.round(cols / 2 + (Math.random() - 0.5) * cols * 0.6)));
+			piece = { cells: b.cells, tx: b.x, ty: b.y, x: startX, y: -4 };
+		};
+		const lock = () => {
+			if (!piece) return;
+			piece.cells.forEach(([cx, cy]) => {
+				const r = piece!.ty + cy;
+				if (r >= 0) grid[r][piece!.tx + cx] = true;
+			});
+			piece = null;
+			const full = grid.map((row, r) => (row.every(Boolean) ? r : -1)).filter((r) => r >= 0);
+			if (full.length) clearing = { rows: full, t: 0 };
+		};
+		const finishClear = () => {
+			if (!clearing) return;
+			const gone = new Set(clearing.rows);
+			// how far each surviving row will move down, so the drop can be animated
+			const off: number[] = [];
+			const kept: boolean[][] = [];
+			for (let r = 0; r < rows; r++) {
+				if (gone.has(r)) continue;
+				kept.push(grid[r]);
+				off.push(clearing.rows.filter((c) => c > r).length);
+			}
+			const pad = rows - kept.length;
+			grid = [...Array.from({ length: pad }, () => Array(cols).fill(false)), ...kept];
+			settle = { off: [...Array(pad).fill(0), ...off], t: 0 };
+			clearing = null;
+		};
+
 		const size = () => {
 			const dpr = Math.min(devicePixelRatio || 1, 2);
 			w = hero.clientWidth;
@@ -212,44 +279,77 @@ const principleIcons = { build: MousePointerClick, team: UsersRound, craft: Rule
 			cv.height = h * dpr;
 			ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
 			cell = w < 600 ? 20 : 30;
-			const n = Math.round((w * h) / 52000);
-			pieces = Array.from({ length: Math.max(8, n) }, () => make(true));
+			cols = Math.max(8, Math.floor(w / cell));
+			ox = (w - cols * cell) / 2;
+			floorY = h - (w < 600 ? 120 : 140); // the stack rests above the contact details
+			rows = Math.max(8, Math.floor(floorY / cell));
+			grid = Array.from({ length: rows }, () => Array(cols).fill(false));
+			piece = null;
+			clearing = null;
+			settle = null;
+			if (reduced) {
+				// a still picture: a few rows of leftovers
+				for (let r = rows - 3; r < rows; r++) for (let c = 0; c < cols; c++) grid[r][c] = Math.random() < 0.7;
+			}
+		};
+		const square = (x: number, y: number, a: number) => {
+			ctx.strokeStyle = `rgba(${LINE},${a})`;
+			ctx.beginPath();
+			ctx.roundRect(x + 1.5, y + 1.5, cell - 3, cell - 3, 6);
+			ctx.stroke();
 		};
 		const draw = (t: number) => {
 			ctx.clearRect(0, 0, w, h);
-			for (const p of pieces) {
-				const cells = rotate(p.cells, p.q);
-				// fade in at the top, out near the bottom, with a slow shimmer
-				const edge = Math.min(1, Math.max(0, p.y / (h * 0.15))) * Math.min(1, Math.max(0, (h - p.y) / (h * 0.25)));
-				const alpha = p.a * edge * (0.8 + 0.2 * Math.sin(t / 1600 + p.ph));
-				if (alpha < 0.01) continue;
-				const dx = p.x - mx, dy = p.y - my;
-				const d = Math.hypot(dx, dy);
-				const push = d < 160 ? (1 - d / 160) * 22 : 0;
-				const ox = d ? (dx / d) * push : 0;
-				const oy = d ? (dy / d) * push : 0;
-				for (const [cx, cy] of cells) {
-					const X = p.x + cx * cell + ox;
-					const Y = p.y + cy * cell + oy;
-					ctx.strokeStyle = `rgba(110,110,125,${Math.min(1, alpha * 1.1)})`;
-					ctx.lineWidth = 1;
-					ctx.beginPath();
-					ctx.roundRect(X + 1.5, Y + 1.5, cell - 3, cell - 3, 6);
-					ctx.stroke();
+			ctx.lineWidth = 1;
+			const top = floorY - rows * cell; // grid row 0 sits here, so the last row rests on the floor
+			for (let r = 0; r < rows; r++) {
+				const flash = clearing && clearing.rows.includes(r) ? clearing.t : -1;
+				const shift = settle ? settle.off[r] * (1 - Math.min(1, settle.t) ** 2 * (3 - 2 * Math.min(1, settle.t))) : 0;
+				const y = top + (r - shift) * cell;
+				for (let c = 0; c < cols; c++) {
+					if (!grid[r][c]) continue;
+					const x = ox + c * cell;
+					if (flash >= 0) {
+						// blink, then fade away
+						const blink = 0.5 + 0.5 * Math.sin(flash * 28);
+						const a = (0.55 + 0.45 * blink) * (1 - Math.max(0, (flash - 0.55) / 0.45));
+						square(x, y, Math.max(0, a));
+					} else {
+						square(x, y, 0.42);
+					}
 				}
 			}
-		};
-		const tick = (t: number) => {
-			for (const p of pieces) {
-				p.y += p.vy;
-				if (p.y > h + cell * 4) Object.assign(p, make(false), { x: Math.random() * w });
+			if (piece) {
+				const fade = Math.min(1, Math.max(0, (piece.y + 4) / 3));
+				piece.cells.forEach(([cx, cy]) => square(ox + Math.round(piece!.x + cx) * cell, top + (Math.floor(piece!.y) + cy) * cell, 0.62 * fade));
 			}
-			draw(t);
+		};
+		const tick = (now: number) => {
+			const dt = Math.min(0.05, (now - last) / 1000 || 0.016);
+			last = now;
+			if (clearing) {
+				clearing.t += dt / 0.7;
+				if (clearing.t >= 1) finishClear();
+			} else if (settle) {
+				settle.t += dt / 0.35;
+				if (settle.t >= 1) settle = null;
+			} else if (!piece) {
+				spawn();
+			} else {
+				piece.y = Math.min(piece.ty, piece.y + 16 * dt); // cells per second
+				piece.x += (piece.tx - piece.x) * Math.min(1, dt * 12);
+				if (piece.y >= piece.ty) {
+					piece.x = piece.tx;
+					lock();
+				}
+			}
+			draw(now);
 			raf = requestAnimationFrame(tick);
 		};
 		const start = () => {
 			if (running || reduced) return;
 			running = true;
+			last = performance.now();
 			raf = requestAnimationFrame(tick);
 		};
 		const stop = () => {
@@ -258,14 +358,9 @@ const principleIcons = { build: MousePointerClick, team: UsersRound, craft: Rule
 		};
 		size();
 		draw(0);
-		addEventListener('resize', size);
-		hero.addEventListener('pointermove', (e) => {
-			const r = hero.getBoundingClientRect();
-			mx = e.clientX - r.left;
-			my = e.clientY - r.top;
-		});
-		hero.addEventListener('pointerleave', () => {
-			mx = my = -9999;
+		addEventListener('resize', () => {
+			size();
+			draw(0);
 		});
 		new IntersectionObserver(([e]) => (e.isIntersecting ? start() : stop())).observe(hero);
 	}
@@ -496,6 +591,7 @@ const principleIcons = { build: MousePointerClick, team: UsersRound, craft: Rule
 	.tetris {
 		position: absolute;
 		inset: 0;
+		z-index: 1;
 		width: 100%;
 		height: 100%;
 	}
