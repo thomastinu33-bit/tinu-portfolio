@@ -155,6 +155,7 @@ const principleIcons = { build: 'cursor-click', team: 'users-three', craft: 'rul
 			[[0, 0], [0, 1], [1, 1], [2, 1]], // J
 			[[2, 0], [0, 1], [1, 1], [2, 1]], // L
 		];
+		const phone = matchMedia('(max-width: 700px)');
 		const reduced = matchMedia('(prefers-reduced-motion: reduce)').matches;
 		const LINE = '110,110,125';
 		let w = 0, h = 0, cell = 30, cols = 0, rows = 0, ox = 0, floorY = 0;
@@ -319,7 +320,7 @@ const principleIcons = { build: 'cursor-click', team: 'users-three', craft: 'rul
 			raf = requestAnimationFrame(tick);
 		};
 		const start = () => {
-			if (running || reduced) return;
+			if (running || reduced || phone.matches) return;
 			running = true;
 			last = performance.now();
 			raf = requestAnimationFrame(tick);
@@ -333,6 +334,13 @@ const principleIcons = { build: 'cursor-click', team: 'users-three', craft: 'rul
 		addEventListener('resize', () => {
 			size();
 			draw(0);
+		});
+		phone.addEventListener('change', () => {
+			if (phone.matches) stop();
+			else {
+				size();
+				start();
+			}
 		});
 		new IntersectionObserver(([e]) => {
 			// off screen: stop the game and freeze the drifting colour too, so nothing animates unseen
@@ -522,6 +530,15 @@ const principleIcons = { build: 'cursor-click', team: 'users-three', craft: 'rul
 	}
 	.hero.paused .blob {
 		animation-play-state: paused;
+	}
+	/* Phones: still colour, no game */
+	@media (max-width: 700px) {
+		.aura .blob {
+			animation: none !important;
+		}
+		.tetris {
+			display: none;
+		}
 	}
 	.blob {
 		position: absolute;
