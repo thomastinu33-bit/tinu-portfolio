@@ -78,7 +78,7 @@ const { study } = Astro.props;
 							);
 						case 'stats':
 							return (
-								<dl class="stats">
+								<dl class="stats" style={`--n: ${Math.min(b.items.length, 3)}`}>
 									{b.items.map((i) => (
 										<div>
 											<dt>{i.value}</dt>
@@ -489,7 +489,7 @@ const { study } = Astro.props;
 	.stats {
 		margin: 0;
 		display: grid;
-		grid-template-columns: repeat(3, minmax(0, 1fr));
+		grid-template-columns: repeat(var(--n, 3), minmax(0, 1fr));
 		gap: 16px;
 	}
 	.stats div,
