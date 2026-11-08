@@ -90,18 +90,17 @@ const { study } = Astro.props;
 						case 'gallery':
 							return (
 								<div class="gallery">
-									{b.label && <h3 class="g-label">{b.label}</h3>}
 									<ul class="track">
 										{b.items.map((g) => (
 											<li>
 												<figure>
 													<Image src={studyImage(g.src)} alt={g.alt} widths={[700, 1100, 1500]} sizes="(max-width: 720px) 90vw, 700px" />
-													<figcaption>{g.caption}</figcaption>
 												</figure>
 											</li>
 										))}
 									</ul>
 									<div class="g-nav">
+										{b.caption && <span class="g-caption">{b.caption}</span>}
 										<span class="g-count" aria-live="polite">{`1 / ${b.items.length}`}</span>
 										<button class="g-prev" type="button" aria-label="Previous">
 											<Icon name="caret-left" size={18} weight="bold" />
@@ -515,13 +514,9 @@ const { study } = Astro.props;
 	}
 	/* Discovery: questions on the left, pain points on the right, on two quiet panels */
 	/* Design exploration: a row of screens you scroll through, one snapping into place at a time */
-	.g-label {
-		margin: 0 0 14px;
-		font-family: var(--font-sans);
-		font-weight: 400;
-		font-size: 0.76rem;
-		letter-spacing: 0.14em;
-		text-transform: uppercase;
+	.g-caption {
+		margin-right: auto;
+		font-size: 0.92rem;
 		color: var(--muted);
 	}
 	.track {
@@ -542,15 +537,12 @@ const { study } = Astro.props;
 		flex: 0 0 100%;
 		scroll-snap-align: start;
 	}
-	.track figcaption {
-		margin-top: 12px;
-	}
 	.g-nav {
 		display: flex;
 		justify-content: flex-end;
 		gap: 8px;
 		align-items: center;
-		margin-top: -28px;
+		margin-top: -26px;
 	}
 	.g-count {
 		margin-right: 6px;
