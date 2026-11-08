@@ -11,7 +11,27 @@ export type Block =
 	| { type: 'row'; images: { src: string; alt: string }[]; caption?: string }
 	| { type: 'logos'; images: { src: string; alt: string }[] }
 	| { type: 'stats'; items: { value: string; label: string }[] }
-	| { type: 'quotes'; items: string[] };
+	| { type: 'quotes'; items: string[] }
+	// A site map: a root, its sections, and under each section one or more chains of pages (top to bottom)
+	| { type: 'sitemap'; root: string; sections: { label: string; chains: string[][] }[]; caption?: string }
+	// Object-based design: columns of objects (o:), calls to action (c:) and metadata (m:)
+	| { type: 'objects'; columns: string[][]; caption?: string }
+	// A row of numbered steps joined by arrows (wraps to two columns on small screens)
+	| { type: 'process'; steps: { icon: string; label: string; body?: string }[] }
+	// The Data Visualization Guidelines site, rebuilt in HTML and clickable (see GuidelinesSite)
+	| { type: 'guidelines'; caption?: string }
+	// A board of sticky notes grouped by theme (see AffinityBoard)
+	| { type: 'affinity'; kind: string; source: string; caption: string; cols?: number; themes: { name: string; tone: string; notes: string[] }[] }
+	// Discovery: the questions we asked beside the pain points we heard
+	| { type: 'research'; questionsLabel: string; questions: string[]; painLabel: string; pains: string[] }
+	// Customer feedback: one featured quote, then short notes from other customers
+	| { type: 'feedback'; quote: string; source: string; notes: string[] }
+	// A grid of captioned pictures; the last one spans the full width when the count is odd
+	| { type: 'gallery'; caption?: string; items: { src: string; alt: string }[] }
+	// Side-by-side cards describing the people a design is for
+	| { type: 'personas'; items: { label: string; icon: string; title: string; body: string }[] }
+	// A looping, muted video (files live in public/)
+	| { type: 'video'; src: string; poster: string; caption?: string };
 
 export type Study = {
 	slug: string;
@@ -36,7 +56,7 @@ export const studies: Study[] = [
 			'Customers visited every day for the latest reports, but over 70% of the homepage was irrelevant to them. I redesigned it to make new reports easy to find.',
 		highlights: ['12x increase in daily visitors', '41.5% visitor adoption', '11% weekly visitor growth'],
 		hero: true,
-		cover: { src: 'yd-homepage/01', alt: 'The redesigned YipitData homepage on a laptop.', bare: true },
+		cover: { src: 'yd-homepage/cover', alt: 'The redesigned YipitData homepage on a laptop.', bare: true },
 		blocks: [
 			{ type: 'heading', text: 'Context' },
 			{
@@ -112,7 +132,7 @@ export const studies: Study[] = [
 			'Customers had no quick way to see the latest KPIs for the companies they follow. I designed one consolidated view of YipitData’s estimates next to consensus values.',
 		highlights: ['62% visitor adoption', '12% average weekly visitor increase', '+18% week-over-week retention'],
 		hero: true,
-		cover: { src: 'yd-key-metrics/01', alt: 'The Key Metrics Screener on a laptop.', bare: true },
+		cover: { src: 'yd-key-metrics/cover', alt: 'The Key Metrics Screener on a laptop.', bare: true },
 		blocks: [
 			{ type: 'heading', text: 'Context' },
 			{
@@ -151,10 +171,63 @@ export const studies: Study[] = [
 				text: 'While gathering feedback on the Screener, we learned that customers wanted additional functionality, such as filtering by sectors, switching between growth rates, and earnings indicators to assess the reliability of estimates. Based on this input, we decided to evolve the Screener to better meet these needs and provide a more dynamic, user-driven experience.',
 			},
 			{
-				type: 'image',
-				src: 'yd-key-metrics/03',
-				alt: 'Key insights consolidated from customer feedback and interview sessions.',
-				caption: 'A consolidation of key insights gathered from customer feedback and interview sessions.',
+				type: 'affinity',
+				kind: 'Key insights',
+				source: 'Feedback and interviews',
+				caption: 'A consolidation of key insights gathered from customer feedback and interview sessions. Quotes are excerpts.',
+				cols: 3,
+				themes: [
+					{
+						name: 'Workflow',
+						tone: 'blue',
+						notes: [
+							'Workflow: Download the data > chart everything and do my extrapolation > see what pops out the other end',
+							'After using the dashboard > update all models > do a morning summary of the day that includes all of my news flows…',
+						],
+					},
+					{
+						name: 'Toggle between growth rates',
+						tone: 'green',
+						notes: [
+							'I don’t know if it would be too much to toggle between year over year or two year or four year estimate. That’s how you get to the quarter to date estimate.',
+							'Look at y/y and 4yr… Usually that aligns with my understanding after doing the data punching.',
+						],
+					},
+					{
+						name: 'Show trend lines',
+						tone: 'purple',
+						notes: [
+							'Regarding the metrics table, we know the point changes WoW but I think it would be helpful to have a trend line. It would be really helpful if you’re strapped on time.',
+							'Instead of period progress, it would be better to see the trend line.',
+						],
+					},
+					{
+						name: 'See context',
+						tone: 'yellow',
+						notes: [
+							'I want to understand what the quarter to date trend is…',
+							'…usually you can’t trust estimates early in the quarter so what should I takeaway from this?',
+							'What are the nuances to think about here…',
+							'I want to know what the comps look like so that I know whats driving this…',
+						],
+					},
+					{
+						name: 'Margin of error',
+						tone: 'orange',
+						notes: [
+							'I’m looking for a distribution of outcomes regarding the estimate. Is the distribution wide or narrow…',
+							'Give me the 80% confidence interval that’s constantly updated every day. That’s what I want.',
+						],
+					},
+					{
+						name: 'Earnings season',
+						tone: 'orange',
+						notes: [
+							'This list is very long and sometimes I know when it is nearing earnings but I want to know if you have any new update regarding that',
+							'Earnings season is very crucial… It would be nice to see if you guys have an update especially closer to earnings.',
+						],
+					},
+				],
 			},
 			{
 				type: 'text',
@@ -201,7 +274,7 @@ export const studies: Study[] = [
 			'Visualization guidelines for research and engineering',
 		],
 		hero: true,
-		cover: { src: 'yd-dataviz/01', alt: 'The Key Metrics dashboard on a laptop.', bare: true },
+		cover: { src: 'yd-dataviz/cover', alt: 'The Key Metrics dashboard on a laptop.', bare: true },
 		blocks: [
 			{ type: 'heading', text: 'Context' },
 			{
@@ -219,10 +292,47 @@ export const studies: Study[] = [
 				text: 'I reviewed over 100 custom analysis requests from customers and watched recordings of research analysts speaking with them to understand their questions, challenges and recurring patterns. Applying the 80-20 principle, I distilled key themes and worked closely with the product manager to define the next steps.',
 			},
 			{
-				type: 'image',
-				src: 'yd-dataviz/02',
-				alt: 'An affinity diagram of themes from customer requests.',
-				caption: 'One of the many affinity diagrams I created to identify key themes.',
+				type: 'affinity',
+				kind: 'Affinity diagram',
+				source: 'Customer requests',
+				caption: 'One of the many affinity diagrams I created to identify key themes. Quotes are excerpts.',
+				cols: 2,
+				themes: [
+					{
+						name: 'Growth rates',
+						tone: 'red',
+						notes: [
+							'…just visually for me to see two year growth rates across time, different types of seasonality through your… through your data set.',
+							'…we can pull data from all our vendors and just visualize like charge change, you know, like do we want to sit on a year over year basis.',
+						],
+					},
+					{
+						name: 'Workflow',
+						tone: 'blue',
+						notes: [
+							'I just have a sheet but usually what I do is like pull in your raw data. So every time you send an update, I’m just literally copy pasting and the raw data. And then I have, you know, just formulas that are pulling just from your raw data',
+						],
+					},
+					{
+						name: 'Forecasting',
+						tone: 'yellow',
+						notes: [
+							'I want to know what the best way is to forecast QTD for the rest of the quarter. What are the nuances to think about here',
+							'A few basic forecast methods. Like linear regression or just clicking seasonality, or, you know, delta between estimated and import it.',
+							'One definitely go in and partly because the data is so accurate and there’s also a read through it to be, you can use the data to the project out maybe the next month or two and get a sense of pending on how much they bought',
+							'I do like aggregations on the data and then we have models for all of our companies. And those sometimes pull specific pieces of information from it',
+						],
+					},
+					{
+						name: 'Context',
+						tone: 'purple',
+						notes: [
+							'If it’s interesting, I will see I want to know what the comps look like so that I know whats driving this and just visually interpret the information and then, you know, make some conclusion and share that with our team.',
+							'…usually you can’t trust estimates early in the quarter so what should I takeaway from this?',
+							'Right now what we do when I have that question is I schedule a call with your analyst.',
+						],
+					},
+				],
 			},
 			{ type: 'heading', text: 'Building the Key Metrics dashboard' },
 			{ type: 'text', text: 'We designed the visualization around three key user needs:' },
@@ -243,6 +353,10 @@ export const studies: Study[] = [
 				type: 'text',
 				text: 'Recognizing this gap, I developed the Data Visualization Guidelines, a resource to help research teams design more effective, user-friendly dashboards. The guidelines also supported engineering by introducing streamlined components, reducing the need to build dashboards from scratch and improving overall efficiency.',
 			},
+			{
+				type: 'guidelines',
+				caption: 'The guidelines site, as the research teams use it. Click the side navigation to look through each page.',
+			},
 		],
 	},
 	{
@@ -254,7 +368,7 @@ export const studies: Study[] = [
 			'Favoriting and watchlisting a company confused customers. I replaced “Favorites” with one expanded Watchlist that personalizes the whole portal.',
 		highlights: ['9x visitor adoption', '6.7x user clicks', '+21% weekly visitors managing their watchlist'],
 		hero: true,
-		cover: { src: 'yd-preferences/01', alt: 'The My Products page on a laptop.', bare: true },
+		cover: { src: 'yd-preferences/cover', alt: 'The My Products page on a laptop.', bare: true },
 		blocks: [
 			{ type: 'heading', text: 'Context' },
 			{
@@ -351,7 +465,16 @@ export const studies: Study[] = [
 			},
 			{ type: 'image', src: 'lemoney/01', alt: 'The Lemoney invoice screen.' },
 			{ type: 'heading', text: 'The design process' },
-			{ type: 'image', src: 'lemoney/02', alt: 'The steps of the design process.' },
+			{
+				type: 'process',
+				steps: [
+					{ icon: 'magnifying-glass', label: 'Research', body: 'Interviews with finance teams' },
+					{ icon: 'squares-four', label: 'Design IA', body: 'Outline the core modules' },
+					{ icon: 'users-three', label: 'Stakeholder review', body: 'Align with product and the team' },
+					{ icon: 'pen-nib', label: 'Design', body: 'Flows and screens' },
+					{ icon: 'desktop', label: 'Implementation', body: 'Hand off the proof of concept' },
+				],
+			},
 			{
 				type: 'text',
 				text: 'I conducted in-depth user research with bookkeepers, accountants, tax managers and finance managers from various organizations to better understand their workflows and pinpoint key pain points. This discovery phase gave us a clear outline of the essential modules for the product. I then shared these insights with stakeholders and collaborated closely with the product manager to define the goals for the proof of concept.',
@@ -368,12 +491,33 @@ export const studies: Study[] = [
 				type: 'text',
 				text: 'I facilitated a card sorting workshop with team members, our company accountant and the users I had interviewed to gather insights. While clear patterns emerged, some cards didn’t fit into specific groups. Based on these findings, I developed the initial information architecture for the product.',
 			},
-			{ type: 'image', src: 'lemoney/06', alt: 'The information architecture of the product.' },
+			{
+				type: 'sitemap',
+				root: 'Home',
+				caption: 'The information architecture of the product.',
+				sections: [
+					{ label: 'Banking', chains: [] },
+					{ label: 'Expenses', chains: [['Reimbursement', 'Approvals'], ['Expense', 'New Expense', 'View Expenses']] },
+					{ label: 'Invoices', chains: [['Estimates'], ['Invoice', 'New Invoice', 'View Invoices'], ['Inventory', 'View items', 'Add new']] },
+					{ label: 'Directory', chains: [['View', 'Add']] },
+					{ label: 'Payroll', chains: [['Employee Details', 'Type'], ['Payment Info'], ['Tax Info']] },
+					{ label: 'Accounting', chains: [] },
+				],
+			},
 			{
 				type: 'text',
 				text: 'To streamline the design, I identified shared elements across multiple modules and applied atomic design principles, creating reusable components for consistency and efficiency. This ensured modularity and seamless integration throughout the application. Here’s how I applied it to the Invoice module.',
 			},
-			{ type: 'image', src: 'lemoney/07', alt: 'Atomic design applied to the Invoice module.' },
+			{
+				type: 'objects',
+				caption: 'Atomic design applied to the Invoice module: the objects, the actions on them and the details they carry.',
+				columns: [
+					['o:Estimates', 'c:Preview and send', 'c:Convert to invoice', 'c:Duplicate', 'c:Create new', 'o:Customer', 'm:Estimate/Invoice Number', 'm:Quote/Amount', 'o:Product/Service Info', 'm:Estimate Status', 'm:Past Estimates'],
+					['o:Invoice', 'c:Preview and send', 'c:Send Reminders', 'c:Duplicate', 'c:Create new', 'c:View/Edit/Delete', 'o:Customer', 'm:Estimate/Invoice Number', 'm:Quote/Amount', 'm:Dates', 'o:Product/Service Info', 'm:Estimate Status', 'm:Past Estimates'],
+					['o:Customer', 'c:Create new', 'c:View/Edit/Delete', 'm:Name', 'm:Contact Info', 'o:Invoice', 'o:Estimates', 'o:Product/Service Info', 'm:Estimate Status', 'm:Past Estimates'],
+					['o:Product/Service Info', 'c:Create new', 'c:View/Edit/Delete', 'm:Name', 'm:Price', 'm:Tax', 'm:SKU number'],
+				],
+			},
 			{
 				type: 'text',
 				text: 'Designing the information architecture for both the main navigation and individual modules was a highly collaborative and iterative process with stakeholders and the lead product manager. To validate the structure, I conducted multiple rounds of user research and designed low-fidelity mockups to visualize user flows and interactions. This feedback-driven approach helped refine the design so it met user needs and expectations.',
@@ -562,8 +706,8 @@ export const studies: Study[] = [
 		tags: ['Evertune AI', 'B2B SaaS', 'Product Design'],
 		summary:
 			'The brand overview page is where customers see how their AI visibility is doing across every prompt they have run, and what to do next.',
-		highlights: ['~97.5% of visitors return', '~21% of app users visit', '~8.6s median time on page'],
-		cover: { src: 'evertune-brand-overview/01', alt: 'The Evertune platform.' },
+		highlights: ['~97.5% of visitors return', '~31% of app users visit'],
+		cover: { src: 'evertune-brand-overview/cover-final', alt: 'The Evertune brand overview page: key metrics, a visibility timeline, a competitor table and scores by model.' },
 		blocks: [
 			{ type: 'heading', text: 'Context' },
 			{
@@ -574,9 +718,8 @@ export const studies: Study[] = [
 			{
 				type: 'stats',
 				items: [
-					{ value: '~21%', label: 'Of app users visit the brand overview' },
+					{ value: '~31%', label: 'Of app users visit the brand overview' },
 					{ value: '~97.5%', label: 'Of visitors return' },
-					{ value: '~8.6s', label: 'Median time on page' },
 				],
 			},
 			{
@@ -584,10 +727,131 @@ export const studies: Study[] = [
 				text: 'Users were able to quickly see how their brand was performing and take next step actions.',
 			},
 			{
-				type: 'image',
-				src: 'evertune-brand-overview/01',
-				alt: 'The Evertune brand overview page (placeholder).',
-				caption: 'Placeholder: the brand overview page.',
+				type: 'video',
+				src: 'evertune/brand-overview.mp4',
+				poster: 'evertune/brand-overview-poster.jpg',
+			},
+			{ type: 'heading', text: 'What I did' },
+			{
+				type: 'text',
+				text: 'I started by partnering with the PM to understand exactly how customers wanted to understand their brand performance. Our customer success teams were already building reports for customers, so as part of our discovery process, we gathered all of those artifacts and evaluated them to uncover patterns in what they showed.',
+			},
+			{ type: 'heading', text: 'Designing for our users' },
+			{
+				type: 'text',
+				text: 'Discovery pointed to two main types of users, each looking at brand performance in a different way.',
+			},
+			{
+				type: 'personas',
+				items: [
+					{
+						label: 'User type 1',
+						icon: 'buildings',
+						title: 'Agency users',
+						body: 'They analyze multiple brands across multiple categories. Going through every tracker for every brand and aggregating the data by hand was slow and difficult.',
+					},
+					{
+						label: 'User type 2',
+						icon: 'target',
+						title: 'In-house brand teams',
+						body: 'They look across categories to see how their brand performs against competitors in each one, and which categories deserve their focus.',
+					},
+				],
+			},
+			{ type: 'heading', text: 'Discovery with users and stakeholders' },
+			{
+				type: 'text',
+				text: 'To understand how customers analyze performance today, we spoke with users and the business teams that support them. The conversations had two parts: what we asked, and the pain points that came out of them.',
+			},
+						{
+				type: 'research',
+				questionsLabel: 'Some of the questions we asked',
+				questions: [
+					"Walk me through how you analyze brand performance today.",
+					"What\u2019s the purpose of the aggregated performance metrics?",
+					"Which part of the process do you find time consuming?",
+					"Which part of the process do you wish you didn\u2019t have to do?",
+					"How do you do this for all your brands?",
+				],
+				painLabel: 'Some of the pain points we uncovered',
+				pains: [
+					"Aggregating data means opening every tracker and downloading it by hand.",
+					"Comparing how a brand does in one category versus another means going back and forth.",
+					"It\u2019s hard to tell which trackers deserve the most attention.",
+					"Reports go to CMOs and teams to shape strategies for brand visibility.",
+					"Customers want one view of their metrics, competitors and citations across all trackers.",
+					"Customers want to see how their owned content is cited over time.",
+					"Pulling the data together is slow, manual and repetitive.",
+					"Agencies build aggregated reports for each client, and it takes up a lot of their time.",
+				],
+			},
+
+			{ type: 'heading', text: 'Design exploration' },
+			{
+				type: 'text',
+				text: 'The design came together through many rounds of iteration. We explored a wide range of layouts, gathered feedback on each one, and used it to refine the designs further.',
+			},
+			{
+				type: 'gallery',
+				caption: 'Examples of some of the designs we explored',
+				items: [
+					{
+						src: 'evertune-brand-overview/explore-main-00',
+						alt: 'Early layout with a navigation prototype: the Insights & Actions panel opens beside the overview with summaries, priorities and suggested actions.',
+					},
+					{
+						src: 'evertune-brand-overview/explore-main-01',
+						alt: 'Early layout with brand scores shown as rings by model, above the competitor benchmarking.',
+					},
+					{
+						src: 'evertune-brand-overview/explore-main-02',
+						alt: 'Layout with an Insights and Recommendations panel beside the key metrics and brand scores.',
+					},
+					{
+						src: 'evertune-brand-overview/explore-main-03',
+						alt: 'Layout with the competitor benchmarking table opening in a side drawer over the overview.',
+					},
+					{
+						src: 'evertune-brand-overview/explore-main-04',
+						alt: 'Layout with competitors ranked as horizontal bars right under the key metrics.',
+					},
+					{
+						src: 'evertune-brand-overview/explore-main-05',
+						alt: 'Layout with competitors compared in a table with scores, visibility, position and source share.',
+					},
+				],
+			},
+			{
+				type: 'text',
+				text: 'Along the way, the PM and I worked with engineering to understand our technical limitations and to define what belonged in the MVP. That shaped which ideas we kept for launch and which we saved for later.',
+			},
+			{ type: 'heading', text: 'How users are responding' },
+			{
+				type: 'text',
+				text: 'After the first walkthroughs, customers started testing the page right away, and the feedback has been good.',
+			},
+			{
+				type: 'feedback',
+				quote: 'Really liking it \u2026 much more of a one stop shop versus having to click around so much in the platform.',
+				source: 'Customer',
+				notes: [
+					'One team liked that it\u2019s a simple entry point anyone on their team can use, and chose to keep it instead of moving to custom dashboards.',
+					'Another said the visualizations make performance easy to communicate. One screenshot shows several metrics at once, which Trend Analysis can\u2019t do, and they loved the donut charts.',
+					'One customer uses it for weekly executive reporting, and the timeline is one of the most important screenshots brands share internally.',
+				],
+			},
+			{ type: 'heading', text: 'Next steps' },
+			{
+				type: 'text',
+				text: 'Within 90 days of launch, 31% of users were actively coming back to the brand overview. We think it can become one of the most valuable views in the platform, with the goal that 90%+ of users never need to leave it. Getting there means:',
+			},
+			{
+				type: 'list',
+				items: [
+					'Bringing every capability of the tracker pages into the brand overview.',
+					'Making the GEO manager easy to use.',
+					'Letting users build their own custom dashboards.',
+				],
 			},
 		],
 	},

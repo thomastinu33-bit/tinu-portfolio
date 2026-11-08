@@ -3,7 +3,7 @@
 import type { ImageMetadata } from 'astro';
 import { studies } from './studies';
 import { studyImage } from '../lib/studyImages';
-import evertuneCover from '../assets/evertune/cover.jpg';
+import evertuneCover from '../assets/evertune/cover-v2.jpg';
 import ydCover from '../assets/yd/cover.png';
 import portrait from '../assets/about/portrait-soft.webp';
 
@@ -109,8 +109,8 @@ export const projects: Project[] = [
 		},
 		tags: ['Evertune AI', 'B2B SaaS', 'Product Design'],
 		flow: {
-			src: 'evertune/flow.mp4',
-			poster: 'evertune/flow-poster.jpg',
+			src: 'evertune/flow-v2.mp4',
+			poster: 'evertune/flow-v2-poster.jpg',
 			steps: [
 				{
 					label: 'Start',
@@ -130,7 +130,7 @@ export const projects: Project[] = [
 				{
 					label: 'Run',
 					caption: 'Pick the models and refresh cadence and watch the monthly prompt usage update, then run the tracker.',
-					at: 29.3,
+					at: 18.4,
 				},
 			],
 		},
@@ -180,7 +180,7 @@ export const experience: Job[] = [
 		when: 'Aug 2025 – Present',
 		summary:
 			'Designing Evertune\u2019s AI-native platform end to end across GEO and Ads, and creating unified agent experiences so customers can understand and improve how their brand shows up in AI answers.',
-		projects: ['evertune', 'evertune-brand-overview'],
+		projects: ['evertune-brand-overview', 'evertune'],
 	},
 	{
 		company: 'YipitData',

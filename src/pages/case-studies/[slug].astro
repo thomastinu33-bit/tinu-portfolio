@@ -1,7 +1,10 @@
 ---
 import { Image } from 'astro:assets';
 import { base } from '../../lib/base';
+import Icon from '../../components/Icon.astro';
 import Layout from '../../layouts/Layout.astro';
+import GuidelinesSite from '../../components/GuidelinesSite.astro';
+import AffinityBoard from '../../components/AffinityBoard.astro';
 import PasswordGate from '../../components/PasswordGate.astro';
 import { site } from '../../data/site';
 import { studies } from '../../data/studies';
@@ -49,6 +52,77 @@ const { study } = Astro.props;
 									))}
 								</ul>
 							);
+						case 'affinity':
+							return <AffinityBoard themes={b.themes} kind={b.kind} source={b.source} caption={b.caption} cols={b.cols} />;
+						case 'guidelines':
+							return (
+								<figure class="guidelines">
+									<GuidelinesSite />
+									{b.caption && <figcaption>{b.caption}</figcaption>}
+								</figure>
+							);
+						case 'process':
+							return (
+								<ol class="process">
+									{b.steps.map((st, i) => (
+										<li>
+											<span class="p-num">{i + 1}</span>
+											<span class="p-ico"><Icon name={st.icon} size={28} weight="light" /></span>
+											<b>{st.label}</b>
+											{st.body && <small>{st.body}</small>}
+										</li>
+									))}
+								</ol>
+							);
+						case 'sitemap':
+							return (
+								<figure class="sitemap">
+									<div class="sm-scroll">
+										<div class="sm">
+											<div class="sm-root"><span class="sm-node root">{b.root}</span></div>
+											<div class="sm-sections" style={`grid-template-columns: ${b.sections.map((x) => `minmax(0, ${Math.max(x.chains.length, 1)}fr)`).join(' ')}`}>
+												{b.sections.map((sec) => (
+													<div class="sm-sec" style={`--w: ${Math.max(sec.chains.length, 1)}`}>
+														<span class="sm-node sec">{sec.label}</span>
+														{sec.chains.length > 0 && (
+															<div class="sm-chains">
+																{sec.chains.map((ch) => (
+																	<ol class="sm-chain">
+																		{ch.map((pg) => (
+																			<li><span class="sm-node">{pg}</span></li>
+																		))}
+																	</ol>
+																))}
+															</div>
+														)}
+													</div>
+												))}
+											</div>
+										</div>
+									</div>
+									{b.caption && <figcaption>{b.caption}</figcaption>}
+								</figure>
+							);
+						case 'objects':
+							return (
+								<figure class="objects">
+									<ul class="ob-key">
+										<li><i class="o"></i>Object</li>
+										<li><i class="c"></i>Call to action</li>
+										<li><i class="m"></i>Metadata</li>
+									</ul>
+									<div class="ob-cols" style={`--n: ${b.columns.length}`}>
+										{b.columns.map((col) => (
+											<ul class="ob-col">
+												{col.map((it) => (
+													<li class={it[0]}>{it.slice(2)}</li>
+												))}
+											</ul>
+										))}
+									</div>
+									{b.caption && <figcaption>{b.caption}</figcaption>}
+								</figure>
+							);
 						case 'image':
 							return (
 								<figure>
@@ -77,7 +151,7 @@ const { study } = Astro.props;
 							);
 						case 'stats':
 							return (
-								<dl class="stats">
+								<dl class="stats" style={`--n: ${Math.min(b.items.length, 3)}`}>
 									{b.items.map((i) => (
 										<div>
 											<dt>{i.value}</dt>
@@ -85,6 +159,106 @@ const { study } = Astro.props;
 										</div>
 									))}
 								</dl>
+							);
+						case 'feedback':
+							return (
+								<div class="feedback">
+									<figure class="fb-quote">
+										<blockquote>{`\u201c${b.quote}\u201d`}</blockquote>
+										<figcaption>{b.source}</figcaption>
+									</figure>
+									{b.notes.map((n) => (
+										<p class="fb-note">{n}</p>
+									))}
+								</div>
+							);
+						case 'gallery':
+							return (
+								<div class="gallery">
+									<ul class="track">
+										{b.items.map((g) => (
+											<li>
+												<figure>
+													<Image src={studyImage(g.src)} alt={g.alt} widths={[700, 1100, 1500]} sizes="(max-width: 720px) 90vw, 700px" />
+												</figure>
+											</li>
+										))}
+									</ul>
+									<div class="g-nav">
+										{b.caption && <span class="g-caption">{b.caption}</span>}
+										<span class="g-count" aria-live="polite">{`1 / ${b.items.length}`}</span>
+										<button class="g-prev" type="button" aria-label="Previous">
+											<Icon name="caret-left" size={18} weight="bold" />
+										</button>
+										<button class="g-next" type="button" aria-label="Next">
+											<Icon name="caret-right" size={18} weight="bold" />
+										</button>
+									</div>
+								</div>
+							);
+						case 'research':
+							return (
+								<div class="research">
+									<section class="panel">
+										<h3>{b.questionsLabel}</h3>
+										<ul class="asks">
+											{b.questions.map((q) => (
+												<li>{`\u201c${q}\u201d`}</li>
+											))}
+										</ul>
+									</section>
+									<section class="panel">
+										<h3>{b.painLabel}</h3>
+										<ul class="pains">
+											{b.pains.map((t) => (
+												<li>{t}</li>
+											))}
+										</ul>
+									</section>
+								</div>
+							);
+						case 'personas':
+							return (
+								<div class="personas">
+									{b.items.map((p) => (
+										<section class="persona">
+											<span class="persona-label">{p.label}</span>
+											<span class="persona-icon">
+												<Icon name={p.icon} size={30} weight="light" />
+											</span>
+											<h3>{p.title}</h3>
+											<p>{p.body}</p>
+										</section>
+									))}
+								</div>
+							);
+						case 'video':
+							return (
+								<figure class="clip-wrap">
+									<div class="clip-box">
+										<video
+											class="clip"
+											src={`${base}/${b.src}`}
+											poster={`${base}/${b.poster}`}
+											muted
+											loop
+											playsinline
+											preload="metadata"
+											aria-label={b.caption ?? 'Walkthrough video'}
+										/>
+										<div class="clip-ctrls">
+											<button class="clip-toggle" type="button" aria-label="Pause video">
+												<Icon name="pause" size={18} weight="fill" class="i-pause" />
+												<Icon name="play" size={18} weight="fill" class="i-play" />
+											</button>
+											<button class="clip-full" type="button" aria-label="View full screen">
+												<Icon name="arrows-out-simple" size={18} weight="bold" class="i-enter" />
+												<Icon name="arrows-in-simple" size={18} weight="bold" class="i-exit" />
+											</button>
+										</div>
+									</div>
+									{b.caption && <figcaption>{b.caption}</figcaption>}
+								</figure>
 							);
 						case 'quotes':
 							return (
@@ -104,7 +278,393 @@ const { study } = Astro.props;
 	<PasswordGate mode="immediate" />
 </Layout>
 
+<script>
+	// Carousels: the arrows scroll one picture at a time and switch off at either end.
+	document.querySelectorAll<HTMLElement>('.gallery').forEach((g) => {
+		const track = g.querySelector<HTMLElement>('.track')!;
+		const prev = g.querySelector<HTMLButtonElement>('.g-prev')!;
+		const next = g.querySelector<HTMLButtonElement>('.g-next')!;
+		const step = () => (track.querySelector('li')?.getBoundingClientRect().width ?? 600) + 16;
+		const count = g.querySelector<HTMLElement>('.g-count')!;
+		const total = track.querySelectorAll('li').length;
+		const sync = () => {
+			count.textContent = `${Math.min(total, Math.round(track.scrollLeft / step()) + 1)} / ${total}`;
+			prev.disabled = track.scrollLeft < 4;
+			next.disabled = track.scrollLeft > track.scrollWidth - track.clientWidth - 4;
+		};
+		prev.addEventListener('click', () => track.scrollBy({ left: -step(), behavior: 'smooth' }));
+		next.addEventListener('click', () => track.scrollBy({ left: step(), behavior: 'smooth' }));
+		track.addEventListener('scroll', sync, { passive: true });
+		addEventListener('resize', sync);
+		sync();
+	});
+
+	// Clips play while on screen and pause when off screen. The corner button (or a click on the clip) pauses and plays.
+	const still = matchMedia('(prefers-reduced-motion: reduce)').matches;
+	document.querySelectorAll<HTMLElement>('.clip-box').forEach((box) => {
+		const v = box.querySelector('video')!;
+		const btn = box.querySelector<HTMLButtonElement>('.clip-toggle')!;
+		const full = box.querySelector<HTMLButtonElement>('.clip-full')!;
+		let userPaused = still;
+		const sync = () => {
+			box.classList.toggle('is-paused', v.paused);
+			btn.setAttribute('aria-label', v.paused ? 'Play video' : 'Pause video');
+		};
+		v.addEventListener('play', sync);
+		v.addEventListener('pause', sync);
+		const toggle = () => {
+			userPaused = !v.paused;
+			v.paused ? v.play().catch(() => {}) : v.pause();
+		};
+		btn.addEventListener('click', toggle);
+		const vid = v as HTMLVideoElement & { webkitEnterFullscreen?: () => void };
+		full.addEventListener('click', () => {
+			if (document.fullscreenElement) document.exitFullscreen();
+			else if (box.requestFullscreen) box.requestFullscreen().catch(() => {});
+			else vid.webkitEnterFullscreen?.(); // iPhone Safari only fullscreens the video itself
+			if (v.paused && !userPaused) v.play().catch(() => {});
+		});
+		document.addEventListener('fullscreenchange', () => {
+			const on = document.fullscreenElement === box;
+			box.classList.toggle('is-full', on);
+			full.setAttribute('aria-label', on ? 'Exit full screen' : 'View full screen');
+		});
+		v.addEventListener('click', toggle);
+		new IntersectionObserver(([e]) => {
+			if (e.isIntersecting && !userPaused) v.play().catch(() => {});
+			else if (!e.isIntersecting) v.pause();
+		}, { threshold: 0.4 }).observe(box);
+		sync();
+	});
+</script>
+
 <style>
+	/* Process: numbered steps joined by arrows */
+	.process {
+		list-style: none;
+		margin: 0;
+		padding: 0;
+		display: grid;
+		grid-template-columns: repeat(5, minmax(0, 1fr));
+		gap: 28px;
+	}
+	.process li {
+		position: relative;
+		display: grid;
+		justify-items: start;
+		align-content: start;
+		gap: 6px;
+		padding: 18px 16px 18px;
+		border-radius: 24px;
+		background: #fafafa;
+		border: 1px solid #ececec;
+		box-shadow: 0 12px 30px -18px rgba(0, 0, 0, 0.15);
+		transition:
+			transform 0.3s cubic-bezier(0.2, 0.7, 0.2, 1),
+			box-shadow 0.3s ease;
+	}
+	.process li:hover {
+		transform: translateY(-4px);
+		box-shadow: 0 26px 54px -20px rgba(150, 110, 170, 0.35);
+	}
+	.process li:not(:last-child)::after {
+		content: '';
+		position: absolute;
+		left: calc(100% + 6px);
+		top: 38px;
+		width: 16px;
+		height: 2px;
+		background: #cfc8dc;
+	}
+	.process li:not(:last-child)::before {
+		content: '';
+		position: absolute;
+		left: calc(100% + 15px);
+		top: 34px;
+		width: 7px;
+		height: 7px;
+		border-top: 2px solid #cfc8dc;
+		border-right: 2px solid #cfc8dc;
+		transform: rotate(45deg);
+	}
+	.p-num {
+		font-size: 0.75rem;
+		color: var(--muted);
+		letter-spacing: 0.08em;
+	}
+	.p-ico {
+		display: grid;
+		place-items: center;
+		width: 48px;
+		height: 48px;
+		margin: 2px 0 6px;
+		border-radius: 14px;
+		background: linear-gradient(140deg, #ffe3d3, #e6e0ff);
+		color: #3a3340;
+	}
+	.process b {
+		font-weight: 500;
+		font-size: 1rem;
+		line-height: 1.2;
+	}
+	.process small {
+		font-size: 0.82rem;
+		line-height: 1.4;
+		color: var(--muted);
+	}
+	@media (max-width: 860px) {
+		.process {
+			grid-template-columns: repeat(2, minmax(0, 1fr));
+			gap: 16px;
+		}
+		.process li::before,
+		.process li::after {
+			display: none;
+		}
+	}
+	/* Site map: a tree of cards joined by thin lines */
+	.sitemap {
+		min-width: 0;
+		max-width: 100%;
+		padding: 28px 24px 20px;
+		border-radius: 24px;
+		background: #fafafa;
+		border: 1px solid #ececec;
+		box-shadow: 0 12px 30px -18px rgba(0, 0, 0, 0.15);
+	}
+	.sm-scroll {
+		min-width: 0;
+		max-width: 100%;
+		overflow-x: auto;
+	}
+	.sm {
+		min-width: 940px;
+	}
+	.sm-root {
+		display: flex;
+		justify-content: center;
+		position: relative;
+		padding-bottom: 26px;
+	}
+	.sm-root::after,
+	.sm-sec::before {
+		content: '';
+		position: absolute;
+		left: 50%;
+		width: 1.5px;
+		background: #cfc8dc;
+	}
+	.sm-root::after {
+		bottom: 0;
+		height: 26px;
+	}
+	.sm-sections {
+		display: grid;
+	}
+	.sm-node {
+		display: inline-block;
+		padding: 7px 12px;
+		border-radius: 12px;
+		background: #fff;
+		border: 1px solid #e6e2ee;
+		box-shadow: 0 8px 18px -12px rgba(0, 0, 0, 0.2);
+		font-size: 0.8rem;
+		line-height: 1.25;
+		text-align: center;
+		color: var(--fg);
+		transition:
+			transform 0.25s ease,
+			box-shadow 0.25s ease;
+	}
+	.sm-node:hover {
+		transform: translateY(-2px);
+		box-shadow: 0 16px 30px -14px rgba(150, 110, 170, 0.4);
+	}
+	.sm-node.root {
+		padding: 9px 26px;
+		background: #2b2b2b;
+		border-color: #2b2b2b;
+		color: #fff;
+	}
+	.sm-node.sec {
+		background: linear-gradient(140deg, #ffe3d3, #e6e0ff);
+		border-color: #fff;
+		font-weight: 500;
+	}
+	.sm-sec {
+		position: relative;
+		display: grid;
+		justify-items: center;
+		align-content: start;
+		gap: 22px;
+		padding-top: 26px;
+	}
+	.sm-sec::before {
+		top: 0;
+		height: 26px;
+	}
+	/* the horizontal bar across the sections */
+	.sm-sec::after {
+		content: '';
+		position: absolute;
+		top: 0;
+		left: 0;
+		right: 0;
+		height: 1.5px;
+		background: #cfc8dc;
+	}
+	.sm-sec:first-child::after {
+		left: 50%;
+	}
+	.sm-sec:last-child::after {
+		right: 50%;
+	}
+	.sm-chains {
+		display: flex;
+		gap: 10px;
+		justify-content: center;
+		align-items: flex-start;
+	}
+	.sm-chain::before {
+		content: '';
+		position: absolute;
+		top: -22px;
+		left: 50%;
+		width: 1.5px;
+		height: 22px;
+		background: #cfc8dc;
+	}
+	.sm-chain::after {
+		content: '';
+		position: absolute;
+		top: -22px;
+		left: -5px;
+		right: -5px;
+		height: 1.5px;
+		background: #cfc8dc;
+	}
+	.sm-chain:first-child::after {
+		left: 50%;
+	}
+	.sm-chain:last-child::after {
+		right: 50%;
+	}
+	.sm-chain:only-child::after {
+		display: none;
+	}
+	.sm-chain {
+		position: relative;
+		list-style: none;
+		margin: 0;
+		padding: 0;
+		display: grid;
+		justify-items: center;
+		gap: 14px;
+	}
+	.sm-chain li {
+		position: relative;
+	}
+	.sm-chain li:not(:last-child)::after {
+		content: '';
+		position: absolute;
+		left: 50%;
+		top: 100%;
+		width: 1.5px;
+		height: 14px;
+		background: #cfc8dc;
+	}
+	.sm-chain .sm-node {
+		font-size: 0.72rem;
+		padding: 6px 8px;
+		background: #fff;
+	}
+	/* Objects: objects, calls to action and metadata as colored cards */
+	.objects {
+		padding: 22px 24px 20px;
+		border-radius: 24px;
+		background: #fafafa;
+		border: 1px solid #ececec;
+		box-shadow: 0 12px 30px -18px rgba(0, 0, 0, 0.15);
+	}
+	.ob-key {
+		list-style: none;
+		margin: 0 0 16px;
+		padding: 0;
+		display: flex;
+		flex-wrap: wrap;
+		gap: 8px 20px;
+		font-size: 0.8rem;
+		color: var(--muted);
+	}
+	.ob-key li {
+		display: inline-flex;
+		align-items: center;
+		gap: 8px;
+	}
+	.ob-key i {
+		width: 12px;
+		height: 12px;
+		border-radius: 4px;
+	}
+	.ob-key .o,
+	.ob-col .o {
+		background: #2b2b2b;
+	}
+	.ob-key .c,
+	.ob-col .c {
+		background: #ebe6ff;
+	}
+	.ob-key .m,
+	.ob-col .m {
+		background: #ffe9dc;
+	}
+	.ob-cols {
+		display: grid;
+		grid-template-columns: repeat(var(--n, 4), minmax(0, 1fr));
+		gap: 14px;
+		align-items: start;
+	}
+	.ob-col {
+		list-style: none;
+		margin: 0;
+		padding: 0;
+		display: grid;
+		gap: 6px;
+	}
+	.ob-col li {
+		padding: 7px 8px;
+		border-radius: 10px;
+		font-size: 0.78rem;
+		line-height: 1.25;
+		text-align: center;
+		transition:
+			transform 0.25s ease,
+			box-shadow 0.25s ease;
+	}
+	.ob-col li:hover {
+		transform: translateY(-2px);
+		box-shadow: 0 14px 26px -14px rgba(150, 110, 170, 0.45);
+	}
+	.ob-col .o {
+		color: #fff;
+		font-weight: 500;
+		margin-top: 8px;
+	}
+	.ob-col li.o:first-child {
+		margin-top: 0;
+	}
+	.ob-col .c {
+		color: #4a3f6e;
+	}
+	.ob-col .m {
+		color: #8a5a3a;
+	}
+	@media (max-width: 720px) {
+		.ob-cols {
+			grid-template-columns: repeat(2, minmax(0, 1fr));
+			row-gap: 20px;
+		}
+	}
 	/* Soft colour behind the top of the page, like the landing page */
 	.wash {
 		position: absolute;
@@ -150,7 +710,7 @@ const { study } = Astro.props;
 		max-width: 22ch;
 	}
 	.lead {
-		max-width: 60ch;
+		max-width: 72ch;
 		font-size: 1.2rem;
 		line-height: 1.6;
 		color: var(--muted);
@@ -188,6 +748,7 @@ const { study } = Astro.props;
 	}
 	.blocks {
 		display: grid;
+		grid-template-columns: minmax(0, 1fr);
 		gap: 28px;
 		margin-top: 40px;
 	}
@@ -200,7 +761,7 @@ const { study } = Astro.props;
 	}
 	.text,
 	.list {
-		max-width: 62ch;
+		max-width: 80ch;
 		margin: 0;
 		font-size: 1.1rem;
 		line-height: 1.7;
@@ -226,10 +787,83 @@ const { study } = Astro.props;
 	}
 	figcaption {
 		margin-top: 12px;
-		max-width: 62ch;
+		max-width: 80ch;
 		font-size: 0.92rem;
 		line-height: 1.55;
 		color: var(--muted);
+	}
+	.clip {
+		display: block;
+		width: 100%;
+		height: auto;
+		border-radius: 20px;
+		border: 1px solid #ececec;
+		background: #fff;
+		box-shadow: 0 24px 60px -24px rgba(0, 0, 0, 0.25);
+		cursor: pointer;
+	}
+	.clip-box {
+		position: relative;
+	}
+	.clip-ctrls {
+		position: absolute;
+		right: 14px;
+		bottom: 14px;
+		display: flex;
+		gap: 8px;
+	}
+	.clip-toggle,
+	.clip-full {
+		display: grid;
+		place-items: center;
+		width: 40px;
+		height: 40px;
+		padding: 0;
+		border-radius: 999px;
+		color: var(--fg);
+		cursor: pointer;
+		background: rgba(255, 255, 255, 0.6);
+		border: 1px solid rgba(255, 255, 255, 0.8);
+		-webkit-backdrop-filter: blur(14px) saturate(160%);
+		backdrop-filter: blur(14px) saturate(160%);
+		box-shadow: 0 6px 18px -6px rgba(0, 0, 0, 0.25);
+		transition: background 0.2s ease, transform 0.2s ease;
+	}
+	.clip-toggle:hover,
+	.clip-full:hover {
+		background: rgba(255, 255, 255, 0.9);
+		transform: scale(1.06);
+	}
+	.clip-toggle :global(svg),
+	.clip-full :global(svg) {
+		grid-area: 1 / 1;
+	}
+	.clip-toggle :global(.i-play),
+	.is-paused .clip-toggle :global(.i-pause) {
+		display: none;
+	}
+	.is-paused .clip-toggle :global(.i-play) {
+		display: block;
+	}
+	.clip-full :global(.i-exit),
+	.is-full .clip-full :global(.i-enter) {
+		display: none;
+	}
+	.is-full .clip-full :global(.i-exit) {
+		display: block;
+	}
+	.clip-box:fullscreen {
+		display: grid;
+		place-items: center;
+		background: #000;
+	}
+	.clip-box:fullscreen .clip {
+		width: 100%;
+		height: 100%;
+		object-fit: contain;
+		border: 0;
+		border-radius: 0;
+		box-shadow: none;
 	}
 	.row {
 		display: grid;
@@ -250,7 +884,7 @@ const { study } = Astro.props;
 	.stats {
 		margin: 0;
 		display: grid;
-		grid-template-columns: repeat(3, minmax(0, 1fr));
+		grid-template-columns: repeat(var(--n, 3), minmax(0, 1fr));
 		gap: 16px;
 	}
 	.stats div,
@@ -280,6 +914,7 @@ const { study } = Astro.props;
 	}
 	.stats dt {
 		font-family: var(--font-serif);
+		font-variant-numeric: lining-nums;
 		font-size: clamp(2.2rem, 4.4vw, 3.1rem);
 		line-height: 1;
 		letter-spacing: -0.01em;
@@ -289,6 +924,270 @@ const { study } = Astro.props;
 		color: var(--muted);
 		font-size: 0.95rem;
 		line-height: 1.45;
+	}
+	/* Discovery: questions on the left, pain points on the right, on two quiet panels */
+	/* Design exploration: a row of screens you scroll through, one snapping into place at a time */
+	.feedback {
+		display: grid;
+		grid-template-columns: minmax(0, 5fr) minmax(0, 6fr);
+		grid-template-rows: repeat(3, auto);
+		gap: 16px;
+	}
+	.fb-quote {
+		grid-row: 1 / span 3;
+	}
+	.fb-note {
+		margin: 0;
+		display: flex;
+		align-items: center;
+		padding: 22px 24px;
+		border-radius: 22px;
+		background: #fafafa;
+		border: 1px solid #ececec;
+		font-size: 1rem;
+		line-height: 1.6;
+		color: #3d3d3d;
+	}
+	.fb-quote {
+		position: relative;
+		overflow: hidden;
+		padding: 40px 44px 36px;
+		border-radius: 28px;
+		background: #fff;
+		border: 1px solid #ececec;
+		box-shadow: 0 12px 30px -20px rgba(0, 0, 0, 0.18);
+	}
+	/* soft peach and lavender glow in the corners, like the user-type cards */
+	.fb-quote::before,
+	.fb-quote::after {
+		content: '';
+		position: absolute;
+		width: 45%;
+		height: 120%;
+		pointer-events: none;
+	}
+	.fb-quote::before {
+		inset: -50% auto auto -12%;
+		background: radial-gradient(closest-side, rgba(255, 214, 190, 0.5), transparent);
+	}
+	.fb-quote::after {
+		inset: auto -12% -60% auto;
+		background: radial-gradient(closest-side, rgba(214, 205, 255, 0.5), transparent);
+	}
+	.fb-quote blockquote,
+	.fb-quote blockquote:hover {
+		position: relative;
+		margin: 0;
+		padding: 0;
+		background: none;
+		border: 0;
+		box-shadow: none;
+		-webkit-backdrop-filter: none;
+		backdrop-filter: none;
+		transform: none;
+		max-width: 22ch;
+		font-family: var(--font-serif);
+		font-size: clamp(1.6rem, 3.2vw, 2.2rem);
+		line-height: 1.25;
+	}
+	.fb-quote figcaption {
+		position: relative;
+		margin-top: 22px;
+		font-size: 0.76rem;
+		letter-spacing: 0.14em;
+		text-transform: uppercase;
+		color: var(--muted);
+	}
+	.g-caption {
+		margin-right: auto;
+		font-size: 0.92rem;
+		color: var(--muted);
+	}
+	.track {
+		list-style: none;
+		margin: 0;
+		padding: 6px 0 44px;
+		display: flex;
+		gap: 16px;
+		overflow-x: auto;
+		scroll-snap-type: x mandatory;
+		scrollbar-width: none;
+		overscroll-behavior-x: contain;
+	}
+	.track::-webkit-scrollbar {
+		display: none;
+	}
+	.track li {
+		flex: 0 0 100%;
+		scroll-snap-align: start;
+	}
+	.g-nav {
+		display: flex;
+		justify-content: flex-end;
+		gap: 8px;
+		align-items: center;
+		margin-top: -26px;
+	}
+	.g-count {
+		margin-right: 6px;
+		font-size: 0.85rem;
+		letter-spacing: 0.08em;
+		color: var(--muted);
+		font-variant-numeric: tabular-nums;
+	}
+	.g-nav button {
+		display: grid;
+		place-items: center;
+		width: 40px;
+		height: 40px;
+		padding: 0;
+		border-radius: 999px;
+		color: var(--fg);
+		cursor: pointer;
+		background: rgba(255, 255, 255, 0.7);
+		border: 1px solid #ececec;
+		box-shadow: 0 6px 18px -10px rgba(0, 0, 0, 0.25);
+		transition: background 0.2s ease, opacity 0.2s ease, transform 0.2s ease;
+	}
+	.g-nav button:hover:not(:disabled) {
+		background: #fff;
+		transform: scale(1.06);
+	}
+	.g-nav button:disabled {
+		opacity: 0.35;
+		cursor: default;
+	}
+	.research {
+		display: grid;
+		grid-template-columns: minmax(0, 5fr) minmax(0, 7fr);
+		gap: 16px;
+	}
+	.panel {
+		display: flex;
+		flex-direction: column;
+		padding: 28px;
+		border-radius: 28px;
+		background: #fafafa;
+		border: 1px solid #ececec;
+	}
+	.panel h3 {
+		margin: 0 0 22px;
+		font-family: var(--font-sans);
+		font-weight: 400;
+		font-size: 0.76rem;
+		letter-spacing: 0.14em;
+		text-transform: uppercase;
+		color: var(--muted);
+	}
+	.asks,
+	.pains {
+		list-style: none;
+		margin: 0;
+		padding: 0;
+	}
+	.asks {
+		flex: 1;
+		display: grid;
+		grid-auto-rows: 1fr;
+		gap: 12px;
+	}
+	/* the questions are cards too, sharing the panel's height evenly so both panels end on the same line */
+	.asks li {
+		display: flex;
+		align-items: center;
+		padding: 18px 22px;
+		border-radius: 18px;
+		background: #fff;
+		border: 1px solid #ececec;
+		font-size: 0.98rem;
+		line-height: 1.5;
+		color: #3d3d3d;
+	}
+	.pains {
+		flex: 1;
+		display: grid;
+		grid-template-columns: repeat(2, minmax(0, 1fr));
+		grid-auto-rows: 1fr;
+		gap: 12px;
+	}
+	.pains li {
+		display: flex;
+		align-items: center;
+		padding: 18px 20px;
+		border-radius: 18px;
+		background: #fff;
+		border: 1px solid #ececec;
+		font-size: 0.98rem;
+		line-height: 1.5;
+		color: #3d3d3d;
+	}
+	.personas {
+		display: grid;
+		grid-template-columns: repeat(2, minmax(0, 1fr));
+		gap: 16px;
+	}
+	.persona {
+		position: relative;
+		overflow: hidden;
+		padding: 28px 28px 30px;
+		border-radius: 24px;
+		background: #fff;
+		border: 1px solid #ececec;
+		box-shadow: 0 12px 30px -20px rgba(0, 0, 0, 0.18);
+		transition: transform 0.3s cubic-bezier(0.2, 0.7, 0.2, 1), box-shadow 0.3s ease;
+	}
+	/* a soft peach and lavender glow in the corner of each card */
+	.persona::before {
+		content: '';
+		position: absolute;
+		inset: -40% -30% auto auto;
+		width: 75%;
+		height: 80%;
+		background: radial-gradient(closest-side, rgba(255, 214, 190, 0.55), transparent);
+		pointer-events: none;
+	}
+	.persona:nth-child(2)::before {
+		background: radial-gradient(closest-side, rgba(214, 205, 255, 0.55), transparent);
+	}
+	.persona:hover {
+		transform: translateY(-4px);
+		box-shadow: 0 26px 54px -20px rgba(150, 110, 170, 0.35);
+	}
+	.persona-label {
+		position: relative;
+		display: block;
+		font-size: 0.74rem;
+		letter-spacing: 0.14em;
+		text-transform: uppercase;
+		color: var(--muted);
+	}
+	.persona-icon {
+		position: relative;
+		display: grid;
+		place-items: center;
+		width: 64px;
+		height: 64px;
+		margin: 22px 0 28px;
+		border-radius: 18px;
+		color: var(--fg);
+		background: rgba(255, 255, 255, 0.7);
+		border: 1px solid rgba(255, 255, 255, 0.95);
+		-webkit-backdrop-filter: blur(14px) saturate(160%);
+		backdrop-filter: blur(14px) saturate(160%);
+		box-shadow: inset 0 1px 0 #fff, 0 10px 24px -12px rgba(120, 90, 140, 0.35);
+	}
+	.persona h3 {
+		position: relative;
+		margin: 0 0 10px;
+		font-size: 1.7rem;
+		line-height: 1.15;
+	}
+	.persona p {
+		position: relative;
+		margin: 0;
+		font-size: 1.02rem;
+		line-height: 1.6;
+		color: #3d3d3d;
 	}
 	.quotes {
 		display: grid;
@@ -302,11 +1201,31 @@ const { study } = Astro.props;
 		font-size: 1.3rem;
 		line-height: 1.4;
 	}
+	@media (max-width: 860px) {
+		.research {
+			grid-template-columns: 1fr;
+		}
+	}
 	@media (max-width: 720px) {
+		.pains {
+			grid-template-columns: 1fr;
+		}
+		.feedback {
+			grid-template-columns: 1fr;
+			grid-template-rows: none;
+		}
+		.fb-quote {
+			grid-row: auto;
+			padding: 28px 24px;
+		}
+		.panel {
+			padding: 22px;
+		}
 		.study {
 			padding-top: 110px;
 		}
 		.stats,
+		.personas,
 		.quotes {
 			grid-template-columns: 1fr;
 		}
@@ -317,8 +1236,31 @@ const { study } = Astro.props;
 			height: 44px;
 		}
 	}
+	/* every card lifts with the same purple glow; this comes last so it beats each card's own resting shadow */
+	.stats div,
+	.pains li,
+	.asks li,
+	.fb-note {
+		transition:
+			transform 0.3s cubic-bezier(0.2, 0.7, 0.2, 1),
+			box-shadow 0.3s ease;
+	}
+	.stats div:hover,
+	.pains li:hover,
+	.asks li:hover,
+	.fb-note:hover,
+	.persona:hover {
+		transform: translateY(-4px);
+		box-shadow: 0 26px 54px -20px rgba(150, 110, 170, 0.35);
+	}
 	@media (prefers-reduced-motion: reduce), (hover: none) {
+		.pains li:hover,
+		.asks li:hover,
+		.fb-note:hover,
 		.stats div:hover,
-		blockquote:hover,
+		.persona:hover,
+		blockquote:hover {
+			transform: none;
+		}
 	}
 </style>

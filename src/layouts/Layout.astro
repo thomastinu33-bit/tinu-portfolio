@@ -51,7 +51,7 @@ const navLinks = [
 						navLinks.map((l) => (
 							<a href={l.href} aria-label={l.label}>
 								<Icon name={l.icon} size={20} weight="light" />
-								<span class="label">{l.label}</span>
+								<span class="nav-label">{l.label}</span>
 							</a>
 						))
 					}
@@ -247,7 +247,7 @@ const navLinks = [
 			background 0.2s ease,
 			padding 0.55s var(--ease);
 	}
-	.label {
+	.nav-label {
 		display: inline-block;
 		max-width: 120px;
 		margin-left: 8px;
@@ -265,7 +265,7 @@ const navLinks = [
 	.nav-collapsed .links a {
 		padding: 0 10px;
 	}
-	.nav-collapsed .label {
+	.nav-collapsed .nav-label {
 		max-width: 0;
 		margin-left: 0;
 		opacity: 0;
@@ -278,7 +278,7 @@ const navLinks = [
 		.nav-collapsed .dock:hover .links a {
 			padding: 0 12px;
 		}
-		.nav-collapsed .dock:hover .label {
+		.nav-collapsed .dock:hover .nav-label {
 			max-width: 120px;
 			margin-left: 8px;
 			opacity: 1;
@@ -290,7 +290,7 @@ const navLinks = [
 	.nav-collapsed .dock:focus-within .links a {
 		padding: 0 12px;
 	}
-	.nav-collapsed .dock:focus-within .label {
+	.nav-collapsed .dock:focus-within .nav-label {
 		max-width: 120px;
 		margin-left: 8px;
 		opacity: 1;
@@ -303,8 +303,8 @@ const navLinks = [
 			width: calc(100vw - 24px);
 			height: 56px;
 		}
-		.label,
-		.nav-collapsed .dock:focus-within .label {
+		.nav-label,
+		.nav-collapsed .dock:focus-within .nav-label {
 			display: none;
 		}
 		.links a,
@@ -318,7 +318,7 @@ const navLinks = [
 	@media (prefers-reduced-motion: reduce) {
 		.dock,
 		.links a,
-		.label {
+		.nav-label {
 			transition: none;
 		}
 	}

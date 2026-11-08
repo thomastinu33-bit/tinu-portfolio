@@ -1,0 +1,977 @@
+---
+import Icon from './Icon.astro';
+// The Data Visualization Guidelines site, rebuilt in HTML so it can be clicked through: the side nav
+// switches between pages, and the charts are real SVG drawn from small data sets (hover a bar for its value).
+
+const pages = ['Intro', 'Color', 'Layout', 'Chart', 'Rules', 'Example Dashboard'];
+
+const goals = [
+	{ icon: 'scales', title: 'Ensure Consistency', body: 'Standardizes layouts, visual hierarchy, typography, colors, and data visualization styles across different dashboards.' },
+	{ icon: 'hand-pointing', title: 'Enhance Usability', body: 'Helps create dashboards that are intuitive, easy to navigate, and user-friendly.' },
+	{ icon: 'chart-bar', title: 'Improve Data Interpretation', body: 'Provides best practices for visualizing data effectively, ensuring insights are clear and actionable' },
+	{ icon: 'brain', title: 'Reduce Cognitive Load', body: 'Focuses on simplifying complex information, minimizing distractions, and guiding users toward key takeaways.' },
+	{ icon: 'users', title: 'Empower Teams', body: 'Enables designers, research teams and engineers to create dashboards independently while maintaining a cohesive user experience.' },
+];
+
+const categorical = [
+	['blue', '#0D4753'],
+	['orange', '#F48D5C'],
+	['green', '#288B6F'],
+	['yellow', '#F4BA01'],
+	['red', '#E9514E'],
+	['teal', '#1788B0'],
+];
+const sequential = [
+	['#0D4753', '#136A7C', '#19889F', '#1EA7C2', '#2BC0DE', '#72D5E9'],
+	['#AC3F0C', '#D24C0F', '#EF5E1A', '#F27840', '#F48D5C', '#F6A179'],
+	['#0E2F26', '#174F3F', '#206F58', '#288B6F', '#32AE8B', '#41C8A2'],
+	['#291F00', '#513E00', '#7A5E01', '#A27D01', '#CB9C01', '#F4BA01'],
+	['#6D0F0D', '#911412', '#B61916', '#DA1E1B', '#E63A37', '#E9514E'],
+];
+
+const C = { blue: '#0D4753', orange: '#F48D5C', green: '#288B6F', yellow: '#F4BA01', red: '#E9514E', teal: '#1788B0', gray: '#9aa5a8', ice: '#d6f1f6' };
+
+// A line through values, drawn inside a box (x0..x1, y0..y1) for a given value range
+const linePath = (vals: number[], x0: number, x1: number, y0: number, y1: number, min: number, max: number) =>
+	vals
+		.map((v, i) => {
+			const x = x0 + (i / (vals.length - 1)) * (x1 - x0);
+			const y = y1 - ((v - min) / (max - min)) * (y1 - y0);
+			return `${i ? 'L' : 'M'}${x.toFixed(1)} ${y.toFixed(1)}`;
+		})
+		.join(' ');
+
+// Example dashboard data
+const months = ['Jun', 'Jul', 'Aug', 'Sept', 'Oct', 'Nov', 'Dec'];
+const gmv = [123, 133, 115, 148, 128, 87, 133];
+const yoy = [67, 89, 111, 133, 127, 122, 117];
+const AGG = { x0: 50, x1: 620, y0: 14, y1: 190, min: 40, max: 160, ticks: [40, 60, 80, 100, 120, 140, 160] };
+const aggSlot = (AGG.x1 - AGG.x0) / gmv.length;
+const aggY = (v: number) => AGG.y1 - ((v - AGG.min) / (AGG.max - AGG.min)) * (AGG.y1 - AGG.y0);
+
+// Stacked share columns (bottom to top)
+const share = [
+	[63, 6, 20, 5, 6],
+	[63, 6, 20, 5, 6],
+	[63, 6, 20, 5, 6],
+	[63, 6, 20, 5, 6],
+	[63, 6, 20, 5, 6],
+	[63, 6, 20, 5, 6],
+];
+const shareColors = [C.blue, C.orange, C.green, C.yellow, C.teal];
+
+const products = [
+	{ c: C.yellow, v: [86, 86, 82, 74, 67, 67] },
+	{ c: C.teal, v: [65, 78, 92, 92, 73, 70] },
+	{ c: C.orange, v: [74, 74, 64, 64, 74, 74] },
+	{ c: C.green, v: [53, 53, 61, 74, 88, 86] },
+	{ c: C.blue, v: [45, 57, 50, 54, 83, 62] },
+];
+
+// Chart-types and layout examples
+const lineA = [70, 92, 73, 114, 88, 103, 77, 137];
+const lineB = [60, 78, 62, 95, 75, 75, 66, 86];
+const lineC = [40, 57, 42, 54, 54, 67, 45, 61];
+const layoutLine = [34.9, 35.4, 35.8, 36.2, 36.5, 36.5, 36.5, 36.5, 36.5, 36.5];
+const area = (n: number, base: number, amp: number, seed: number) =>
+	Array.from({ length: n }, (_, i) => base + Math.sin(i * 0.5 + seed) * amp * 0.4 + Math.exp(-Math.pow((i - n * 0.8) / (n * 0.08), 2)) * amp);
+const areaA = area(40, 82, 40, 0);
+const areaB = area(40, 62, 30, 1);
+const areaC = area(40, 49, 14, 2);
+
+// Rules
+const yoyBars = [
+	['Panera Bread', 34],
+	['Boston Market', 38],
+	["BJ's Restaurants", 80],
+	['Olive Garden', 124],
+];
+const stackGood = Array.from({ length: 12 }, (_, i) => {
+	const a = 28 + ((i * 7) % 8);
+	const b = 28 + ((i * 5) % 6);
+	return [a, b, 8 + (i % 3) * 2, 8 + ((i + 1) % 3) * 2, 100 - (a + b + 16 + (i % 3) * 2 + ((i + 1) % 3) * 2)];
+});
+const stackBad = Array.from({ length: 12 }, (_, i) => {
+	const a = 28 + ((i * 7) % 8);
+	const b = 26 + ((i * 5) % 6);
+	const rest = [7, 6, 5, 5, 4, 4, 3, 3];
+	const total = a + b + rest.reduce((s, r) => s + r, 0);
+	return [a, b, ...rest.map((r) => r * (100 / total) * 0.9), 0];
+});
+const badColors = [C.blue, C.orange, C.green, C.yellow, C.red, C.teal, '#b6e8ef', '#f6a179', '#72d5e9'];
+---
+
+<div class="gl" data-gl>
+	<nav class="gl-nav" aria-label="Guidelines pages">
+		<div class="brand">
+			<span class="logo">y</span>
+			<span class="name">Data Visualization Guidelines</span>
+		</div>
+		<ul>
+			{
+				pages.map((p, i) => (
+					<li>
+						<button type="button" class={i === 0 ? 'is-on' : ''} data-i={i} aria-pressed={i === 0 ? 'true' : 'false'}>
+							{p}
+						</button>
+					</li>
+				))
+			}
+		</ul>
+	</nav>
+
+	<div class="gl-body">
+		<!-- Intro -->
+		<section class="page is-on" data-page="0">
+			<h3 class="h1">Welcome</h3>
+			<p>
+				Our <b>Dashboard Design Guidelines</b> exist to ensure that every dashboard we create is intuitive, consistent, and effective in delivering insights. A well-designed dashboard enables users to quickly interpret key data, make informed decisions, and minimize the need for manual analysis.
+			</p>
+			<p>
+				These guidelines serve as <b>a reference for research and engineering teams</b> when building dashboards, helping them structure information in a way that enhances usability and readability. By following these principles, teams can create dashboards that not only align with our design system but also empower users to explore data independently, reducing reliance on custom analysis.
+			</p>
+			<p>Whether you're building a new dashboard or refining an existing one, use this guide to ensure clarity, consistency, and a seamless user experience.</p>
+			<h4 class="h2">Goals</h4>
+			<ul class="goals">
+				{
+					goals.map((g) => (
+						<li>
+							<Icon name={g.icon} size={28} weight="regular" aria-hidden="true" />
+							<b>{g.title}</b>
+							<span>{g.body}</span>
+						</li>
+					))
+				}
+			</ul>
+		</section>
+
+		<!-- Color -->
+		<section class="page" data-page="1">
+			<h3 class="h1">Color</h3>
+			<h4 class="h2">Categorical Colors</h4>
+			<p>
+				Categorical color palettes are used to distinguish a logical separation. We want these colors to look very different from one another to clearly delineate groups. These colors should be able to exist in a group without signifying increasing or decreasing values.
+			</p>
+			<ul class="swatches">
+				{
+					categorical.map(([n, hex]) => (
+						<li>
+							<span class="chip" style={`background:${hex}`}></span>
+							<b>{n}</b>
+							<small>{hex}</small>
+						</li>
+					))
+				}
+			</ul>
+			<h4 class="h2">Sequential Colors</h4>
+			<p>
+				Sequential color palette should be used to establish a visual hierarchy. We want these colors to tell a story using the color stops as a way to better illustrate importance.
+			</p>
+			<ul class="swatches">
+				{
+					sequential.flat().map((hex) => (
+						<li>
+							<span class="chip" style={`background:${hex}`}></span>
+							<small>{hex}</small>
+						</li>
+					))
+				}
+			</ul>
+		</section>
+
+		<!-- Layout -->
+		<section class="page" data-page="2">
+			<h3 class="h1">Layout</h3>
+			<h4 class="h2">Top Navigation</h4>
+			<p>
+				The top navigation should prominently display the <b>page title</b> and <b>global filters</b>, ensuring users always have context and easy access to key controls. This section should remain <b>sticky</b> on scroll to maintain visibility and enhance usability, allowing users to navigate data efficiently without losing their place.
+			</p>
+			<div class="panel">
+				<div class="mock">
+					<div class="m-top">
+						<span class="m-logo">yipit<small>DATA</small></span>
+						<span class="m-search">Search for Products</span>
+						<span>Home</span><span>Coverage</span><span class="on">Key Metrics</span><span>Webcasts</span>
+					</div>
+					<div class="m-main">
+						<aside>
+							<b>Affirm (AFRM)</b>
+							<i>Add to Watchlist</i>
+							<span>Overview</span><span>Reports</span>
+							<em>Dashboard</em>
+							<span class="sel">Page Title</span><span>Title 2</span>
+							<em>Resources</em>
+							<span>Product Info</span>
+						</aside>
+						<div class="m-head">
+							<b>Page Title</b>
+							<div class="filters">
+								<span class="f on"><i>6mo</i>Past 6 Months</span>
+								<span class="f on">Retailers <b>Costco</b></span>
+								<span class="f on">Brands <u>6</u></span>
+								<span class="f">Category</span>
+								<span class="f">Periodicity</span>
+								<span class="f plus">+</span>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+			<h4 class="h2">Chart Layout</h4>
+			<p>
+				This layout offers flexibility with a one-column or two-column structure for charts, allowing you to choose the most effective format for readability and comparison. This ensures optimal data visualization, maintains a clear information hierarchy, and adapts to different screen sizes for a seamless user experience.
+			</p>
+			<div class="panel">
+				<p class="ct">Chart Title</p>
+				<div class="card">
+					<svg viewBox="0 0 640 220" role="img" aria-label="A line chart with a darker line and a flat extension">
+						{[0, 1, 2, 3].map((i) => <line x1="50" x2="620" y1={20 + i * 55} y2={20 + i * 55} class="grid" />)}
+						<rect x="50" y="20" width="200" height="165" fill="#f6f6f6"></rect>
+						<path d={linePath(layoutLine, 50, 560, 20, 185, 34, 38)} stroke={C.blue} fill="none" stroke-width="2.4"></path>
+						<path d={linePath([36.5, 36.5, 36.5, 36.5, 36.5, 36.5], 250, 610, 20, 185, 34, 38)} stroke="#b9c8cb" fill="none" stroke-width="2.4"></path>
+						<path d={linePath([32, 30.5, 30, 29, 29.5, 31, 30, 29.5, 30.5, 31], 50, 610, 20, 185, 28, 38)} stroke="#1ea1b6" fill="none" stroke-width="2.4"></path>
+						<line x1="150" x2="150" y1="20" y2="185" stroke="#777"></line>
+					</svg>
+				</div>
+			</div>
+		</section>
+
+		<!-- Chart -->
+		<section class="page" data-page="3">
+			<h3 class="h1">Chart</h3>
+			<h4 class="h2">Chart Scale</h4>
+			<p>
+				To maintain <b>readability and clarity</b>, limit the <b>X-axis to a maximum of 12 data points</b> and the <b>Y-axis to no more than 8 data points</b>. This ensures data remains easily interpretable, prevents overcrowding, and enhances <b>visual hierarchy</b> for a better user experience. For smaller visuals, limit the X-axis to a maximum of 6 data points.
+			</p>
+			<div class="panel">
+				<div class="card">
+					<svg viewBox="0 0 640 230" role="img" aria-label="An empty chart showing the axis limits: twelve x labels and seven y labels">
+						{
+							[26, 28, 30, 32, 34, 36, 38].map((v, i) => (
+								<>
+									<line x1="50" x2="620" y1={190 - i * 26} y2={190 - i * 26} class="grid" />
+									<text x="40" y={194 - i * 26} text-anchor="end" class="tick">{v}%</text>
+								</>
+							))
+						}
+						{
+							['Oct 13', 'Oct 20', 'Oct 27', 'Nov 03', 'Nov 10', 'Nov 17', 'Nov 24', 'Dec 01', 'Dec 08', 'Dec 15', 'Dec 22', 'Dec 29'].map((l, i) => (
+								<text x={62 + i * 51.5} y="208" text-anchor="middle" class="tick">{l}</text>
+							))
+						}
+					</svg>
+				</div>
+			</div>
+			<h4 class="h2">Chart Types</h4>
+			<div class="two">
+				<div class="panel">
+					<div class="card">
+						<svg viewBox="0 0 320 200" role="img" aria-label="A line chart with three series">
+							{[0, 1, 2, 3, 4, 5].map((i) => <line x1="30" x2="310" y1={14 + i * 28} y2={14 + i * 28} class="grid" />)}
+							<path d={linePath(lineA, 40, 305, 14, 154, 40, 160)} stroke={C.blue} fill="none" stroke-width="2.4"></path>
+							<path d={linePath(lineB, 40, 305, 14, 154, 40, 160)} stroke={C.orange} fill="none" stroke-width="2.4"></path>
+							<path d={linePath(lineC, 40, 305, 14, 154, 40, 160)} stroke={C.green} fill="none" stroke-width="2.4"></path>
+							<g class="legend" transform="translate(70 184)">
+								<circle cx="0" cy="0" r="4" fill={C.blue}></circle><text x="8" y="3">Product</text>
+								<circle cx="70" cy="0" r="4" fill={C.orange}></circle><text x="78" y="3">Services</text>
+								<circle cx="145" cy="0" r="4" fill={C.green}></circle><text x="153" y="3">Subscription</text>
+							</g>
+						</svg>
+					</div>
+					<p class="cap">Line chart</p>
+				</div>
+				<div class="panel">
+					<div class="card">
+						<svg viewBox="0 0 320 200" role="img" aria-label="An area chart with three years">
+							{[0, 1, 2, 3, 4, 5].map((i) => <line x1="30" x2="310" y1={14 + i * 28} y2={14 + i * 28} class="grid" />)}
+							<path d={`${linePath(areaA, 36, 305, 14, 154, 40, 160)} L305 154 L36 154 Z`} fill="#1788b0" fill-opacity="0.28" stroke="#1788b0" stroke-width="1.6"></path>
+							<path d={`${linePath(areaB, 36, 305, 14, 154, 40, 160)} L305 154 L36 154 Z`} fill="#2bc0de" fill-opacity="0.3" stroke="#2bc0de" stroke-width="1.6"></path>
+							<path d={`${linePath(areaC, 36, 305, 14, 154, 40, 160)} L305 154 L36 154 Z`} fill="#72d5e9" fill-opacity="0.3" stroke="#72d5e9" stroke-width="1.6"></path>
+							<g class="legend" transform="translate(110 184)">
+								<circle cx="0" cy="0" r="4" fill="#1788b0"></circle><text x="8" y="3">2024</text>
+								<circle cx="50" cy="0" r="4" fill="#2bc0de"></circle><text x="58" y="3">2023</text>
+								<circle cx="100" cy="0" r="4" fill="#72d5e9"></circle><text x="108" y="3">2022</text>
+							</g>
+						</svg>
+					</div>
+					<p class="cap">Area chart</p>
+				</div>
+			</div>
+		</section>
+
+		<!-- Rules -->
+		<section class="page" data-page="4">
+			<h3 class="h1">Rules</h3>
+			<h4 class="h2"><span class="rule">Rule 1:</span> Use different colors only when they correspond to differences of meaning in the data.</h4>
+			<div class="two">
+				<div class="panel">
+					<div class="card ok">
+						<p class="ct sm">YOY Growth in Spending on Food Delivery from Restaurant Website Samples</p>
+						<svg viewBox="0 0 320 170" role="img" aria-label="Bars in one color">
+							{
+								yoyBars.map(([n, v], i) => (
+									<g class="bar">
+										<rect x={40 + i * 66} y={140 - (v as number) * 1.0} width="46" height={(v as number) * 1.0} fill={C.blue}></rect>
+										<text x={63 + i * 66} y={150 - (v as number) * 1.0} text-anchor="middle" class="val">{v}%</text>
+										<text x={63 + i * 66} y="160" text-anchor="middle" class="tick">{n}</text>
+										<title>{`${n}: ${v}%`}</title>
+									</g>
+								))
+							}
+							<line x1="30" x2="310" y1="140" y2="140" class="axis"></line>
+						</svg>
+					</div>
+					<p class="cap good">Do</p>
+				</div>
+				<div class="panel">
+					<div class="card bad">
+						<p class="ct sm">YOY Growth in Spending on Food Delivery from Restaurant Website Samples</p>
+						<svg viewBox="0 0 320 170" role="img" aria-label="Bars in many colors">
+							{
+								yoyBars.map(([n, v], i) => (
+									<g class="bar">
+										<rect x={40 + i * 66} y={140 - (v as number) * 1.0} width="46" height={(v as number) * 1.0} fill={[C.blue, C.orange, C.green, C.yellow][i]}></rect>
+										<text x={63 + i * 66} y={150 - (v as number) * 1.0} text-anchor="middle" class="val">{v}%</text>
+										<text x={63 + i * 66} y="160" text-anchor="middle" class="tick">{n}</text>
+										<title>{`${n}: ${v}%`}</title>
+									</g>
+								))
+							}
+							<line x1="30" x2="310" y1="140" y2="140" class="axis"></line>
+						</svg>
+					</div>
+					<p class="cap badc">Don't</p>
+				</div>
+			</div>
+			<h4 class="h2"><span class="rule">Rule 2:</span> Don't include too much detail. Eliminate the unnecessary so you can focus on what's important.</h4>
+			<div class="two">
+				<div class="panel">
+					<div class="card ok">
+						<svg viewBox="0 0 320 190" role="img" aria-label="Stacked columns with five series">
+							{
+								stackGood.map((col, i) => {
+									let y = 150;
+									return col.map((v, k) => {
+										const h = (v / 100) * 140;
+										y -= h;
+										return <rect x={20 + i * 25} y={y} width="18" height={h} fill={[C.blue, C.orange, C.green, C.yellow, C.gray][k]}></rect>;
+									});
+								})
+							}
+							<g class="legend" transform="translate(50 178)">
+								{['McDonalds', 'KFC', 'Wagamama', 'Five Guys', 'Other'].map((n, k) => (
+									<>
+										<circle cx={k * 50} cy="0" r="3.5" fill={[C.blue, C.orange, C.green, C.yellow, C.gray][k]}></circle>
+										<text x={k * 50 + 6} y="3" style="font-size:7px">{n}</text>
+									</>
+								))}
+							</g>
+						</svg>
+					</div>
+					<p class="cap good">Do</p>
+				</div>
+				<div class="panel">
+					<div class="card bad">
+						<svg viewBox="0 0 320 190" role="img" aria-label="Stacked columns with too many series">
+							{
+								stackBad.map((col, i) => {
+									let y = 150;
+									return col.map((v, k) => {
+										const h = (v / 100) * 140;
+										y -= h;
+										return <rect x={20 + i * 25} y={y} width="18" height={h} fill={badColors[k]}></rect>;
+									});
+								})
+							}
+							<g class="legend" transform="translate(30 172)">
+								{['McDonalds', 'KFC', 'Wagamama', 'Five Guys', 'Nandos', 'ShakeShack', 'Pizza Express', 'Subway'].map((n, k) => (
+									<>
+										<circle cx={(k % 4) * 70} cy={Math.floor(k / 4) * 10} r="3" fill={badColors[k]}></circle>
+										<text x={(k % 4) * 70 + 5} y={Math.floor(k / 4) * 10 + 3} style="font-size:6.5px">{n}</text>
+									</>
+								))}
+							</g>
+						</svg>
+					</div>
+					<p class="cap badc">Don't</p>
+				</div>
+			</div>
+		</section>
+
+		<!-- Example dashboard -->
+		<section class="page" data-page="5">
+			<div class="dash-head">
+				<h3 class="h1">Example Dashboard <span class="save"><Icon name="download-simple" size={16} aria-hidden="true" />Save</span></h3>
+				<div class="filters">
+					<span class="f on"><i>6mo</i>Past 6 Months</span>
+					<span class="f on">Retailers <b>Costco</b></span>
+					<span class="f on">Brands <u>6</u></span>
+					<span class="f on">Metric <b>GMV</b></span>
+					<span class="f on">Growth Rate <b>Y/Y</b></span>
+					<span class="f">Category</span>
+					<span class="f plus">+</span>
+				</div>
+			</div>
+			<h4 class="h2">Aggregate Metrics</h4>
+			<div class="card">
+				<svg viewBox="0 0 640 235" role="img" aria-label="Monthly GMV bars with a year over year line">
+					{
+						AGG.ticks.map((t) => (
+							<>
+								<line x1={AGG.x0} x2={AGG.x1} y1={aggY(t)} y2={aggY(t)} class="grid" />
+								<text x={AGG.x0 - 8} y={aggY(t) + 3} text-anchor="end" class="tick">{t}k</text>
+							</>
+						))
+					}
+					{
+						gmv.map((v, i) => (
+							<g class="bar">
+								<rect x={AGG.x0 + i * aggSlot + 4} y={aggY(v)} width={aggSlot - 8} height={AGG.y1 - aggY(v)} fill={C.blue}></rect>
+								<text x={AGG.x0 + i * aggSlot + aggSlot / 2} y={aggY(v) - 5} text-anchor="middle" class="val hv">{v}k</text>
+								<title>{`${months[i]}: ${v}k GMV`}</title>
+							</g>
+						))
+					}
+					<path d={linePath(yoy, AGG.x0 + aggSlot / 2, AGG.x1 - aggSlot / 2, AGG.y0, AGG.y1, AGG.min, AGG.max)} stroke={C.ice} fill="none" stroke-width="2"></path>
+					{months.map((m, i) => <text x={AGG.x0 + i * aggSlot + aggSlot / 2} y="208" text-anchor="middle" class="tick">{m}</text>)}
+					<g class="legend" transform="translate(280 228)">
+						<circle cx="0" cy="0" r="4" fill={C.blue}></circle><text x="8" y="3">GMV</text>
+						<circle cx="60" cy="0" r="4" fill={C.ice}></circle><text x="68" y="3">Y/Y</text>
+					</g>
+				</svg>
+			</div>
+			<div class="two dash2">
+				<div>
+					<h4 class="h2">Brands Market Share</h4>
+					<div class="card">
+						<svg viewBox="0 0 320 200" role="img" aria-label="Stacked market share by brand over six months">
+							{
+								[0, 25, 50, 75, 100].map((t) => (
+									<>
+										<line x1="40" x2="310" y1={170 - t * 1.4} y2={170 - t * 1.4} class="grid" />
+										<text x="32" y={173 - t * 1.4} text-anchor="end" class="tick">{t}%</text>
+									</>
+								))
+							}
+							{
+								share.map((col, i) => {
+									let y = 170;
+									return col.map((v, k) => {
+										const hh = v * 1.4;
+										y -= hh;
+										return (
+											<g class="bar">
+												<rect x={48 + i * 44} y={y} width="30" height={hh} fill={shareColors[k]}></rect>
+												<title>{`${months[i + 1]}: ${v}%`}</title>
+											</g>
+										);
+									});
+								})
+							}
+						</svg>
+					</div>
+				</div>
+				<div>
+					<h4 class="h2">Top Products</h4>
+					<div class="card">
+						<svg viewBox="0 0 320 200" role="img" aria-label="Five product lines over six months">
+							{
+								[50, 60, 70, 80, 90, 100].map((t, i) => (
+									<>
+										<line x1="40" x2="310" y1={170 - i * 28} y2={170 - i * 28} class="grid" />
+										<text x="32" y={173 - i * 28} text-anchor="end" class="tick">{t}k</text>
+									</>
+								))
+							}
+							{products.map((p) => <path d={linePath(p.v, 46, 304, 30, 170, 50, 100)} stroke={p.c} fill="none" stroke-width="2.2"></path>)}
+						</svg>
+					</div>
+				</div>
+			</div>
+		</section>
+	</div>
+</div>
+
+<script>
+	// Side nav: show the page you click
+	document.querySelectorAll<HTMLElement>('[data-gl]').forEach((root) => {
+		const btns = [...root.querySelectorAll<HTMLButtonElement>('.gl-nav button')];
+		const pages = [...root.querySelectorAll<HTMLElement>('.page')];
+		const body = root.querySelector<HTMLElement>('.gl-body')!;
+		const show = (i: number) => {
+			btns.forEach((b, n) => {
+				b.classList.toggle('is-on', n === i);
+				b.setAttribute('aria-pressed', String(n === i));
+			});
+			pages.forEach((p, n) => p.classList.toggle('is-on', n === i));
+			body.scrollTo({ top: 0 });
+		};
+		btns.forEach((b) => b.addEventListener('click', () => show(Number(b.dataset.i))));
+	});
+</script>
+
+<style>
+	.gl {
+		--ink: #444;
+		--soft: #777;
+		--teal: #0d4753;
+		display: grid;
+		grid-template-columns: minmax(150px, 20%) 1fr;
+		height: min(640px, 80vh);
+		overflow: hidden;
+		border-radius: 20px;
+		border: 1px solid #ececec;
+		background: #fff;
+		box-shadow: 0 12px 30px -18px rgba(0, 0, 0, 0.15);
+		font-family: Roboto, 'Helvetica Neue', Arial, sans-serif;
+		color: var(--ink);
+		text-align: left;
+	}
+	.gl-nav {
+		background: #fafafa;
+		padding: 14px 10px;
+		overflow: auto;
+	}
+	.brand {
+		display: flex;
+		align-items: center;
+		gap: 8px;
+		padding: 2px 4px 16px;
+	}
+	.logo {
+		flex-shrink: 0;
+		display: grid;
+		place-items: center;
+		width: 28px;
+		height: 28px;
+		border-radius: 5px;
+		background: var(--teal);
+		color: #fff;
+		font-weight: 700;
+		font-size: 1.15rem;
+	}
+	.name {
+		font-weight: 500;
+		font-size: 0.8rem;
+		line-height: 1.2;
+		color: #1b1b1b;
+	}
+	.gl-nav ul {
+		list-style: none;
+		margin: 0;
+		padding: 0;
+		display: grid;
+		gap: 4px;
+	}
+	.gl-nav button {
+		all: unset;
+		box-sizing: border-box;
+		display: block;
+		width: 100%;
+		padding: 8px 12px;
+		border-radius: 6px;
+		font-size: 0.85rem;
+		cursor: pointer;
+		color: var(--ink);
+		transition: background 0.15s ease;
+	}
+	.gl-nav button:hover {
+		background: #eef1f2;
+	}
+	.gl-nav button.is-on {
+		background: #cbd6d9;
+		color: var(--teal);
+		font-weight: 500;
+	}
+	.gl-nav button:focus-visible {
+		outline: 2px solid var(--accent);
+	}
+	.gl-body {
+		overflow: auto;
+		overscroll-behavior: contain;
+		padding: 18px 22px 28px;
+	}
+	.page {
+		display: none;
+	}
+	.page.is-on {
+		display: block;
+	}
+	.h1 {
+		margin: 0 0 12px;
+		font-family: inherit;
+		font-weight: 700;
+		font-size: 1.7rem;
+		letter-spacing: 0;
+		color: var(--ink);
+		display: flex;
+		align-items: baseline;
+		gap: 12px;
+		flex-wrap: wrap;
+	}
+	.h2 {
+		margin: 22px 0 8px;
+		font-family: inherit;
+		font-weight: 500;
+		font-size: 1.1rem;
+		letter-spacing: 0;
+		color: var(--ink);
+	}
+	.rule {
+		color: var(--teal);
+	}
+	.page p {
+		margin: 0 0 10px;
+		font-size: 0.8rem;
+		line-height: 1.55;
+		color: var(--soft);
+	}
+	.page p b {
+		font-weight: 500;
+		color: #5f5f5f;
+	}
+	.save {
+		display: inline-flex;
+		align-items: center;
+		gap: 5px;
+		font-size: 0.8rem;
+		font-weight: 500;
+		color: var(--teal);
+	}
+
+	/* Intro */
+	.goals {
+		list-style: none;
+		margin: 6px 0 0;
+		padding: 0;
+		display: grid;
+		grid-template-columns: repeat(3, minmax(0, 1fr));
+		gap: 18px 22px;
+	}
+	.goals li {
+		display: grid;
+		gap: 3px;
+		align-content: start;
+		color: #666;
+	}
+	.goals b {
+		font-weight: 500;
+		font-size: 0.85rem;
+		color: var(--ink);
+	}
+	.goals span {
+		font-size: 0.75rem;
+		line-height: 1.5;
+		color: var(--soft);
+	}
+
+	/* Color */
+	.swatches {
+		list-style: none;
+		margin: 10px 0 0;
+		padding: 0;
+		display: grid;
+		grid-template-columns: repeat(6, minmax(0, 1fr));
+		gap: 8px 12px;
+		text-align: center;
+	}
+	.chip {
+		display: block;
+		height: 44px;
+		border-radius: 5px;
+	}
+	.swatches b {
+		display: block;
+		margin-top: 4px;
+		font-weight: 400;
+		font-size: 0.75rem;
+		color: var(--soft);
+	}
+	.swatches small {
+		display: block;
+		margin-top: 2px;
+		font-size: 0.7rem;
+		color: #b5b5b5;
+	}
+
+	/* Boxes that hold examples */
+	.panel {
+		margin-top: 10px;
+		padding: 12px;
+		background: #f4f4f4;
+		border-radius: 4px;
+	}
+	.card {
+		padding: 8px 10px;
+		background: #fff;
+		border: 1px solid #ececec;
+		border-radius: 6px;
+	}
+	.card.ok {
+		border-color: #288b6f;
+	}
+	.card.bad {
+		border-color: #e9514e;
+	}
+	.card svg {
+		display: block;
+		width: 100%;
+		height: auto;
+	}
+	.two {
+		display: grid;
+		grid-template-columns: repeat(2, minmax(0, 1fr));
+		gap: 14px;
+		align-items: start;
+	}
+	.two > .panel {
+		margin-top: 8px;
+	}
+	.cap {
+		margin: 8px 0 0 !important;
+		font-size: 0.72rem !important;
+		color: var(--soft);
+	}
+	.cap.good {
+		color: #288b6f;
+		font-weight: 500;
+	}
+	.cap.badc {
+		color: #e9514e;
+		font-weight: 500;
+	}
+	.ct {
+		margin: 0 0 6px !important;
+		font-size: 0.8rem !important;
+		font-weight: 500;
+		color: #222 !important;
+	}
+	.ct.sm {
+		font-size: 0.68rem !important;
+	}
+	.dash2 {
+		margin-top: 0;
+	}
+
+	/* SVG chart parts */
+	.grid {
+		stroke: #ececec;
+		stroke-width: 1;
+	}
+	.axis {
+		stroke: #9aa5a8;
+		stroke-width: 1;
+	}
+	.tick {
+		font-size: 7.5px;
+		fill: #8a8a8a;
+	}
+	.val {
+		font-size: 7.5px;
+		font-weight: 700;
+		fill: #fff;
+	}
+	.val.hv {
+		fill: var(--teal);
+		opacity: 0;
+		transition: opacity 0.15s ease;
+	}
+	.legend text {
+		font-size: 8px;
+		fill: #666;
+	}
+	.bar rect {
+		transition: opacity 0.15s ease;
+	}
+	.bar:hover rect {
+		opacity: 0.8;
+	}
+	.bar:hover .val.hv {
+		opacity: 1;
+	}
+
+	/* Layout mock */
+	.mock {
+		background: #fff;
+		font-size: 0.62rem;
+		color: #2a4a52;
+		overflow: hidden;
+	}
+	.m-top {
+		display: flex;
+		align-items: center;
+		gap: 14px;
+		padding: 7px 12px;
+		border-bottom: 1px solid #ececec;
+	}
+	.m-logo {
+		font-weight: 700;
+		font-size: 0.9rem;
+		color: var(--teal);
+	}
+	.m-logo small {
+		font-size: 0.6rem;
+		font-weight: 500;
+	}
+	.m-search {
+		padding: 4px 12px;
+		border: 1px solid #bbb;
+		border-radius: 999px;
+		color: #888;
+	}
+	.m-top .on {
+		font-weight: 600;
+		border-bottom: 2px solid var(--teal);
+		padding-bottom: 3px;
+	}
+	.m-main {
+		display: grid;
+		grid-template-columns: 24% 1fr;
+		min-height: 130px;
+	}
+	.m-main aside {
+		display: grid;
+		align-content: start;
+		gap: 5px;
+		padding: 10px;
+		background: var(--teal);
+		color: #fff;
+	}
+	.m-main aside b {
+		text-align: center;
+		font-weight: 500;
+		font-size: 0.72rem;
+	}
+	.m-main aside i {
+		justify-self: center;
+		padding: 1px 6px;
+		border: 1px solid #fff8;
+		border-radius: 4px;
+		font-style: normal;
+		font-size: 0.5rem;
+		margin-bottom: 6px;
+	}
+	.m-main aside em {
+		margin-top: 6px;
+		font-style: normal;
+		font-size: 0.5rem;
+		opacity: 0.7;
+	}
+	.m-main aside .sel {
+		background: #ffffff22;
+		border-radius: 3px;
+		padding: 1px 4px;
+	}
+	.m-head {
+		padding: 8px 12px;
+		box-shadow: 0 8px 12px -10px rgba(0, 0, 0, 0.2);
+		align-self: start;
+	}
+	.m-head > b {
+		font-size: 0.85rem;
+		font-weight: 500;
+		color: #444;
+	}
+
+	/* Filters */
+	.filters {
+		display: flex;
+		flex-wrap: wrap;
+		gap: 6px;
+		margin-top: 6px;
+	}
+	.f {
+		display: inline-flex;
+		align-items: center;
+		gap: 4px;
+		padding: 4px 9px;
+		border: 1px solid #ddd;
+		border-radius: 4px;
+		font-size: 0.7rem;
+		font-weight: 400;
+		color: var(--teal);
+		background: #fff;
+	}
+	.f.on {
+		background: #e6ecee;
+		border-color: #e6ecee;
+	}
+	.f b {
+		font-weight: 700;
+	}
+	.f i {
+		font-style: normal;
+		font-size: 0.55rem;
+		padding: 1px 3px;
+		border-radius: 3px;
+		background: #cbd6d9;
+	}
+	.f u {
+		text-decoration: none;
+		display: grid;
+		place-items: center;
+		width: 14px;
+		height: 14px;
+		border-radius: 50%;
+		background: var(--teal);
+		color: #fff;
+		font-size: 0.55rem;
+	}
+	.f::after {
+		content: '';
+		border: 4px solid transparent;
+		border-top-color: currentColor;
+		margin: 3px 0 0 2px;
+	}
+	.f.plus::after {
+		display: none;
+	}
+	.mock .f {
+		font-size: 0.55rem;
+		padding: 3px 6px;
+	}
+	.dash-head {
+		position: sticky;
+		top: -18px;
+		z-index: 2;
+		margin: -18px -22px 0;
+		padding: 18px 22px 10px;
+		background: #fff;
+		box-shadow: 0 8px 14px -12px rgba(0, 0, 0, 0.25);
+	}
+	.dash-head .h1 {
+		margin-bottom: 6px;
+	}
+
+	@media (max-width: 720px) {
+		.gl {
+			grid-template-columns: 1fr;
+			grid-template-rows: auto 1fr;
+			height: 600px;
+		}
+		.gl-nav {
+			padding: 8px;
+		}
+		.brand {
+			display: none;
+		}
+		.gl-nav ul {
+			display: flex;
+			gap: 4px;
+			overflow-x: auto;
+		}
+		.gl-nav button {
+			white-space: nowrap;
+			width: auto;
+		}
+		.goals {
+			grid-template-columns: 1fr;
+		}
+		.swatches {
+			grid-template-columns: repeat(3, minmax(0, 1fr));
+		}
+		.two {
+			grid-template-columns: 1fr;
+		}
+	}
+</style>

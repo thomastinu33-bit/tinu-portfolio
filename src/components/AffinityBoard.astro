@@ -2,7 +2,14 @@
 // One affinity diagram, drawn as a board of sticky notes grouped by theme, with two more sheets
 // peeking out behind it so it reads as "one of many". The quotes are short, verbatim excerpts from
 // customer calls (company names left out).
-const themes = [
+interface Props {
+	themes?: { name: string; tone: string; notes: string[] }[];
+	kind?: string;
+	source?: string;
+	caption?: string;
+	cols?: number;
+}
+const defaults = [
 	{
 		name: 'Workflow',
 		tone: 'green',
@@ -40,14 +47,21 @@ const themes = [
 		],
 	},
 ];
+const {
+	themes = defaults,
+	kind = 'Affinity diagram',
+	source = 'Customer calls',
+	caption = 'One of the many affinity diagrams built from customer calls. Quotes are excerpts.',
+	cols = 4,
+} = Astro.props;
 ---
 
-<figure class="affinity">
+<figure class="affinity" style={`--cols: ${cols}`}>
 	<div class="stack">
 		<div class="board" role="group" aria-label="An affinity diagram of customer quotes, grouped by theme">
 			<header class="board-head">
-				<span class="kind">Affinity diagram</span>
-				<span class="source">Customer calls</span>
+				<span class="kind">{kind}</span>
+				<span class="source">{source}</span>
 			</header>
 			<div class="themes">
 				{
@@ -65,7 +79,7 @@ const themes = [
 			</div>
 		</div>
 	</div>
-	<figcaption>One of the many affinity diagrams built from customer calls. Quotes are excerpts.</figcaption>
+	<figcaption>{caption}</figcaption>
 </figure>
 
 <style>
@@ -75,6 +89,8 @@ const themes = [
 		--yellow: #fdeba8;
 		--purple: #e1d1f8;
 		--blue: #c6e0fa;
+		--orange: #fbd3a6;
+		--red: #fbc0b6;
 	}
 	/* The two sheets behind the board */
 	.stack {
@@ -126,7 +142,7 @@ const themes = [
 	}
 	.themes {
 		display: grid;
-		grid-template-columns: repeat(4, minmax(0, 1fr));
+		grid-template-columns: repeat(var(--cols, 4), minmax(0, 1fr));
 		gap: clamp(14px, 2vw, 26px);
 		align-items: start;
 	}
@@ -159,6 +175,12 @@ const themes = [
 	}
 	.theme.blue {
 		--tone: var(--blue);
+	}
+	.theme.red {
+		--tone: var(--red);
+	}
+	.theme.orange {
+		--tone: var(--orange);
 	}
 	.theme ul {
 		list-style: none;

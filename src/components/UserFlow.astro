@@ -244,9 +244,10 @@ const notes = [
 		position: relative;
 		margin: 0;
 		padding: clamp(14px, 2.4vw, 28px);
-		border-radius: 20px;
-		background: #fbfbfb;
+		border-radius: 28px;
+		background: linear-gradient(160deg, #fffaf6 0%, #fafafa 45%, #f8f6ff 100%);
 		border: 1px solid #ececec;
+		box-shadow: 0 12px 30px -18px rgba(0, 0, 0, 0.15);
 		font-family: var(--font-sans);
 		display: grid;
 		gap: 64px;
@@ -313,9 +314,9 @@ const notes = [
 	}
 	.lane {
 		padding: 38px 24px 24px;
-		border-radius: 16px;
-		background: #f3f3f3;
-		border: 1px solid #e8e8e8;
+		border-radius: 24px;
+		background: rgba(255, 255, 255, 0.55);
+		border: 1px solid #ececec;
 	}
 	.lane .chip {
 		left: 18px;
@@ -330,10 +331,10 @@ const notes = [
 		align-items: center;
 		justify-content: center;
 		padding: 12px 12px;
-		border-radius: 12px;
+		border-radius: 16px;
 		background: #fff;
-		border: 1px solid #e0e0e0;
-		box-shadow: 0 4px 14px rgba(0, 0, 0, 0.04);
+		border: 1px solid #ececec;
+		box-shadow: 0 12px 30px -18px rgba(0, 0, 0, 0.15);
 		font-size: 0.82rem;
 		line-height: 1.35;
 		color: var(--fg);
@@ -354,10 +355,31 @@ const notes = [
 		width: 26px;
 		height: 26px;
 		border-radius: 8px;
-		background: #efefef;
-		color: #555;
+		background: linear-gradient(140deg, #ffe3d3, #e6e0ff);
+		color: #5a4a5e;
 		font-size: 0.8rem;
 		font-weight: 500;
+	}
+
+	.node:not(.decision),
+	.note,
+	.node-note {
+		transition:
+			transform 0.3s cubic-bezier(0.2, 0.7, 0.2, 1),
+			box-shadow 0.3s ease;
+	}
+	.node:not(.decision):hover,
+	.note:hover,
+	.node-note:hover {
+		transform: translateY(-3px);
+		box-shadow: 0 26px 54px -20px rgba(150, 110, 170, 0.35);
+	}
+	@media (prefers-reduced-motion: reduce) {
+		.node:not(.decision):hover,
+		.note:hover,
+		.node-note:hover {
+			transform: none;
+		}
 	}
 
 	/* Decision diamond: a clipped dark shape with a clipped white shape inside it */
@@ -419,9 +441,9 @@ const notes = [
 	.note,
 	.node-note {
 		padding: 14px 16px;
-		border-radius: 12px;
-		border: 1px dashed #cfcfcf;
-		background: #fafafa;
+		border-radius: 16px;
+		border: 1px dashed #d8d2e6;
+		background: rgba(255, 255, 255, 0.7);
 		font-size: 0.8rem;
 		line-height: 1.4;
 		color: #3b3b3b;
@@ -477,9 +499,9 @@ const notes = [
 		position: relative;
 		z-index: 0;
 		margin: -24px -16px -16px -16px;
-		border-radius: 16px;
-		background: #f3f3f3;
-		border: 1px solid #e8e8e8;
+		border-radius: 24px;
+		background: rgba(255, 255, 255, 0.55);
+		border: 1px solid #ececec;
 	}
 	.panel .chip {
 		left: 14px;

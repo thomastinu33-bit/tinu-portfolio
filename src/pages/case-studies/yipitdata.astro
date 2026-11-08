@@ -77,6 +77,7 @@ const quotes = [
 
 <Layout title={`${project.title} · ${site.name}`} description={project.summary}>
 	<div id="gated" class="gated">
+	<div class="wash" aria-hidden="true"></div>
 		<article class="container study">
 			<a class="back" href={`${base}/#work`}>← All case studies</a>
 
@@ -243,6 +244,25 @@ const quotes = [
 </Layout>
 
 <style>
+	/* Soft colour behind the top of the page, like the landing page */
+	.wash {
+		position: absolute;
+		inset: 0 0 auto;
+		height: 720px;
+		z-index: -1;
+		pointer-events: none;
+		overflow: hidden;
+		background:
+			radial-gradient(42% 55% at 12% 12%, rgba(255, 214, 190, 0.6), transparent 70%),
+			radial-gradient(40% 55% at 88% 8%, rgba(214, 205, 255, 0.55), transparent 70%);
+		filter: blur(18px);
+		-webkit-mask-image: linear-gradient(#000 60%, transparent);
+		mask-image: linear-gradient(#000 60%, transparent);
+	}
+	.gated {
+		position: relative;
+		isolation: isolate;
+	}
 	.study {
 		max-width: 900px;
 		padding-top: 140px;
@@ -498,6 +518,36 @@ const quotes = [
 		width: 22px;
 		height: 1px;
 		background: #bdbdbd;
+	}
+	/* Cards share one look with the other case studies */
+	.stats li,
+	.problems li,
+	.voice,
+	.slot {
+		border-radius: 24px;
+		background: #fafafa;
+		border: 1px solid #ececec;
+		box-shadow: 0 12px 30px -18px rgba(0, 0, 0, 0.15);
+	}
+	.stats li,
+	.problems li,
+	.voice {
+		transition:
+			transform 0.3s cubic-bezier(0.2, 0.7, 0.2, 1),
+			box-shadow 0.3s ease;
+	}
+	.stats li:hover,
+	.problems li:hover,
+	.voice:hover {
+		transform: translateY(-4px);
+		box-shadow: 0 26px 54px -20px rgba(150, 110, 170, 0.35);
+	}
+	@media (prefers-reduced-motion: reduce) {
+		.stats li:hover,
+		.problems li:hover,
+		.voice:hover {
+			transform: none;
+		}
 	}
 	@media (max-width: 720px) {
 		.stats,
