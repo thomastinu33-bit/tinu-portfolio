@@ -12,6 +12,8 @@ export type Block =
 	| { type: 'logos'; images: { src: string; alt: string }[] }
 	| { type: 'stats'; items: { value: string; label: string }[] }
 	| { type: 'quotes'; items: string[] }
+	// Side-by-side cards describing the people a design is for
+	| { type: 'personas'; items: { label: string; icon: string; title: string; body: string }[] }
 	// A looping, muted video (files live in public/)
 	| { type: 'video'; src: string; poster: string; caption?: string };
 
@@ -598,11 +600,24 @@ export const studies: Study[] = [
 			{ type: 'heading', text: 'Designing for our users' },
 			{
 				type: 'text',
-				text: 'Discovery pointed to two main types of users. The first is the agency user, who analyzes multiple brands across multiple categories. For them, going through every tracker for every brand and aggregating the data by hand was slow and difficult.',
+				text: 'Discovery pointed to two main types of users, each looking at brand performance in a different way.',
 			},
 			{
-				type: 'text',
-				text: 'The second is the in-house brand team, who looks across categories to see how their brand is performing against its competitors in each one, and which categories deserve their focus.',
+				type: 'personas',
+				items: [
+					{
+						label: 'User type 1',
+						icon: 'buildings',
+						title: 'Agency users',
+						body: 'They analyze multiple brands across multiple categories. Going through every tracker for every brand and aggregating the data by hand was slow and difficult.',
+					},
+					{
+						label: 'User type 2',
+						icon: 'target',
+						title: 'In-house brand teams',
+						body: 'They look across categories to see how their brand performs against competitors in each one, and which categories deserve their focus.',
+					},
+				],
 			},
 		],
 	},
