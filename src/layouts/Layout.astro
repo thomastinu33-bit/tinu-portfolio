@@ -63,23 +63,10 @@ const navLinks = [
 	</head>
 	<body>
 		<header class="nav-wrap">
-			<!-- Two bars that cross-fade: the full-width one at the top of the page, and a small icon dock once you scroll.
-			     Fading (not resizing) keeps the switch smooth. Hovering the dock opens the labels. -->
-			<div class="dock dock-full">
+			<!-- Full width at the top of the page. Scrolling collapses it to a small icon dock that opens again on hover. -->
+			<div class="dock">
 				<a class="brand" href={`${base}/`} aria-label={`${site.name}, home`}>{site.name}</a>
 				<nav class="links" aria-label="Main">
-					{
-						navLinks.map((l) => (
-							<a href={l.href} aria-label={l.label}>
-								<Icon name={l.icon} size={20} weight="light" />
-								<span class="label">{l.label}</span>
-							</a>
-						))
-					}
-				</nav>
-			</div>
-			<div class="dock dock-mini">
-				<nav class="links" aria-label="Main (compact)">
 					{
 						navLinks.map((l) => (
 							<a href={l.href} aria-label={l.label}>
@@ -206,55 +193,44 @@ const navLinks = [
 		box-shadow: var(--glass-shadow);
 	}
 
-	/* Top nav: a full-width glass bar at the top of the page. Scrolling cross-fades it into a small centred icon dock,
-	   and hovering (or tabbing into) the dock opens the labels. Only opacity and transform change, so it stays smooth. */
+	/* Top nav: a full-width glass bar at the top of the page. Scrolling collapses it to a small centred icon dock, and
+	   hovering (or tabbing into) the dock opens the labels. Only the width animates (the height never changes), the name
+	   is taken out of the layout, and the colour behind is not blurred more than it needs to be, to keep it smooth. */
 	.nav-wrap {
 		position: fixed;
 		inset: 20px 0 auto;
 		z-index: 10;
-		display: grid;
-		justify-items: center;
+		display: flex;
+		justify-content: center;
 		pointer-events: none;
 	}
 	.dock {
-		grid-area: 1 / 1;
+		--ease: cubic-bezier(0.32, 0.72, 0, 1);
 		pointer-events: auto;
+		position: relative;
 		display: flex;
 		align-items: center;
-		justify-content: space-between;
+		justify-content: flex-end;
+		overflow: hidden;
+		width: min(1280px, 100vw - 48px);
+		height: 60px;
+		padding: 0 8px;
 		border-radius: 999px;
 		background: rgba(255, 255, 255, 0.55);
-		-webkit-backdrop-filter: blur(20px) saturate(170%);
-		backdrop-filter: blur(20px) saturate(170%);
+		-webkit-backdrop-filter: blur(16px) saturate(160%);
+		backdrop-filter: blur(16px) saturate(160%);
 		border: 1px solid rgba(255, 255, 255, 0.7);
 		box-shadow:
-			0 8px 32px rgba(0, 0, 0, 0.07),
+			0 8px 28px rgba(0, 0, 0, 0.07),
 			inset 0 1px 0 rgba(255, 255, 255, 0.7);
-		transition:
-			opacity 0.3s ease,
-			transform 0.35s cubic-bezier(0.2, 0.7, 0.2, 1),
-			visibility 0s linear 0s;
-	}
-	.dock-full {
-		width: min(1280px, 100vw - 48px);
-		height: 64px;
-		padding: 0 20px 0 32px;
-	}
-	.dock-mini {
-		height: 56px;
-		padding: 0 6px;
-		width: 268px;
-		justify-content: center;
-		opacity: 0;
-		visibility: hidden;
-		transform: translateY(-10px) scale(0.94);
-		transition:
-			opacity 0.3s ease,
-			transform 0.35s cubic-bezier(0.2, 0.7, 0.2, 1),
-			width 0.35s cubic-bezier(0.2, 0.7, 0.2, 1),
-			visibility 0s linear 0.35s;
+		transition: width 0.55s var(--ease);
+		will-change: width;
 	}
 	.brand {
+		position: absolute;
+		left: 32px;
+		top: 50%;
+		transform: translateY(-50%);
 		color: var(--fg);
 		text-decoration: none;
 		text-transform: uppercase;
@@ -262,11 +238,13 @@ const navLinks = [
 		font-weight: 400;
 		font-size: 0.95rem;
 		letter-spacing: 0.18em;
+		transition: opacity 0.3s ease;
 	}
 	.links {
 		display: flex;
 		align-items: center;
 		gap: 2px;
+		flex-shrink: 0;
 	}
 	.links a {
 		display: flex;
@@ -284,56 +262,60 @@ const navLinks = [
 	.links a:focus-visible {
 		background: rgba(255, 255, 255, 0.85);
 	}
+	/* Everything that changes size uses the same duration and easing as the bar, so it all moves as one */
+	.links a {
+		transition:
+			background 0.2s ease,
+			padding 0.55s var(--ease);
+	}
 	.label {
+		display: inline-block;
 		max-width: 120px;
 		margin-left: 8px;
+		overflow: hidden;
+		transition:
+			max-width 0.55s var(--ease),
+			margin-left 0.55s var(--ease),
+			opacity 0.3s ease;
 	}
-	.dock-mini .label {
+
+	/* Collapsed: just the icons */
+	.nav-collapsed .dock {
+		width: 272px;
+	}
+	.nav-collapsed .brand {
+		opacity: 0;
+		pointer-events: none;
+	}
+	.nav-collapsed .links a {
+		padding: 0 10px;
+	}
+	.nav-collapsed .label {
 		max-width: 0;
 		margin-left: 0;
 		opacity: 0;
-		overflow: hidden;
-		transition:
-			max-width 0.35s cubic-bezier(0.2, 0.7, 0.2, 1),
-			margin-left 0.35s cubic-bezier(0.2, 0.7, 0.2, 1),
-			opacity 0.25s ease;
 	}
-
-	/* Scrolled: swap the bars */
-	.nav-collapsed .dock-full {
-		opacity: 0;
-		visibility: hidden;
-		transform: translateY(-10px) scale(0.98);
-		transition:
-			opacity 0.25s ease,
-			transform 0.3s ease,
-			visibility 0s linear 0.3s;
-	}
-	.nav-collapsed .dock-mini {
-		opacity: 1;
-		visibility: visible;
-		transform: none;
-		transition:
-			opacity 0.3s ease 0.05s,
-			transform 0.35s cubic-bezier(0.2, 0.7, 0.2, 1) 0.05s,
-			width 0.35s cubic-bezier(0.2, 0.7, 0.2, 1),
-			visibility 0s linear 0s;
-	}
-	/* Hover / focus on the dock opens the labels */
+	/* Hover / focus on the collapsed dock opens the labels */
 	@media (hover: hover) {
-		.dock-mini:hover {
-			width: 580px;
+		.nav-collapsed .dock:hover {
+			width: 600px;
 		}
-		.dock-mini:hover .label {
+		.nav-collapsed .dock:hover .links a {
+			padding: 0 12px;
+		}
+		.nav-collapsed .dock:hover .label {
 			max-width: 120px;
 			margin-left: 8px;
 			opacity: 1;
 		}
 	}
-	.dock-mini:focus-within {
-		width: 580px;
+	.nav-collapsed .dock:focus-within {
+		width: 600px;
 	}
-	.dock-mini:focus-within .label {
+	.nav-collapsed .dock:focus-within .links a {
+		padding: 0 12px;
+	}
+	.nav-collapsed .dock:focus-within .label {
 		max-width: 120px;
 		margin-left: 8px;
 		opacity: 1;
@@ -342,34 +324,33 @@ const navLinks = [
 		.nav-wrap {
 			inset: 12px 0 auto;
 		}
-		.dock-full {
+		.dock {
 			width: calc(100vw - 24px);
 			height: 56px;
-			padding: 0 8px 0 20px;
 		}
 		.brand {
+			left: 20px;
 			font-size: 0.74rem;
 			letter-spacing: 0.1em;
 		}
-		.dock-full .label {
+		.label,
+		.nav-collapsed .dock:focus-within .label {
 			display: none;
 		}
-		.links a {
+		.links a,
+		.nav-collapsed .dock:focus-within .links a {
 			padding: 0 10px;
 		}
-		.dock-mini:focus-within {
-			width: 268px;
-		}
-		.dock-mini:focus-within .label {
-			max-width: 0;
-			margin-left: 0;
-			opacity: 0;
+		.nav-collapsed .dock:focus-within {
+			width: 272px;
 		}
 	}
 	@media (prefers-reduced-motion: reduce) {
 		.dock,
+		.brand,
+		.links a,
 		.label {
-			transition: none !important;
+			transition: none;
 		}
 	}
 
