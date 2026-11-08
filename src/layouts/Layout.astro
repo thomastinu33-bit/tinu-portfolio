@@ -35,28 +35,9 @@ const navLinks = [
 		/>
 		<!-- If this browser already unlocked the private work, say so before anything paints (see PasswordGate) -->
 		<script is:inline>
-			(function () {
-				var root = document.documentElement;
-				var ticking = false;
-				var update = function () {
-					ticking = false;
-					var y = window.scrollY;
-					// a small dead zone so it doesn't flicker around the threshold
-					if (y > 80) root.classList.add('nav-collapsed');
-					else if (y < 30) root.classList.remove('nav-collapsed');
-				};
-				update();
-				window.addEventListener(
-					'scroll',
-					function () {
-						if (!ticking) {
-							ticking = true;
-							requestAnimationFrame(update);
-						}
-					},
-					{ passive: true }
-				);
-			})();
+			try {
+				if (localStorage.getItem('portfolio-unlocked') === '1') document.documentElement.classList.add('pw-unlocked');
+			} catch (e) {}
 		</script>
 		<meta name="generator" content={Astro.generator} />
 		<title>{title}</title>
@@ -108,11 +89,25 @@ const navLinks = [
 		<script is:inline>
 			(function () {
 				var root = document.documentElement;
+				var ticking = false;
 				var update = function () {
-					root.classList.toggle('nav-collapsed', window.scrollY > 40);
+					ticking = false;
+					var y = window.scrollY;
+					// a small dead zone so it doesn't flicker around the threshold
+					if (y > 80) root.classList.add('nav-collapsed');
+					else if (y < 30) root.classList.remove('nav-collapsed');
 				};
 				update();
-				window.addEventListener('scroll', update, { passive: true });
+				window.addEventListener(
+					'scroll',
+					function () {
+						if (!ticking) {
+							ticking = true;
+							requestAnimationFrame(update);
+						}
+					},
+					{ passive: true }
+				);
 			})();
 		</script>
 	</body>
