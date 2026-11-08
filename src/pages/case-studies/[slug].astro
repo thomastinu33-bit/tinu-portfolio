@@ -74,6 +74,55 @@ const { study } = Astro.props;
 									))}
 								</ol>
 							);
+						case 'sitemap':
+							return (
+								<figure class="sitemap">
+									<div class="sm-scroll">
+										<div class="sm">
+											<div class="sm-root"><span class="sm-node root">{b.root}</span></div>
+											<div class="sm-sections" style={`grid-template-columns: ${b.sections.map((x) => `minmax(0, ${Math.max(x.chains.length, 1)}fr)`).join(' ')}`}>
+												{b.sections.map((sec) => (
+													<div class="sm-sec" style={`--w: ${Math.max(sec.chains.length, 1)}`}>
+														<span class="sm-node sec">{sec.label}</span>
+														{sec.chains.length > 0 && (
+															<div class="sm-chains">
+																{sec.chains.map((ch) => (
+																	<ol class="sm-chain">
+																		{ch.map((pg) => (
+																			<li><span class="sm-node">{pg}</span></li>
+																		))}
+																	</ol>
+																))}
+															</div>
+														)}
+													</div>
+												))}
+											</div>
+										</div>
+									</div>
+									{b.caption && <figcaption>{b.caption}</figcaption>}
+								</figure>
+							);
+						case 'objects':
+							return (
+								<figure class="objects">
+									<ul class="ob-key">
+										<li><i class="o"></i>Object</li>
+										<li><i class="c"></i>Call to action</li>
+										<li><i class="m"></i>Metadata</li>
+									</ul>
+									<div class="ob-cols" style={`--n: ${b.columns.length}`}>
+										{b.columns.map((col) => (
+											<ul class="ob-col">
+												{col.map((it) => (
+													<li class={it[0]}>{it.slice(2)}</li>
+												))}
+											</ul>
+										))}
+									</div>
+									{b.caption && <figcaption>{b.caption}</figcaption>}
+								</figure>
+							);
 						case 'image':
 							return (
 								<figure>
@@ -373,6 +422,249 @@ const { study } = Astro.props;
 			display: none;
 		}
 	}
+	/* Site map: a tree of cards joined by thin lines */
+	.sitemap {
+		min-width: 0;
+		max-width: 100%;
+		padding: 28px 24px 20px;
+		border-radius: 24px;
+		background: #fafafa;
+		border: 1px solid #ececec;
+		box-shadow: 0 12px 30px -18px rgba(0, 0, 0, 0.15);
+	}
+	.sm-scroll {
+		min-width: 0;
+		max-width: 100%;
+		overflow-x: auto;
+	}
+	.sm {
+		min-width: 940px;
+	}
+	.sm-root {
+		display: flex;
+		justify-content: center;
+		position: relative;
+		padding-bottom: 26px;
+	}
+	.sm-root::after,
+	.sm-sec::before {
+		content: '';
+		position: absolute;
+		left: 50%;
+		width: 1.5px;
+		background: #cfc8dc;
+	}
+	.sm-root::after {
+		bottom: 0;
+		height: 26px;
+	}
+	.sm-sections {
+		display: grid;
+	}
+	.sm-node {
+		display: inline-block;
+		padding: 7px 12px;
+		border-radius: 12px;
+		background: #fff;
+		border: 1px solid #e6e2ee;
+		box-shadow: 0 8px 18px -12px rgba(0, 0, 0, 0.2);
+		font-size: 0.8rem;
+		line-height: 1.25;
+		text-align: center;
+		color: var(--fg);
+		transition:
+			transform 0.25s ease,
+			box-shadow 0.25s ease;
+	}
+	.sm-node:hover {
+		transform: translateY(-2px);
+		box-shadow: 0 16px 30px -14px rgba(150, 110, 170, 0.4);
+	}
+	.sm-node.root {
+		padding: 9px 26px;
+		background: #2b2b2b;
+		border-color: #2b2b2b;
+		color: #fff;
+	}
+	.sm-node.sec {
+		background: linear-gradient(140deg, #ffe3d3, #e6e0ff);
+		border-color: #fff;
+		font-weight: 500;
+	}
+	.sm-sec {
+		position: relative;
+		display: grid;
+		justify-items: center;
+		align-content: start;
+		gap: 22px;
+		padding-top: 26px;
+	}
+	.sm-sec::before {
+		top: 0;
+		height: 26px;
+	}
+	/* the horizontal bar across the sections */
+	.sm-sec::after {
+		content: '';
+		position: absolute;
+		top: 0;
+		left: 0;
+		right: 0;
+		height: 1.5px;
+		background: #cfc8dc;
+	}
+	.sm-sec:first-child::after {
+		left: 50%;
+	}
+	.sm-sec:last-child::after {
+		right: 50%;
+	}
+	.sm-chains {
+		display: flex;
+		gap: 10px;
+		justify-content: center;
+		align-items: flex-start;
+	}
+	.sm-chain::before {
+		content: '';
+		position: absolute;
+		top: -22px;
+		left: 50%;
+		width: 1.5px;
+		height: 22px;
+		background: #cfc8dc;
+	}
+	.sm-chain::after {
+		content: '';
+		position: absolute;
+		top: -22px;
+		left: -5px;
+		right: -5px;
+		height: 1.5px;
+		background: #cfc8dc;
+	}
+	.sm-chain:first-child::after {
+		left: 50%;
+	}
+	.sm-chain:last-child::after {
+		right: 50%;
+	}
+	.sm-chain:only-child::after {
+		display: none;
+	}
+	.sm-chain {
+		position: relative;
+		list-style: none;
+		margin: 0;
+		padding: 0;
+		display: grid;
+		justify-items: center;
+		gap: 14px;
+	}
+	.sm-chain li {
+		position: relative;
+	}
+	.sm-chain li:not(:last-child)::after {
+		content: '';
+		position: absolute;
+		left: 50%;
+		top: 100%;
+		width: 1.5px;
+		height: 14px;
+		background: #cfc8dc;
+	}
+	.sm-chain .sm-node {
+		font-size: 0.72rem;
+		padding: 6px 8px;
+		background: #fff;
+	}
+	/* Objects: objects, calls to action and metadata as colored cards */
+	.objects {
+		padding: 22px 24px 20px;
+		border-radius: 24px;
+		background: #fafafa;
+		border: 1px solid #ececec;
+		box-shadow: 0 12px 30px -18px rgba(0, 0, 0, 0.15);
+	}
+	.ob-key {
+		list-style: none;
+		margin: 0 0 16px;
+		padding: 0;
+		display: flex;
+		flex-wrap: wrap;
+		gap: 8px 20px;
+		font-size: 0.8rem;
+		color: var(--muted);
+	}
+	.ob-key li {
+		display: inline-flex;
+		align-items: center;
+		gap: 8px;
+	}
+	.ob-key i {
+		width: 12px;
+		height: 12px;
+		border-radius: 4px;
+	}
+	.ob-key .o,
+	.ob-col .o {
+		background: #2b2b2b;
+	}
+	.ob-key .c,
+	.ob-col .c {
+		background: #ebe6ff;
+	}
+	.ob-key .m,
+	.ob-col .m {
+		background: #ffe9dc;
+	}
+	.ob-cols {
+		display: grid;
+		grid-template-columns: repeat(var(--n, 4), minmax(0, 1fr));
+		gap: 14px;
+		align-items: start;
+	}
+	.ob-col {
+		list-style: none;
+		margin: 0;
+		padding: 0;
+		display: grid;
+		gap: 6px;
+	}
+	.ob-col li {
+		padding: 7px 8px;
+		border-radius: 10px;
+		font-size: 0.78rem;
+		line-height: 1.25;
+		text-align: center;
+		transition:
+			transform 0.25s ease,
+			box-shadow 0.25s ease;
+	}
+	.ob-col li:hover {
+		transform: translateY(-2px);
+		box-shadow: 0 14px 26px -14px rgba(150, 110, 170, 0.45);
+	}
+	.ob-col .o {
+		color: #fff;
+		font-weight: 500;
+		margin-top: 8px;
+	}
+	.ob-col li.o:first-child {
+		margin-top: 0;
+	}
+	.ob-col .c {
+		color: #4a3f6e;
+	}
+	.ob-col .m {
+		color: #8a5a3a;
+	}
+	@media (max-width: 720px) {
+		.ob-cols {
+			grid-template-columns: repeat(2, minmax(0, 1fr));
+			row-gap: 20px;
+		}
+	}
 	/* Soft colour behind the top of the page, like the landing page */
 	.wash {
 		position: absolute;
@@ -456,6 +748,7 @@ const { study } = Astro.props;
 	}
 	.blocks {
 		display: grid;
+		grid-template-columns: minmax(0, 1fr);
 		gap: 28px;
 		margin-top: 40px;
 	}

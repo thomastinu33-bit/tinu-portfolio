@@ -12,6 +12,10 @@ export type Block =
 	| { type: 'logos'; images: { src: string; alt: string }[] }
 	| { type: 'stats'; items: { value: string; label: string }[] }
 	| { type: 'quotes'; items: string[] }
+	// A site map: a root, its sections, and under each section one or more chains of pages (top to bottom)
+	| { type: 'sitemap'; root: string; sections: { label: string; chains: string[][] }[]; caption?: string }
+	// Object-based design: columns of objects (o:), calls to action (c:) and metadata (m:)
+	| { type: 'objects'; columns: string[][]; caption?: string }
 	// A row of numbered steps joined by arrows (wraps to two columns on small screens)
 	| { type: 'process'; steps: { icon: string; label: string; body?: string }[] }
 	// The Data Visualization Guidelines site, rebuilt in HTML and clickable (see GuidelinesSite)
@@ -487,12 +491,33 @@ export const studies: Study[] = [
 				type: 'text',
 				text: 'I facilitated a card sorting workshop with team members, our company accountant and the users I had interviewed to gather insights. While clear patterns emerged, some cards didn’t fit into specific groups. Based on these findings, I developed the initial information architecture for the product.',
 			},
-			{ type: 'image', src: 'lemoney/06', alt: 'The information architecture of the product.' },
+			{
+				type: 'sitemap',
+				root: 'Home',
+				caption: 'The information architecture of the product.',
+				sections: [
+					{ label: 'Banking', chains: [] },
+					{ label: 'Expenses', chains: [['Reimbursement', 'Approvals'], ['Expense', 'New Expense', 'View Expenses']] },
+					{ label: 'Invoices', chains: [['Estimates'], ['Invoice', 'New Invoice', 'View Invoices'], ['Inventory', 'View items', 'Add new']] },
+					{ label: 'Directory', chains: [['View', 'Add']] },
+					{ label: 'Payroll', chains: [['Employee Details', 'Type'], ['Payment Info'], ['Tax Info']] },
+					{ label: 'Accounting', chains: [] },
+				],
+			},
 			{
 				type: 'text',
 				text: 'To streamline the design, I identified shared elements across multiple modules and applied atomic design principles, creating reusable components for consistency and efficiency. This ensured modularity and seamless integration throughout the application. Here’s how I applied it to the Invoice module.',
 			},
-			{ type: 'image', src: 'lemoney/07', alt: 'Atomic design applied to the Invoice module.' },
+			{
+				type: 'objects',
+				caption: 'Atomic design applied to the Invoice module: the objects, the actions on them and the details they carry.',
+				columns: [
+					['o:Estimates', 'c:Preview and send', 'c:Convert to invoice', 'c:Duplicate', 'c:Create new', 'o:Customer', 'm:Estimate/Invoice Number', 'm:Quote/Amount', 'o:Product/Service Info', 'm:Estimate Status', 'm:Past Estimates'],
+					['o:Invoice', 'c:Preview and send', 'c:Send Reminders', 'c:Duplicate', 'c:Create new', 'c:View/Edit/Delete', 'o:Customer', 'm:Estimate/Invoice Number', 'm:Quote/Amount', 'm:Dates', 'o:Product/Service Info', 'm:Estimate Status', 'm:Past Estimates'],
+					['o:Customer', 'c:Create new', 'c:View/Edit/Delete', 'm:Name', 'm:Contact Info', 'o:Invoice', 'o:Estimates', 'o:Product/Service Info', 'm:Estimate Status', 'm:Past Estimates'],
+					['o:Product/Service Info', 'c:Create new', 'c:View/Edit/Delete', 'm:Name', 'm:Price', 'm:Tax', 'm:SKU number'],
+				],
+			},
 			{
 				type: 'text',
 				text: 'Designing the information architecture for both the main navigation and individual modules was a highly collaborative and iterative process with stakeholders and the lead product manager. To validate the structure, I conducted multiple rounds of user research and designed low-fidelity mockups to visualize user flows and interactions. This feedback-driven approach helped refine the design so it met user needs and expectations.',
