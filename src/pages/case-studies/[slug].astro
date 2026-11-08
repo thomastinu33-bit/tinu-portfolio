@@ -17,7 +17,7 @@ const { study } = Astro.props;
 	<div id="gated" class="gated">
 	<div class="wash" aria-hidden="true"></div>
 	<article class="container study">
-		<a class="back glass" href={`${base}/#work`}>← Experience</a>
+		<a class="back" href={`${base}/#work`}>← Experience</a>
 
 		<ul class="tags">
 			{study.tags.map((t) => <li>{t}</li>)}
@@ -132,18 +132,14 @@ const { study } = Astro.props;
 	}
 	.back {
 		display: inline-block;
-		color: var(--fg);
+		color: var(--muted);
 		text-decoration: none;
 		margin-bottom: 32px;
-		padding: 6px 16px;
-		border-radius: 999px;
-		font-size: 0.9rem;
-		background: rgba(255, 255, 255, 0.6);
-		transition: transform 0.25s ease, background 0.25s ease;
+		font-size: 0.95rem;
+		transition: color 0.2s ease;
 	}
 	.back:hover {
-		background: rgba(255, 255, 255, 0.9);
-		transform: translateX(-3px);
+		color: var(--fg);
 	}
 	h1 {
 		font-family: var(--font-serif);
@@ -173,18 +169,15 @@ const { study } = Astro.props;
 		margin: 0;
 		display: flex;
 		flex-wrap: wrap;
-		gap: 8px;
-	}
-	.tags li {
-		font-size: 0.72rem;
-		letter-spacing: 0.12em;
+		gap: 4px 0;
+		font-size: 0.76rem;
+		letter-spacing: 0.14em;
 		text-transform: uppercase;
 		color: var(--muted);
-		background: rgba(255, 255, 255, 0.7);
-		border: 1px solid rgba(255, 255, 255, 0.9);
-		box-shadow: 0 4px 14px -6px rgba(120, 70, 40, 0.15);
-		border-radius: 999px;
-		padding: 5px 14px;
+	}
+	.tags li + li::before {
+		content: '·';
+		margin: 0 10px;
 	}
 	.hero-shot {
 		margin-top: 40px;
@@ -328,8 +321,5 @@ const { study } = Astro.props;
 	@media (prefers-reduced-motion: reduce), (hover: none) {
 		.stats div:hover,
 		blockquote:hover,
-		.back:hover {
-			transform: none;
-		}
 	}
 </style>

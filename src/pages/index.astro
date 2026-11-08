@@ -114,10 +114,12 @@ const principleIcons = { build: MousePointerClick, team: UsersRound, craft: Rule
 														sizes="(max-width: 820px) 90vw, 420px"
 													/>
 												)}
-												{p.highlights?.[0] && <span class="stat">{p.highlights[0]}</span>}
 											</div>
 											<div class="card-text">
-												<h4>{p.title}</h4>
+												<div class="card-copy">
+													<h4>{p.title}</h4>
+													{p.highlights?.[0] && <span class="stat">{p.highlights[0]}</span>}
+												</div>
 												<span class="arrow" aria-hidden="true">
 													<ArrowUpRight size={18} strokeWidth={1.5} />
 												</span>
@@ -322,16 +324,8 @@ const principleIcons = { build: MousePointerClick, team: UsersRound, craft: Rule
 		font-family: var(--font-sans);
 		font-weight: 400;
 	}
-	/* The greeting sits in a small frosted pill */
 	.greeting span {
 		display: inline-block;
-		padding: 8px 20px;
-		border-radius: 999px;
-		background: rgba(255, 255, 255, 0.55);
-		border: 1px solid rgba(255, 255, 255, 0.8);
-		-webkit-backdrop-filter: blur(14px);
-		backdrop-filter: blur(14px);
-		box-shadow: 0 6px 24px rgba(160, 110, 90, 0.1);
 		font-size: 0.82rem;
 		letter-spacing: 0.16em;
 		text-transform: uppercase;
@@ -800,19 +794,12 @@ const principleIcons = { build: MousePointerClick, team: UsersRound, craft: Rule
 		top: 112px;
 	}
 	.job-when {
-		display: inline-block;
-		margin: 0 0 16px;
-		padding: 6px 14px;
-		border-radius: 999px;
-		background: rgba(255, 255, 255, 0.6);
-		border: 1px solid rgba(255, 255, 255, 0.9);
-		-webkit-backdrop-filter: blur(12px);
-		backdrop-filter: blur(12px);
-		box-shadow: 0 6px 18px -8px rgba(120, 100, 160, 0.3);
+		display: block;
+		margin: 0 0 12px;
 		font-size: 0.76rem;
 		text-transform: uppercase;
 		letter-spacing: 0.14em;
-		color: #6b6460;
+		color: var(--muted);
 		font-variant-numeric: lining-nums;
 	}
 	.job-info h3 {
@@ -883,25 +870,13 @@ const principleIcons = { build: MousePointerClick, team: UsersRound, craft: Rule
 		padding: 9%;
 		box-sizing: border-box;
 	}
-	/* One result, pinned to the picture like a glass sticker */
+	/* One result, as a quiet line under the title */
 	.stat {
-		position: absolute;
-		left: 12px;
-		bottom: 12px;
-		max-width: calc(100% - 24px);
-		padding: 6px 12px;
-		border-radius: 999px;
-		background: rgba(255, 255, 255, 0.72);
-		border: 1px solid rgba(255, 255, 255, 0.95);
-		-webkit-backdrop-filter: blur(10px);
-		backdrop-filter: blur(10px);
-		box-shadow: 0 6px 16px -8px rgba(80, 60, 110, 0.35);
-		font-size: 0.78rem;
-		line-height: 1.2;
-		color: #4a4450;
-		overflow: hidden;
-		text-overflow: ellipsis;
-		white-space: nowrap;
+		display: block;
+		margin-top: 6px;
+		font-size: 0.88rem;
+		line-height: 1.35;
+		color: var(--muted);
 	}
 	.card-text {
 		display: flex;
