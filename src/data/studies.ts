@@ -14,6 +14,8 @@ export type Block =
 	| { type: 'quotes'; items: string[] }
 	// Discovery: the questions we asked beside the pain points we heard
 	| { type: 'research'; questionsLabel: string; questions: string[]; painLabel: string; pains: string[] }
+	// Customer feedback: one featured quote, then short notes from other customers
+	| { type: 'feedback'; quote: string; source: string; items: { who: string; text: string }[] }
 	// A grid of captioned pictures; the last one spans the full width when the count is odd
 	| { type: 'gallery'; caption?: string; items: { src: string; alt: string }[] }
 	// Side-by-side cards describing the people a design is for
@@ -685,6 +687,34 @@ export const studies: Study[] = [
 			{
 				type: 'text',
 				text: 'Along the way, the PM and I worked with engineering to understand our technical limitations and to define what belonged in the MVP. That shaped which ideas we kept for launch and which we saved for later.',
+			},
+			{ type: 'heading', text: 'How users are responding' },
+			{
+				type: 'text',
+				text: 'Early feedback from customers has been positive. They describe the page as a single place to understand performance, and an easy one to share.',
+			},
+			{
+				type: 'feedback',
+				quote: 'Really liking it \u2026 much more of a one stop shop versus having to click around so much in the platform.',
+				source: 'Vestmark',
+				items: [
+					{
+						who: 'MilkPEP / GALE',
+						text: 'Called it a simple entry point that any team member can use, and chose to keep using it instead of moving to custom dashboards.',
+					},
+					{
+						who: 'C2Next',
+						text: 'Said the strong visualizations make performance easy to communicate, and loved the donut charts. One screenshot captures several metrics at once, which Trend Analysis can\u2019t.',
+					},
+					{
+						who: 'At Home',
+						text: 'Uses the dashboard for weekly executive reporting. The timeline is one of the most important screenshots brands share internally.',
+					},
+					{
+						who: 'First walkthroughs',
+						text: 'Vestmark and At Home reacted well and started testing right away. Internally, we see it becoming one of the most valuable views in the platform, with the goal that 90%+ of users never need to leave it.',
+					},
+				],
 			},
 		],
 	},
