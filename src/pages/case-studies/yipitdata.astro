@@ -519,6 +519,36 @@ const quotes = [
 		height: 1px;
 		background: #bdbdbd;
 	}
+	/* Cards share one look with the other case studies */
+	.stats li,
+	.problems li,
+	.voice,
+	.slot {
+		border-radius: 24px;
+		background: #fafafa;
+		border: 1px solid #ececec;
+		box-shadow: 0 12px 30px -18px rgba(0, 0, 0, 0.15);
+	}
+	.stats li,
+	.problems li,
+	.voice {
+		transition:
+			transform 0.3s cubic-bezier(0.2, 0.7, 0.2, 1),
+			box-shadow 0.3s ease;
+	}
+	.stats li:hover,
+	.problems li:hover,
+	.voice:hover {
+		transform: translateY(-4px);
+		box-shadow: 0 26px 54px -20px rgba(0, 0, 0, 0.22);
+	}
+	@media (prefers-reduced-motion: reduce) {
+		.stats li:hover,
+		.problems li:hover,
+		.voice:hover {
+			transform: none;
+		}
+	}
 	@media (max-width: 720px) {
 		.stats,
 		.slots.two,
