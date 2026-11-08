@@ -16,6 +16,7 @@ export const site = {
 	// The lines that rotate under "Hi, I'm …" on the home page.
 	intro: [
 		"I'm a product designer",
+		'I design and build interfaces',
 		'I currently design at Evertune AI',
 		"I've been designing for B2B SaaS platforms since 2021",
 		'I turn complex problems into simple, user-centered solutions',
