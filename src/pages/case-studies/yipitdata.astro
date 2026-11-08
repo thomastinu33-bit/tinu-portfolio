@@ -1,7 +1,6 @@
 ---
 import { base } from '../../lib/base';
 import Layout from '../../layouts/Layout.astro';
-import PasswordGate from '../../components/PasswordGate.astro';
 import { Image } from 'astro:assets';
 import { site, projects } from '../../data/site';
 import AffinityBoard from '../../components/AffinityBoard.astro';
@@ -76,7 +75,7 @@ const quotes = [
 ---
 
 <Layout title={`${project.title} · ${site.name}`} description={project.summary}>
-	<div id="gated" class="gated">
+	<div class="gated">
 	<div class="wash" aria-hidden="true"></div>
 		<article class="container study">
 			<a class="back" href={`${base}/#work`}>← All case studies</a>
@@ -240,7 +239,6 @@ const quotes = [
 		</article>
 	</div>
 
-	<PasswordGate mode="immediate" />
 </Layout>
 
 <style>

@@ -3,9 +3,9 @@ import { Image } from 'astro:assets';
 import { base } from '../../lib/base';
 import Icon from '../../components/Icon.astro';
 import Layout from '../../layouts/Layout.astro';
+import PasswordGate from '../../components/PasswordGate.astro';
 import GuidelinesSite from '../../components/GuidelinesSite.astro';
 import AffinityBoard from '../../components/AffinityBoard.astro';
-import PasswordGate from '../../components/PasswordGate.astro';
 import { site } from '../../data/site';
 import { studies } from '../../data/studies';
 import { studyImage } from '../../lib/studyImages';
@@ -15,9 +15,11 @@ export function getStaticPaths() {
 }
 
 const { study } = Astro.props;
+// Only Evertune work is private.
+const isPrivate = study.slug.startsWith('evertune');
 ---
 <Layout title={`${study.title} · ${site.name}`} description={study.summary}>
-	<div id="gated" class="gated">
+	<div id={isPrivate ? 'gated' : undefined} class="gated">
 	<div class="wash" aria-hidden="true"></div>
 	<article class="container study">
 		<a class="back" href={`${base}/#work`}>← Experience</a>
@@ -274,8 +276,7 @@ const { study } = Astro.props;
 		</div>
 	</article>
 	</div>
-
-	<PasswordGate mode="immediate" />
+	{isPrivate && <PasswordGate mode="immediate" />}
 </Layout>
 
 <script>

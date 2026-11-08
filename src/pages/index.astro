@@ -3,7 +3,6 @@ import Icon from '../components/Icon.astro';
 import { base } from '../lib/base';
 import Layout from '../layouts/Layout.astro';
 import { Image } from 'astro:assets';
-import PasswordGate from '../components/PasswordGate.astro';
 import { site, projects, principles, experience } from '../data/site';
 
 const principleIcons = { build: 'cursor-click', team: 'users-three', craft: 'ruler', improve: 'ear' };
@@ -53,9 +52,7 @@ const principleIcons = { build: 'cursor-click', team: 'users-three', craft: 'rul
 		</ul>
 	</section>
 
-	<!-- Everything below is private until the password is entered (see the script at the bottom). -->
-	<div id="gate-sentinel" aria-hidden="true"></div>
-	<div id="gated" class="gated">
+	<div class="gated">
 	<section id="work" class="nav-width">
 		<h2>Experience</h2>
 		<p class="work-lead">Where I’ve worked, and the projects I’m proudest of.</p>
@@ -146,7 +143,6 @@ const principleIcons = { build: 'cursor-click', team: 'users-three', craft: 'rul
 	</section>
 	</div>
 
-	<PasswordGate mode="scroll" />
 </Layout>
 
 <script>
@@ -731,9 +727,6 @@ const principleIcons = { build: 'cursor-click', team: 'users-three', craft: 'rul
 	}
 	#work h2 {
 		text-align: center;
-	}
-	#gate-sentinel {
-		height: 0;
 	}
 	/* How I work */
 	#how-i-work h2 {
