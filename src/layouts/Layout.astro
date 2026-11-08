@@ -65,7 +65,6 @@ const navLinks = [
 		<header class="nav-wrap">
 			<!-- Full width at the top of the page. Scrolling collapses it to a small icon dock that opens again on hover. -->
 			<div class="dock">
-				<a class="brand" href={`${base}/`} aria-label={`${site.name}, home`}>{site.name}</a>
 				<nav class="links" aria-label="Main">
 					{
 						navLinks.map((l) => (
@@ -194,8 +193,7 @@ const navLinks = [
 	}
 
 	/* Top nav: a full-width glass bar at the top of the page. Scrolling collapses it to a small centred icon dock, and
-	   hovering (or tabbing into) the dock opens the labels. Only the width animates (the height never changes), the name
-	   is taken out of the layout, and the colour behind is not blurred more than it needs to be, to keep it smooth. */
+	   hovering (or tabbing into) the dock opens the labels. Only the width animates (the height never changes), the colour behind is not blurred more than it needs to be, to keep it smooth. */
 	.nav-wrap {
 		position: fixed;
 		inset: 20px 0 auto;
@@ -210,9 +208,9 @@ const navLinks = [
 		position: relative;
 		display: flex;
 		align-items: center;
-		justify-content: flex-end;
+		justify-content: center;
 		overflow: hidden;
-		width: min(1280px, 100vw - 48px);
+		width: min(620px, 100vw - 48px);
 		height: 60px;
 		padding: 0 8px;
 		border-radius: 999px;
@@ -225,20 +223,6 @@ const navLinks = [
 			inset 0 1px 0 rgba(255, 255, 255, 0.7);
 		transition: width 0.55s var(--ease);
 		will-change: width;
-	}
-	.brand {
-		position: absolute;
-		left: 32px;
-		top: 50%;
-		transform: translateY(-50%);
-		color: var(--fg);
-		text-decoration: none;
-		text-transform: uppercase;
-		white-space: nowrap;
-		font-weight: 400;
-		font-size: 0.95rem;
-		letter-spacing: 0.18em;
-		transition: opacity 0.3s ease;
 	}
 	.links {
 		display: flex;
@@ -283,10 +267,6 @@ const navLinks = [
 	.nav-collapsed .dock {
 		width: 272px;
 	}
-	.nav-collapsed .brand {
-		opacity: 0;
-		pointer-events: none;
-	}
 	.nav-collapsed .links a {
 		padding: 0 10px;
 	}
@@ -298,7 +278,7 @@ const navLinks = [
 	/* Hover / focus on the collapsed dock opens the labels */
 	@media (hover: hover) {
 		.nav-collapsed .dock:hover {
-			width: 600px;
+			width: 620px;
 		}
 		.nav-collapsed .dock:hover .links a {
 			padding: 0 12px;
@@ -310,7 +290,7 @@ const navLinks = [
 		}
 	}
 	.nav-collapsed .dock:focus-within {
-		width: 600px;
+		width: 620px;
 	}
 	.nav-collapsed .dock:focus-within .links a {
 		padding: 0 12px;
@@ -328,11 +308,6 @@ const navLinks = [
 			width: calc(100vw - 24px);
 			height: 56px;
 		}
-		.brand {
-			left: 20px;
-			font-size: 0.74rem;
-			letter-spacing: 0.1em;
-		}
 		.label,
 		.nav-collapsed .dock:focus-within .label {
 			display: none;
@@ -347,7 +322,6 @@ const navLinks = [
 	}
 	@media (prefers-reduced-motion: reduce) {
 		.dock,
-		.brand,
 		.links a,
 		.label {
 			transition: none;
