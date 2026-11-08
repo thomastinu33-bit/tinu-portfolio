@@ -14,7 +14,7 @@ export const resume = {
 				'Design core experiences end to end for Evertune\u2019s AI-native platform, from early exploration through launch and iteration.',
 				'Create unified agent experiences across the agents we use for GEO and Ads, so customers can check visibility, build GEO strategies and plan ad campaigns without complexity.',
 				'Explore directions quickly in Figma, Claude and Codex, and partner with PMs and engineers to turn ambiguous problems into clear solutions.',
-				'Sweat the details of responsive layouts and interactions, and evolve the design language and systems, including in code.',
+				'Code and push frontend PRs for features and the design system, fine-tuning responsive layouts, typography, spacing and interactions, and maintaining the design system in canvas and code so those details hold as the product grows.',
 			],
 		},
 		{
