@@ -3,7 +3,7 @@
 import type { ImageMetadata } from 'astro';
 import { studies } from './studies';
 import { studyImage } from '../lib/studyImages';
-import evertuneCover from '../assets/evertune/cover.jpg';
+import evertuneCover from '../assets/evertune/cover-v2.jpg';
 import ydCover from '../assets/yd/cover.png';
 import portrait from '../assets/about/portrait-soft.webp';
 
