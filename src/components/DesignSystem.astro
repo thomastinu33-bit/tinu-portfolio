@@ -1,10 +1,8 @@
 ---
+import Icon from './Icon.astro';
 // A compact snippet of the Investor Platform design system, drawn from its Figma documentation:
 // the foundations that set it apart from MUI's defaults (color tokens, type) next to the custom,
 // hover-driven filter. Colors with a hex value are the ones labeled in the Figma file.
-import ListFilter from '@lucide/astro/icons/list-filter';
-import X from '@lucide/astro/icons/x';
-import ChevronRight from '@lucide/astro/icons/chevron-right';
 
 const primary = [
 	{ name: 'main', value: '#0D4753', css: '#0D4753' },
@@ -115,18 +113,18 @@ const consumerGoods = [
 		<section class="col" aria-label="Custom filter">
 			<h4 class="title">Filter <span>custom, since MUI has none</span></h4>
 			<div class="states" aria-hidden="true">
-				<span class="fchip"><ListFilter size={13} strokeWidth={1.75} />Filter</span>
-				<span class="fchip is-hover"><ListFilter size={13} strokeWidth={1.75} />Filter</span>
-				<span class="fchip is-selected"><ListFilter size={13} strokeWidth={1.75} />Filter: Unread <X size={12} strokeWidth={2} /></span>
+				<span class="fchip"><Icon name="funnel-simple" size={13} />Filter</span>
+				<span class="fchip is-hover"><Icon name="funnel-simple" size={13} />Filter</span>
+				<span class="fchip is-selected"><Icon name="funnel-simple" size={13} />Filter: Unread <Icon name="x" size={12} /></span>
 			</div>
 
 			<div class="try" data-filter>
 				<p class="try-hint">Try it: hover Consumer Goods, then pick a category.</p>
 				<span class="fchip live" data-chip>
-					<ListFilter size={13} strokeWidth={1.75} aria-hidden="true" />
+					<Icon name="funnel-simple" size={13} aria-hidden="true" />
 					<span data-chip-label>Filter</span>
 					<button type="button" class="clear" data-clear aria-label="Clear the filter" hidden>
-						<X size={12} strokeWidth={2} aria-hidden="true" />
+						<Icon name="x" size={12} aria-hidden="true" />
 					</button>
 				</span>
 				<div class="menus">
@@ -136,7 +134,7 @@ const consumerGoods = [
 								<li class:list={['mitem', { has: c === 'Consumer Goods' }]}>
 									<button type="button" role="menuitem" aria-haspopup={c === 'Consumer Goods' ? 'true' : undefined}>
 										{c}
-										{c === 'Consumer Goods' && <ChevronRight size={14} strokeWidth={1.75} aria-hidden="true" />}
+										{c === 'Consumer Goods' && <Icon name="caret-right" size={14} aria-hidden="true" />}
 									</button>
 									{c === 'Consumer Goods' && (
 										<ul class="menu sub" role="menu" aria-label="Consumer Goods">

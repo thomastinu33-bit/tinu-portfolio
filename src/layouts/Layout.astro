@@ -1,4 +1,5 @@
 ---
+import Icon from '../components/Icon.astro';
 import { base } from '../lib/base';
 import { site } from '../data/site';
 
@@ -10,11 +11,11 @@ interface Props {
 const { title = `${site.name} · ${site.role}`, description = site.tagline } = Astro.props;
 
 const navLinks = [
-	{ label: 'Home', href: `${base}/` },
-	{ label: 'How I work', href: `${base}/#how-i-work` },
-	{ label: 'Experience', href: `${base}/#work` },
-	{ label: 'About', href: `${base}/#about` },
-	{ label: 'Resume', href: `${base}/resume/` },
+	{ label: 'Home', icon: 'house', href: `${base}/` },
+	{ label: 'How I work', icon: 'lightbulb', href: `${base}/#how-i-work` },
+	{ label: 'Experience', icon: 'briefcase', href: `${base}/#work` },
+	{ label: 'About', icon: 'user', href: `${base}/#about` },
+	{ label: 'Resume', icon: 'file-text', href: `${base}/resume/` },
 ];
 ---
 
@@ -34,22 +35,45 @@ const navLinks = [
 		/>
 		<!-- If this browser already unlocked the private work, say so before anything paints (see PasswordGate) -->
 		<script is:inline>
-			try {
-				if (localStorage.getItem('portfolio-unlocked') === '1') document.documentElement.classList.add('pw-unlocked');
-			} catch (e) {}
+			(function () {
+				var root = document.documentElement;
+				var ticking = false;
+				var update = function () {
+					ticking = false;
+					var y = window.scrollY;
+					// a small dead zone so it doesn't flicker around the threshold
+					if (y > 80) root.classList.add('nav-collapsed');
+					else if (y < 30) root.classList.remove('nav-collapsed');
+				};
+				update();
+				window.addEventListener(
+					'scroll',
+					function () {
+						if (!ticking) {
+							ticking = true;
+							requestAnimationFrame(update);
+						}
+					},
+					{ passive: true }
+				);
+			})();
 		</script>
 		<meta name="generator" content={Astro.generator} />
 		<title>{title}</title>
 	</head>
 	<body>
 		<header class="nav-wrap">
-			<div class="nav glass">
-				<a class="brand" href={`${base}/`} aria-label={`${site.name}, home`}>
-					<span class="full">{site.name}</span>
-					<span class="short" aria-hidden="true">{site.name.split(' ').map((w) => w[0]).join('')}</span>
-				</a>
-				<nav aria-label="Main">
-					{navLinks.map((l) => <a href={l.href}>{l.label}</a>)}
+			<!-- Full width at the top of the page. Scrolling collapses it to a small icon dock that opens again on hover. -->
+			<div class="dock">
+				<nav class="links" aria-label="Main">
+					{
+						navLinks.map((l) => (
+							<a href={l.href} aria-label={l.label}>
+								<Icon name={l.icon} size={20} weight="light" />
+								<span class="label">{l.label}</span>
+							</a>
+						))
+					}
 				</nav>
 			</div>
 		</header>
@@ -57,10 +81,40 @@ const navLinks = [
 			<slot />
 		</main>
 		<footer class="footer">
+			<div id="contact" class="foot-meta nav-width">
+				<div class="touch">
+					<span class="meta-label">Get in touch</span>
+					<a class="meta-link" href={`mailto:${site.email}`}>
+						<Icon name="envelope-simple" size={16} aria-hidden="true" />
+						{site.email}
+					</a>
+					<a class="meta-link" href={site.linkedin} target="_blank" rel="noopener">
+						LinkedIn
+						<Icon name="arrow-up-right" size={16} aria-hidden="true" />
+					</a>
+				</div>
+				<div class="location">
+					<span class="meta-label">Based in</span>
+					<span class="meta-link">
+						<Icon name="map-pin" size={16} aria-hidden="true" />
+						{site.location}
+					</span>
+				</div>
+			</div>
 			<div class="container">
 				<p class="copyright">© {new Date().getFullYear()} {site.name}</p>
 			</div>
 		</footer>
+		<script is:inline>
+			(function () {
+				var root = document.documentElement;
+				var update = function () {
+					root.classList.toggle('nav-collapsed', window.scrollY > 40);
+				};
+				update();
+				window.addEventListener('scroll', update, { passive: true });
+			})();
+		</script>
 	</body>
 </html>
 
@@ -138,122 +192,139 @@ const navLinks = [
 		box-shadow: var(--glass-shadow);
 	}
 
-	/* The nav is a clearer glass than the cards: less white tint, more blur, and a faint bright edge */
-	.nav.glass {
-		background: rgba(255, 255, 255, 0.3);
-		-webkit-backdrop-filter: blur(30px) saturate(180%);
-		backdrop-filter: blur(30px) saturate(180%);
-		border: 1px solid rgba(255, 255, 255, 0.55);
-		box-shadow:
-			0 8px 32px rgba(0, 0, 0, 0.06),
-			inset 0 1px 0 rgba(255, 255, 255, 0.6);
-	}
-
+	/* Top nav: a full-width glass bar at the top of the page. Scrolling collapses it to a small centred icon dock, and
+	   hovering (or tabbing into) the dock opens the labels. Only the width animates (the height never changes), the colour behind is not blurred more than it needs to be, to keep it smooth. */
 	.nav-wrap {
 		position: fixed;
-		inset: 24px 24px auto;
+		inset: 20px 0 auto;
 		z-index: 10;
-	}
-	.nav {
-		max-width: 1280px;
-		margin: 0 auto;
-		height: 64px;
-		padding: 0 32px;
-		border-radius: 999px;
 		display: flex;
-		justify-content: space-between;
+		justify-content: center;
+		pointer-events: none;
+	}
+	.dock {
+		--ease: cubic-bezier(0.32, 0.72, 0, 1);
+		pointer-events: auto;
+		position: relative;
+		display: flex;
 		align-items: center;
-		gap: 16px;
+		justify-content: center;
+		overflow: hidden;
+		width: min(620px, 100vw - 48px);
+		height: 60px;
+		padding: 0 8px;
+		border-radius: 999px;
+		background: rgba(255, 255, 255, 0.55);
+		-webkit-backdrop-filter: blur(16px) saturate(160%);
+		backdrop-filter: blur(16px) saturate(160%);
+		border: 1px solid rgba(255, 255, 255, 0.7);
+		box-shadow:
+			0 8px 28px rgba(0, 0, 0, 0.07),
+			inset 0 1px 0 rgba(255, 255, 255, 0.7);
+		transition: width 0.55s var(--ease);
+		will-change: width;
 	}
-	.brand {
-		color: var(--fg);
-		text-decoration: none;
-		text-transform: uppercase;
-		white-space: nowrap;
-		font-weight: 400;
-		font-size: 0.95rem;
-		letter-spacing: 0.18em;
-	}
-	.nav nav {
+	.links {
 		display: flex;
-		gap: 32px;
+		align-items: center;
+		gap: 2px;
+		flex-shrink: 0;
 	}
-	.nav nav a {
+	.links a {
+		display: flex;
+		align-items: center;
+		height: 44px;
+		padding: 0 12px;
+		border-radius: 999px;
 		color: var(--fg);
-		opacity: 0.8;
 		text-decoration: none;
+		white-space: nowrap;
 		font-size: 1rem;
-		transition: opacity 0.15s;
+		transition: background 0.2s ease;
 	}
-	.nav nav a:hover {
+	.links a:hover,
+	.links a:focus-visible {
+		background: rgba(255, 255, 255, 0.85);
+	}
+	/* Everything that changes size uses the same duration and easing as the bar, so it all moves as one */
+	.links a {
+		transition:
+			background 0.2s ease,
+			padding 0.55s var(--ease);
+	}
+	.label {
+		display: inline-block;
+		max-width: 120px;
+		margin-left: 8px;
+		overflow: hidden;
+		transition:
+			max-width 0.55s var(--ease),
+			margin-left 0.55s var(--ease),
+			opacity 0.3s ease;
+	}
+
+	/* Collapsed: just the icons */
+	.nav-collapsed .dock {
+		width: 272px;
+	}
+	.nav-collapsed .links a {
+		padding: 0 10px;
+	}
+	.nav-collapsed .label {
+		max-width: 0;
+		margin-left: 0;
+		opacity: 0;
+	}
+	/* Hover / focus on the collapsed dock opens the labels */
+	@media (hover: hover) {
+		.nav-collapsed .dock:hover {
+			width: 620px;
+		}
+		.nav-collapsed .dock:hover .links a {
+			padding: 0 12px;
+		}
+		.nav-collapsed .dock:hover .label {
+			max-width: 120px;
+			margin-left: 8px;
+			opacity: 1;
+		}
+	}
+	.nav-collapsed .dock:focus-within {
+		width: 620px;
+	}
+	.nav-collapsed .dock:focus-within .links a {
+		padding: 0 12px;
+	}
+	.nav-collapsed .dock:focus-within .label {
+		max-width: 120px;
+		margin-left: 8px;
 		opacity: 1;
 	}
-	/* A bigger invisible tap area around each link, without changing the layout */
-	.nav nav a {
-		position: relative;
-	}
-	.nav nav a::after {
-		content: '';
-		position: absolute;
-		inset: -14px -5px;
-	}
-	@media (max-width: 600px) {
-		.nav-wrap {
-			inset: 12px 12px auto;
-		}
-		.nav {
-			height: 56px;
-			padding: 0 20px;
-		}
-		.brand {
-			font-size: 0.78rem;
-			letter-spacing: 0.1em;
-		}
-		.nav nav {
-			gap: 12px;
-		}
-		.nav nav a {
-			font-size: 0.8rem;
-		}
-	}
-	/* Links never wrap. Where five don't fit beside the name, "Home" goes first (the name links home),
-	   then the name tightens, then it becomes initials. */
-	.nav nav a {
-		white-space: nowrap;
-	}
-	.brand .short {
-		display: none;
-	}
 	@media (max-width: 760px) {
-		.nav nav a:first-child {
+		.nav-wrap {
+			inset: 12px 0 auto;
+		}
+		.dock {
+			width: calc(100vw - 24px);
+			height: 56px;
+		}
+		.label,
+		.nav-collapsed .dock:focus-within .label {
 			display: none;
 		}
-	}
-	@media (max-width: 520px) {
-		.nav {
-			padding: 0 14px;
-			gap: 10px;
+		.links a,
+		.nav-collapsed .dock:focus-within .links a {
+			padding: 0 10px;
 		}
-		.nav nav {
-			gap: 10px;
-		}
-		.nav nav a {
-			font-size: 0.74rem;
-		}
-		.brand {
-			font-size: 0.7rem;
-			letter-spacing: 0.06em;
-			white-space: nowrap;
+		.nav-collapsed .dock:focus-within {
+			width: 272px;
 		}
 	}
-	@media (max-width: 359px) {
-		.brand .full {
-			display: none;
-		}
-		.brand .short {
-			display: inline;
-			font-size: 0.85rem;
-			letter-spacing: 0.1em;
+	@media (prefers-reduced-motion: reduce) {
+		.dock,
+		.links a,
+		.label {
+			transition: none;
 		}
 	}
 
@@ -262,6 +333,61 @@ const navLinks = [
 		padding: 32px 0;
 		border-top: 1px solid rgba(90, 50, 30, 0.08);
 		text-align: center;
+	}
+	.foot-meta {
+		display: flex;
+		justify-content: space-between;
+		align-items: flex-end;
+		gap: 16px;
+		margin-bottom: 28px;
+		font-size: 0.95rem;
+		text-align: left;
+	}
+	.touch {
+		display: flex;
+		flex-wrap: wrap;
+		align-items: baseline;
+		gap: 4px 20px;
+	}
+	.location {
+		flex-shrink: 0;
+		text-align: right;
+		white-space: nowrap;
+	}
+	.meta-label {
+		display: block;
+		width: 100%;
+		color: var(--muted);
+		font-size: 0.75rem;
+		text-transform: uppercase;
+		letter-spacing: 0.12em;
+	}
+	.meta-link {
+		display: inline-flex;
+		align-items: center;
+		gap: 6px;
+		color: var(--fg);
+		text-decoration: none;
+	}
+	.meta-link svg {
+		flex-shrink: 0;
+		color: var(--muted);
+		transition: color 0.15s, transform 0.15s;
+	}
+	a.meta-link:hover,
+	a.meta-link:hover svg {
+		color: var(--accent);
+	}
+	a.meta-link:hover svg.arrow-ne {
+		transform: translate(2px, -2px);
+	}
+	@media (max-width: 600px) {
+		.foot-meta {
+			font-size: 0.85rem;
+		}
+		a.meta-link {
+			padding-block: 10px;
+		}
 	}
 	.copyright {
 		color: var(--muted);

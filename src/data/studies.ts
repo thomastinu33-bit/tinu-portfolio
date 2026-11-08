@@ -555,4 +555,40 @@ export const studies: Study[] = [
 			},
 		],
 	},
+	{
+		slug: 'evertune-brand-overview',
+		title: 'One view of brand performance across all AI prompts',
+		company: 'Evertune',
+		tags: ['Evertune AI', 'B2B SaaS', 'Product Design'],
+		summary:
+			'The brand overview page is where customers see how their AI visibility is doing across every prompt they have run, and what to do next.',
+		highlights: ['~97.5% of visitors return', '~21% of app users visit', '~8.6s median time on page'],
+		cover: { src: 'evertune-brand-overview/01', alt: 'The Evertune platform.' },
+		blocks: [
+			{ type: 'heading', text: 'Context' },
+			{
+				type: 'text',
+				text: 'As customers ran more prompts across more trackers, understanding their overall AI visibility meant working through each category and tracker one at a time, a burden that grew most when they wanted to benchmark against competitors. Partnering closely with Product, I dug into how customers evaluated their performance and where they needed a clearer starting point. What emerged was a need for an aggregated view of brand performance, which shaped the design of the brand overview page.',
+			},
+			{ type: 'heading', text: 'Impact' },
+			{
+				type: 'stats',
+				items: [
+					{ value: '~21%', label: 'Of app users visit the brand overview' },
+					{ value: '~97.5%', label: 'Of visitors return' },
+					{ value: '~8.6s', label: 'Median time on page' },
+				],
+			},
+			{
+				type: 'text',
+				text: 'Users were able to quickly see how their brand was performing and take next step actions.',
+			},
+			{
+				type: 'image',
+				src: 'evertune-brand-overview/01',
+				alt: 'The Evertune brand overview page (placeholder).',
+				caption: 'Placeholder: the brand overview page.',
+			},
+		],
+	},
 ];

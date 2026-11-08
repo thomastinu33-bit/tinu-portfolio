@@ -1,10 +1,9 @@
 ---
+import Icon from './Icon.astro';
 import { base } from '../lib/base';
 // A project hero: a walkthrough video in a window frame, split into chapters. The steps underneath
 // show where you are (with a thin progress line) and jump to a chapter when clicked. It plays on
 // its own while on screen, muted and looping, with a pause button.
-import Play from '@lucide/astro/icons/play';
-import Pause from '@lucide/astro/icons/pause';
 import type { FlowVideo } from '../data/site';
 
 interface Props {
@@ -33,8 +32,8 @@ const steps = video.steps;
 					<source src={src} type="video/mp4" />
 				</video>
 				<button type="button" class="toggle" aria-label="Pause the walkthrough">
-					<span class="i-pause"><Pause size={16} strokeWidth={2} aria-hidden="true" /></span>
-					<span class="i-play"><Play size={16} strokeWidth={2} aria-hidden="true" /></span>
+					<span class="i-pause"><Icon name="pause" size={16} aria-hidden="true" /></span>
+					<span class="i-play"><Icon name="play" size={16} aria-hidden="true" /></span>
 				</button>
 			</div>
 		</div>

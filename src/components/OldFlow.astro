@@ -1,9 +1,8 @@
 ---
+import Icon from './Icon.astro';
 // The previous tracker creation flow, drawn with its real routes: the type you pick
 // decides which steps come next, and every path merges at "Enter competitors".
 // Wires are drawn from the boxes' real positions (see the script), in a neutral palette.
-import Plus from '@lucide/astro/icons/plus';
-import TriangleAlert from '@lucide/astro/icons/triangle-alert';
 
 const methods = ['Let Evertune generate', 'Give instruction', 'Enter topics'];
 ---
@@ -36,7 +35,7 @@ const methods = ['Let Evertune generate', 'Give instruction', 'Enter topics'];
 					<small>Five to choose from</small>
 				</div>
 			</div>
-			<span class="flag side"><TriangleAlert size={14} strokeWidth={1.75} aria-hidden="true" />Hard to choose</span>
+			<span class="flag side"><Icon name="warning" size={14} aria-hidden="true" />Hard to choose</span>
 		</div>
 
 		<ul class="options">
@@ -92,8 +91,8 @@ const methods = ['Let Evertune generate', 'Give instruction', 'Enter topics'];
 				<div>
 					<b>Review prompts</b>
 					<small>Edit topics and prompts</small>
-					<span class="add"><Plus size={14} strokeWidth={1.75} aria-hidden="true" />Add topic or prompt</span>
-					<span class="flag"><TriangleAlert size={14} strokeWidth={1.75} aria-hidden="true" />Hard to add more</span>
+					<span class="add"><Icon name="plus" size={14} aria-hidden="true" />Add topic or prompt</span>
+					<span class="flag"><Icon name="warning" size={14} aria-hidden="true" />Hard to add more</span>
 				</div>
 			</div>
 		</div>
