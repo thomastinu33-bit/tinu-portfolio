@@ -766,21 +766,11 @@ const principleIcons = { build: 'cursor-click', team: 'users-three', craft: 'rul
 		}
 	}
 
-	/* About: a glass text card beside a photo, over soft colour washes */
+	/* About: a glass text card beside a photo */
 	#about {
 		position: relative;
 		isolation: isolate;
 		padding-block: 24px 40px;
-	}
-	#about::before {
-		content: '';
-		position: absolute;
-		inset: -40px 0 -20px;
-		z-index: -1;
-		pointer-events: none;
-		background:
-			radial-gradient(40% 50% at 12% 30%, rgba(255, 214, 190, 0.5), transparent 70%),
-			radial-gradient(38% 50% at 90% 75%, rgba(214, 205, 255, 0.5), transparent 70%);
 	}
 	#about h2 {
 		text-align: center;
