@@ -284,10 +284,47 @@ export const studies: Study[] = [
 				text: 'I reviewed over 100 custom analysis requests from customers and watched recordings of research analysts speaking with them to understand their questions, challenges and recurring patterns. Applying the 80-20 principle, I distilled key themes and worked closely with the product manager to define the next steps.',
 			},
 			{
-				type: 'image',
-				src: 'yd-dataviz/02',
-				alt: 'An affinity diagram of themes from customer requests.',
-				caption: 'One of the many affinity diagrams I created to identify key themes.',
+				type: 'affinity',
+				kind: 'Affinity diagram',
+				source: 'Customer requests',
+				caption: 'One of the many affinity diagrams I created to identify key themes. Quotes are excerpts.',
+				cols: 2,
+				themes: [
+					{
+						name: 'Growth rates',
+						tone: 'red',
+						notes: [
+							'…just visually for me to see two year growth rates across time, different types of seasonality through your… through your data set.',
+							'…we can pull data from all our vendors and just visualize like charge change, you know, like do we want to sit on a year over year basis.',
+						],
+					},
+					{
+						name: 'Workflow',
+						tone: 'blue',
+						notes: [
+							'I just have a sheet but usually what I do is like pull in your raw data. So every time you send an update, I’m just literally copy pasting and the raw data. And then I have, you know, just formulas that are pulling just from your raw data',
+						],
+					},
+					{
+						name: 'Forecasting',
+						tone: 'yellow',
+						notes: [
+							'I want to know what the best way is to forecast QTD for the rest of the quarter. What are the nuances to think about here',
+							'A few basic forecast methods. Like linear regression or just clicking seasonality, or, you know, delta between estimated and import it.',
+							'One definitely go in and partly because the data is so accurate and there’s also a read through it to be, you can use the data to the project out maybe the next month or two and get a sense of pending on how much they bought',
+							'I do like aggregations on the data and then we have models for all of our companies. And those sometimes pull specific pieces of information from it',
+						],
+					},
+					{
+						name: 'Context',
+						tone: 'purple',
+						notes: [
+							'If it’s interesting, I will see I want to know what the comps look like so that I know whats driving this and just visually interpret the information and then, you know, make some conclusion and share that with our team.',
+							'…usually you can’t trust estimates early in the quarter so what should I takeaway from this?',
+							'Right now what we do when I have that question is I schedule a call with your analyst.',
+						],
+					},
+				],
 			},
 			{ type: 'heading', text: 'Building the Key Metrics dashboard' },
 			{ type: 'text', text: 'We designed the visualization around three key user needs:' },
