@@ -46,7 +46,7 @@ export const studies: Study[] = [
 			'Customers visited every day for the latest reports, but over 70% of the homepage was irrelevant to them. I redesigned it to make new reports easy to find.',
 		highlights: ['12x increase in daily visitors', '41.5% visitor adoption', '11% weekly visitor growth'],
 		hero: true,
-		cover: { src: 'yd-homepage/01', alt: 'The redesigned YipitData homepage on a laptop.', bare: true },
+		cover: { src: 'yd-homepage/cover', alt: 'The redesigned YipitData homepage on a laptop.', bare: true },
 		blocks: [
 			{ type: 'heading', text: 'Context' },
 			{
@@ -122,7 +122,7 @@ export const studies: Study[] = [
 			'Customers had no quick way to see the latest KPIs for the companies they follow. I designed one consolidated view of YipitData’s estimates next to consensus values.',
 		highlights: ['62% visitor adoption', '12% average weekly visitor increase', '+18% week-over-week retention'],
 		hero: true,
-		cover: { src: 'yd-key-metrics/01', alt: 'The Key Metrics Screener on a laptop.', bare: true },
+		cover: { src: 'yd-key-metrics/cover', alt: 'The Key Metrics Screener on a laptop.', bare: true },
 		blocks: [
 			{ type: 'heading', text: 'Context' },
 			{
@@ -211,7 +211,7 @@ export const studies: Study[] = [
 			'Visualization guidelines for research and engineering',
 		],
 		hero: true,
-		cover: { src: 'yd-dataviz/01', alt: 'The Key Metrics dashboard on a laptop.', bare: true },
+		cover: { src: 'yd-dataviz/cover', alt: 'The Key Metrics dashboard on a laptop.', bare: true },
 		blocks: [
 			{ type: 'heading', text: 'Context' },
 			{
@@ -264,7 +264,7 @@ export const studies: Study[] = [
 			'Favoriting and watchlisting a company confused customers. I replaced “Favorites” with one expanded Watchlist that personalizes the whole portal.',
 		highlights: ['9x visitor adoption', '6.7x user clicks', '+21% weekly visitors managing their watchlist'],
 		hero: true,
-		cover: { src: 'yd-preferences/01', alt: 'The My Products page on a laptop.', bare: true },
+		cover: { src: 'yd-preferences/cover', alt: 'The My Products page on a laptop.', bare: true },
 		blocks: [
 			{ type: 'heading', text: 'Context' },
 			{
