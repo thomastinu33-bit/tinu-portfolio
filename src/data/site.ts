@@ -109,8 +109,8 @@ export const projects: Project[] = [
 		},
 		tags: ['Evertune AI', 'B2B SaaS', 'Product Design'],
 		flow: {
-			src: 'evertune/flow.mp4',
-			poster: 'evertune/flow-poster.jpg',
+			src: 'evertune/flow-v2.mp4',
+			poster: 'evertune/flow-v2-poster.jpg',
 			steps: [
 				{
 					label: 'Start',
