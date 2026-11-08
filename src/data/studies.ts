@@ -595,14 +595,6 @@ export const studies: Study[] = [
 				type: 'text',
 				text: 'I started by partnering with the PM to understand exactly how customers wanted to understand their brand performance. Our customer success teams were already building reports for customers, so as part of our discovery process, we gathered all of those artifacts and evaluated them to uncover patterns in what they showed.',
 			},
-			{
-				type: 'text',
-				text: 'Those patterns became the foundation for an aggregated view of performance across every prompt customers run. From there I designed the page end to end, from early exploration through high-fidelity designs, with a timeline chart at the top so customers can see how their visibility changes over time and dig into the data.',
-			},
-			{
-				type: 'text',
-				text: 'The last piece was connecting the page to the agent. When a score moves, customers can ask \u201cWhy did my score change?\u201d, read the answer in context, then collapse the agent to the side and keep exploring.',
-			},
 		],
 	},
 ];
