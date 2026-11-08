@@ -361,6 +361,27 @@ const notes = [
 		font-weight: 500;
 	}
 
+	.node:not(.decision),
+	.note,
+	.node-note {
+		transition:
+			transform 0.3s cubic-bezier(0.2, 0.7, 0.2, 1),
+			box-shadow 0.3s ease;
+	}
+	.node:not(.decision):hover,
+	.note:hover,
+	.node-note:hover {
+		transform: translateY(-3px);
+		box-shadow: 0 26px 54px -20px rgba(150, 110, 170, 0.35);
+	}
+	@media (prefers-reduced-motion: reduce) {
+		.node:not(.decision):hover,
+		.note:hover,
+		.node-note:hover {
+			transform: none;
+		}
+	}
+
 	/* Decision diamond: a clipped dark shape with a clipped white shape inside it */
 	.node.decision {
 		background: none;

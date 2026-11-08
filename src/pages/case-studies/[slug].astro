@@ -751,7 +751,7 @@ const { study } = Astro.props;
 	}
 	.persona:hover {
 		transform: translateY(-4px);
-		box-shadow: 0 22px 40px -18px rgba(255, 150, 100, 0.4);
+		box-shadow: 0 26px 54px -20px rgba(150, 110, 170, 0.35);
 	}
 	.persona-label {
 		position: relative;
@@ -836,7 +836,27 @@ const { study } = Astro.props;
 			height: 44px;
 		}
 	}
+	/* every card lifts with the same purple glow; this comes last so it beats each card's own resting shadow */
+	.stats div,
+	.pains li,
+	.asks li,
+	.fb-note {
+		transition:
+			transform 0.3s cubic-bezier(0.2, 0.7, 0.2, 1),
+			box-shadow 0.3s ease;
+	}
+	.stats div:hover,
+	.pains li:hover,
+	.asks li:hover,
+	.fb-note:hover,
+	.persona:hover {
+		transform: translateY(-4px);
+		box-shadow: 0 26px 54px -20px rgba(150, 110, 170, 0.35);
+	}
 	@media (prefers-reduced-motion: reduce), (hover: none) {
+		.pains li:hover,
+		.asks li:hover,
+		.fb-note:hover,
 		.stats div:hover,
 		.persona:hover,
 		blockquote:hover {
