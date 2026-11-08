@@ -4,8 +4,6 @@ import Layout from '../layouts/Layout.astro';
 import { Image } from 'astro:assets';
 import PasswordGate from '../components/PasswordGate.astro';
 import { site, projects, principles, experience } from '../data/site';
-import Mail from '@lucide/astro/icons/mail';
-import MapPin from '@lucide/astro/icons/map-pin';
 import ArrowUpRight from '@lucide/astro/icons/arrow-up-right';
 import ChevronDown from '@lucide/astro/icons/chevron-down';
 import Ruler from '@lucide/astro/icons/ruler';
@@ -39,26 +37,6 @@ const principleIcons = { build: MousePointerClick, team: UsersRound, craft: Rule
 		<a class="scroll-cue" href="#how-i-work" aria-label="Scroll to How I work">
 			<ChevronDown size={20} strokeWidth={1.5} aria-hidden="true" />
 		</a>
-		<div id="contact" class="hero-meta nav-width">
-			<div class="touch">
-				<span class="meta-label">Get in touch</span>
-				<a class="meta-link" href={`mailto:${site.email}`}>
-					<Mail size={16} strokeWidth={1.75} aria-hidden="true" />
-					{site.email}
-				</a>
-				<a class="meta-link" href={site.linkedin} target="_blank" rel="noopener">
-					LinkedIn
-					<ArrowUpRight size={16} strokeWidth={1.75} aria-hidden="true" />
-				</a>
-			</div>
-			<div class="location">
-				<span class="meta-label">Based in</span>
-				<span class="meta-link">
-					<MapPin size={16} strokeWidth={1.75} aria-hidden="true" />
-					{site.location}
-				</span>
-			</div>
-		</div>
 	</section>
 
 	<section id="how-i-work" class="nav-width">
@@ -281,7 +259,7 @@ const principleIcons = { build: MousePointerClick, team: UsersRound, craft: Rule
 			cell = w < 600 ? 20 : 30;
 			cols = Math.max(8, Math.floor(w / cell));
 			ox = (w - cols * cell) / 2;
-			floorY = h - (w < 600 ? 120 : 140); // the stack rests above the contact details
+			floorY = h - (w < 600 ? 56 : 64); // the stack rests just above the bottom of the first screen
 			rows = Math.max(8, Math.floor(floorY / cell));
 			grid = Array.from({ length: rows }, () => Array(cols).fill(false));
 			piece = null;
@@ -453,65 +431,6 @@ const principleIcons = { build: MousePointerClick, team: UsersRound, craft: Rule
 		background: linear-gradient(180deg, #fffaf6 0%, #ffffff 100%);
 		overflow: hidden;
 		isolation: isolate;
-	}
-	/* Contact details pinned to the bottom corners of the first screen */
-	.hero-meta {
-		position: absolute;
-		left: 0;
-		right: 0;
-		bottom: 36px;
-		display: flex;
-		justify-content: space-between;
-		align-items: flex-end;
-		gap: 16px;
-		font-size: 0.95rem;
-	}
-	.touch {
-		display: flex;
-		flex-wrap: wrap;
-		align-items: baseline;
-		gap: 4px 20px;
-	}
-	.location {
-		flex-shrink: 0;
-		text-align: right;
-		white-space: nowrap;
-	}
-	.meta-label {
-		display: block;
-		width: 100%;
-		color: var(--muted);
-		font-size: 0.75rem;
-		text-transform: uppercase;
-		letter-spacing: 0.12em;
-	}
-	.meta-link {
-		display: inline-flex;
-		align-items: center;
-		gap: 6px;
-		color: var(--fg);
-		text-decoration: none;
-	}
-	.meta-link svg {
-		flex-shrink: 0;
-		color: var(--muted);
-		transition: color 0.15s, transform 0.15s;
-	}
-	a.meta-link:hover,
-	a.meta-link:hover svg {
-		color: var(--accent);
-	}
-	a.meta-link:hover svg.lucide-arrow-up-right {
-		transform: translate(2px, -2px);
-	}
-	@media (max-width: 600px) {
-		.hero-meta {
-			bottom: max(24px, env(safe-area-inset-bottom));
-			font-size: 0.85rem;
-		}
-		a.meta-link {
-			padding-block: 10px;
-		}
 	}
 	.hero .container {
 		width: 100%;
@@ -861,7 +780,7 @@ const principleIcons = { build: MousePointerClick, team: UsersRound, craft: Rule
 	#about::before {
 		content: '';
 		position: absolute;
-		inset: -40px -5% -20px;
+		inset: -40px 0 -20px;
 		z-index: -1;
 		pointer-events: none;
 		background:

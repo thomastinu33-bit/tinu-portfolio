@@ -1,6 +1,9 @@
 ---
 import { base } from '../lib/base';
 import { site } from '../data/site';
+import Mail from '@lucide/astro/icons/mail';
+import MapPin from '@lucide/astro/icons/map-pin';
+import ArrowUpRight from '@lucide/astro/icons/arrow-up-right';
 
 interface Props {
 	title?: string;
@@ -57,6 +60,26 @@ const navLinks = [
 			<slot />
 		</main>
 		<footer class="footer">
+			<div id="contact" class="foot-meta nav-width">
+				<div class="touch">
+					<span class="meta-label">Get in touch</span>
+					<a class="meta-link" href={`mailto:${site.email}`}>
+						<Mail size={16} strokeWidth={1.75} aria-hidden="true" />
+						{site.email}
+					</a>
+					<a class="meta-link" href={site.linkedin} target="_blank" rel="noopener">
+						LinkedIn
+						<ArrowUpRight size={16} strokeWidth={1.75} aria-hidden="true" />
+					</a>
+				</div>
+				<div class="location">
+					<span class="meta-label">Based in</span>
+					<span class="meta-link">
+						<MapPin size={16} strokeWidth={1.75} aria-hidden="true" />
+						{site.location}
+					</span>
+				</div>
+			</div>
 			<div class="container">
 				<p class="copyright">© {new Date().getFullYear()} {site.name}</p>
 			</div>
@@ -262,6 +285,61 @@ const navLinks = [
 		padding: 32px 0;
 		border-top: 1px solid rgba(90, 50, 30, 0.08);
 		text-align: center;
+	}
+	.foot-meta {
+		display: flex;
+		justify-content: space-between;
+		align-items: flex-end;
+		gap: 16px;
+		margin-bottom: 28px;
+		font-size: 0.95rem;
+		text-align: left;
+	}
+	.touch {
+		display: flex;
+		flex-wrap: wrap;
+		align-items: baseline;
+		gap: 4px 20px;
+	}
+	.location {
+		flex-shrink: 0;
+		text-align: right;
+		white-space: nowrap;
+	}
+	.meta-label {
+		display: block;
+		width: 100%;
+		color: var(--muted);
+		font-size: 0.75rem;
+		text-transform: uppercase;
+		letter-spacing: 0.12em;
+	}
+	.meta-link {
+		display: inline-flex;
+		align-items: center;
+		gap: 6px;
+		color: var(--fg);
+		text-decoration: none;
+	}
+	.meta-link svg {
+		flex-shrink: 0;
+		color: var(--muted);
+		transition: color 0.15s, transform 0.15s;
+	}
+	a.meta-link:hover,
+	a.meta-link:hover svg {
+		color: var(--accent);
+	}
+	a.meta-link:hover svg.lucide-arrow-up-right {
+		transform: translate(2px, -2px);
+	}
+	@media (max-width: 600px) {
+		.foot-meta {
+			font-size: 0.85rem;
+		}
+		a.meta-link {
+			padding-block: 10px;
+		}
 	}
 	.copyright {
 		color: var(--muted);
