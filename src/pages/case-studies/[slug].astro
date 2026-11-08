@@ -94,6 +94,10 @@ const { study } = Astro.props;
 										<blockquote>{`\u201c${b.quote}\u201d`}</blockquote>
 										<figcaption>{b.source}</figcaption>
 									</figure>
+									{b.notes.map((n) => (
+										<p class="fb-note">{n}</p>
+									))}
+									<p class="fb-goal">{b.goal}</p>
 								</div>
 							);
 						case 'gallery':
@@ -525,7 +529,35 @@ const { study } = Astro.props;
 	/* Design exploration: a row of screens you scroll through, one snapping into place at a time */
 	.feedback {
 		display: grid;
+		grid-template-columns: minmax(0, 5fr) minmax(0, 6fr);
+		grid-template-rows: repeat(3, auto);
 		gap: 16px;
+	}
+	.fb-quote {
+		grid-row: 1 / span 3;
+	}
+	.fb-note {
+		margin: 0;
+		display: flex;
+		align-items: center;
+		padding: 22px 24px;
+		border-radius: 22px;
+		background: #fafafa;
+		border: 1px solid #ececec;
+		font-size: 1rem;
+		line-height: 1.6;
+		color: #3d3d3d;
+	}
+	.fb-goal {
+		grid-column: 1 / -1;
+		margin: 0;
+		padding: 28px 32px;
+		border-radius: 22px;
+		background: #161616;
+		color: #f4f4f4;
+		font-family: var(--font-serif);
+		font-size: clamp(1.3rem, 2.4vw, 1.7rem);
+		line-height: 1.35;
 	}
 	.fb-quote {
 		position: relative;
@@ -564,7 +596,7 @@ const { study } = Astro.props;
 		-webkit-backdrop-filter: none;
 		backdrop-filter: none;
 		transform: none;
-		max-width: 30ch;
+		max-width: 22ch;
 		font-family: var(--font-serif);
 		font-size: clamp(1.6rem, 3.2vw, 2.2rem);
 		line-height: 1.25;
@@ -789,7 +821,12 @@ const { study } = Astro.props;
 		.pains {
 			grid-template-columns: 1fr;
 		}
+		.feedback {
+			grid-template-columns: 1fr;
+			grid-template-rows: none;
+		}
 		.fb-quote {
+			grid-row: auto;
 			padding: 28px 24px;
 		}
 		.panel {

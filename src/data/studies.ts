@@ -15,7 +15,7 @@ export type Block =
 	// Discovery: the questions we asked beside the pain points we heard
 	| { type: 'research'; questionsLabel: string; questions: string[]; painLabel: string; pains: string[] }
 	// Customer feedback: one featured quote, then short notes from other customers
-	| { type: 'feedback'; quote: string; source: string }
+	| { type: 'feedback'; quote: string; source: string; notes: string[]; goal: string }
 	// A grid of captioned pictures; the last one spans the full width when the count is odd
 	| { type: 'gallery'; caption?: string; items: { src: string; alt: string }[] }
 	// Side-by-side cards describing the people a design is for
@@ -700,15 +700,12 @@ export const studies: Study[] = [
 				type: 'feedback',
 				quote: 'Really liking it \u2026 much more of a one stop shop versus having to click around so much in the platform.',
 				source: 'Customer',
-			},
-			{
-				type: 'list',
-				items: [
+				notes: [
 					'One team liked that it\u2019s a simple entry point anyone on their team can use, and chose to keep it instead of moving to custom dashboards.',
 					'Another said the visualizations make performance easy to communicate. One screenshot shows several metrics at once, which Trend Analysis can\u2019t do, and they loved the donut charts.',
 					'One customer uses it for weekly executive reporting, and the timeline is one of the most important screenshots brands share internally.',
-					'We think it could become one of the most valuable views in the platform. The goal is that 90%+ of users never need to leave it.',
 				],
+				goal: 'We think it could become one of the most valuable views in the platform. The goal is that 90%+ of users never need to leave it.',
 			},
 		],
 	},
