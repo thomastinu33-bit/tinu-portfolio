@@ -12,6 +12,8 @@ export type Block =
 	| { type: 'logos'; images: { src: string; alt: string }[] }
 	| { type: 'stats'; items: { value: string; label: string }[] }
 	| { type: 'quotes'; items: string[] }
+	// A board of sticky notes grouped by theme (see AffinityBoard)
+	| { type: 'affinity'; kind: string; source: string; caption: string; cols?: number; themes: { name: string; tone: string; notes: string[] }[] }
 	// Discovery: the questions we asked beside the pain points we heard
 	| { type: 'research'; questionsLabel: string; questions: string[]; painLabel: string; pains: string[] }
 	// Customer feedback: one featured quote, then short notes from other customers
@@ -161,10 +163,63 @@ export const studies: Study[] = [
 				text: 'While gathering feedback on the Screener, we learned that customers wanted additional functionality, such as filtering by sectors, switching between growth rates, and earnings indicators to assess the reliability of estimates. Based on this input, we decided to evolve the Screener to better meet these needs and provide a more dynamic, user-driven experience.',
 			},
 			{
-				type: 'image',
-				src: 'yd-key-metrics/03',
-				alt: 'Key insights consolidated from customer feedback and interview sessions.',
-				caption: 'A consolidation of key insights gathered from customer feedback and interview sessions.',
+				type: 'affinity',
+				kind: 'Key insights',
+				source: 'Feedback and interviews',
+				caption: 'A consolidation of key insights gathered from customer feedback and interview sessions. Quotes are excerpts.',
+				cols: 3,
+				themes: [
+					{
+						name: 'Workflow',
+						tone: 'blue',
+						notes: [
+							'Workflow: Download the data > chart everything and do my extrapolation > see what pops out the other end',
+							'After using the dashboard > update all models > do a morning summary of the day that includes all of my news flows…',
+						],
+					},
+					{
+						name: 'Toggle between growth rates',
+						tone: 'green',
+						notes: [
+							'I don’t know if it would be too much to toggle between year over year or two year or four year estimate. That’s how you get to the quarter to date estimate.',
+							'Look at y/y and 4yr… Usually that aligns with my understanding after doing the data punching.',
+						],
+					},
+					{
+						name: 'Show trend lines',
+						tone: 'purple',
+						notes: [
+							'Regarding the metrics table, we know the point changes WoW but I think it would be helpful to have a trend line. It would be really helpful if you’re strapped on time.',
+							'Instead of period progress, it would be better to see the trend line.',
+						],
+					},
+					{
+						name: 'See context',
+						tone: 'yellow',
+						notes: [
+							'I want to understand what the quarter to date trend is…',
+							'…usually you can’t trust estimates early in the quarter so what should I takeaway from this?',
+							'What are the nuances to think about here…',
+							'I want to know what the comps look like so that I know whats driving this…',
+						],
+					},
+					{
+						name: 'Margin of error',
+						tone: 'orange',
+						notes: [
+							'I’m looking for a distribution of outcomes regarding the estimate. Is the distribution wide or narrow…',
+							'Give me the 80% confidence interval that’s constantly updated every day. That’s what I want.',
+						],
+					},
+					{
+						name: 'Earnings season',
+						tone: 'orange',
+						notes: [
+							'This list is very long and sometimes I know when it is nearing earnings but I want to know if you have any new update regarding that',
+							'Earnings season is very crucial… It would be nice to see if you guys have an update especially closer to earnings.',
+						],
+					},
+				],
 			},
 			{
 				type: 'text',

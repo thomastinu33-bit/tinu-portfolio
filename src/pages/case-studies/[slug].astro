@@ -3,6 +3,7 @@ import { Image } from 'astro:assets';
 import { base } from '../../lib/base';
 import Icon from '../../components/Icon.astro';
 import Layout from '../../layouts/Layout.astro';
+import AffinityBoard from '../../components/AffinityBoard.astro';
 import PasswordGate from '../../components/PasswordGate.astro';
 import { site } from '../../data/site';
 import { studies } from '../../data/studies';
@@ -50,6 +51,8 @@ const { study } = Astro.props;
 									))}
 								</ul>
 							);
+						case 'affinity':
+							return <AffinityBoard themes={b.themes} kind={b.kind} source={b.source} caption={b.caption} cols={b.cols} />;
 						case 'image':
 							return (
 								<figure>
