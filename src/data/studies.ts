@@ -15,7 +15,7 @@ export type Block =
 	// Discovery: the questions we asked beside the pain points we heard
 	| { type: 'research'; questionsLabel: string; questions: string[]; painLabel: string; pains: string[] }
 	// A grid of captioned pictures; the last one spans the full width when the count is odd
-	| { type: 'gallery'; items: { src: string; alt: string; caption: string }[] }
+	| { type: 'gallery'; label?: string; items: { src: string; alt: string; caption: string }[] }
 	// Side-by-side cards describing the people a design is for
 	| { type: 'personas'; items: { label: string; icon: string; title: string; body: string }[] }
 	// A looping, muted video (files live in public/)
@@ -658,31 +658,32 @@ export const studies: Study[] = [
 			},
 			{
 				type: 'gallery',
+				label: 'Some of the designs we explored',
 				items: [
 					{
 						src: 'evertune-brand-overview/explore-01',
 						alt: 'Early layout with brand scores shown as rings by model, above the competitor benchmarking.',
-						caption: 'Scores as rings, by model',
+						caption: 'Brand scores as rings for each model, with competitor benchmarking below.',
 					},
 					{
 						src: 'evertune-brand-overview/explore-02',
 						alt: 'Layout with an Insights and Recommendations panel beside the key metrics and brand scores.',
-						caption: 'Insights beside the data',
+						caption: 'Insights and recommendations in a panel beside the data.',
 					},
 					{
 						src: 'evertune-brand-overview/explore-03',
 						alt: 'Layout with the competitor benchmarking table opening in a side drawer over the overview.',
-						caption: 'Benchmarking in a side drawer',
+						caption: 'Competitor benchmarking opening in a side drawer over the overview.',
 					},
 					{
 						src: 'evertune-brand-overview/explore-04',
 						alt: 'Layout with competitors ranked as horizontal bars right under the key metrics.',
-						caption: 'Competitors as ranked bars',
+						caption: 'Competitors shown as ranked bars right under the key metrics.',
 					},
 					{
 						src: 'evertune-brand-overview/explore-05',
 						alt: 'Layout with competitors compared in a table with scores, visibility, position and source share.',
-						caption: 'Competitors in a comparison table',
+						caption: 'Competitors compared in a table of scores, visibility, position and source share.',
 					},
 				],
 			},
