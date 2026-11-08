@@ -593,7 +593,7 @@ export const studies: Study[] = [
 			{ type: 'heading', text: 'What I did' },
 			{
 				type: 'text',
-				text: 'I started by partnering with the PM to understand exactly how customers wanted to understand their brand performance. Our customer success teams were already building reports for customers, so we gathered all of those artifacts and looked for patterns in what they showed.',
+				text: 'I started by partnering with the PM to understand exactly how customers wanted to understand their brand performance. Our customer success teams were already building reports for customers, so as part of our discovery process, we gathered all of those artifacts and evaluated them to uncover patterns in what they showed.',
 			},
 			{
 				type: 'text',
@@ -603,7 +603,6 @@ export const studies: Study[] = [
 				type: 'text',
 				text: 'The last piece was connecting the page to the agent. When a score moves, customers can ask \u201cWhy did my score change?\u201d, read the answer in context, then collapse the agent to the side and keep exploring.',
 			},
-
 		],
 	},
 ];
