@@ -12,8 +12,8 @@ export type Block =
 	| { type: 'logos'; images: { src: string; alt: string }[] }
 	| { type: 'stats'; items: { value: string; label: string }[] }
 	| { type: 'quotes'; items: string[] }
-	// A clickable walkthrough of a guidelines site: click an item in its side nav to switch page
-	| { type: 'guide'; caption?: string; items: { label: string; src: string; alt: string }[] }
+	// The Data Visualization Guidelines site, rebuilt in HTML and clickable (see GuidelinesSite)
+	| { type: 'guidelines'; caption?: string }
 	// A board of sticky notes grouped by theme (see AffinityBoard)
 	| { type: 'affinity'; kind: string; source: string; caption: string; cols?: number; themes: { name: string; tone: string; notes: string[] }[] }
 	// Discovery: the questions we asked beside the pain points we heard
@@ -348,16 +348,8 @@ export const studies: Study[] = [
 				text: 'Recognizing this gap, I developed the Data Visualization Guidelines, a resource to help research teams design more effective, user-friendly dashboards. The guidelines also supported engineering by introducing streamlined components, reducing the need to build dashboards from scratch and improving overall efficiency.',
 			},
 			{
-				type: 'guide',
+				type: 'guidelines',
 				caption: 'The guidelines site, as the research teams use it. Click the side navigation to look through each page.',
-				items: [
-					{ label: 'Intro', src: 'yd-dataviz/guide/intro', alt: 'The Data Visualization Guidelines intro page.' },
-					{ label: 'Color', src: 'yd-dataviz/guide/color', alt: 'The color page: categorical and sequential palettes.' },
-					{ label: 'Layout', src: 'yd-dataviz/guide/layout', alt: 'The layout page: where charts, titles and filters go.' },
-					{ label: 'Chart', src: 'yd-dataviz/guide/chart', alt: 'The chart page: chart anatomy and chart types.' },
-					{ label: 'Rules', src: 'yd-dataviz/guide/rules', alt: 'The rules page: good and bad chart examples.' },
-					{ label: 'Example Dashboard', src: 'yd-dataviz/guide/dashboard', alt: 'The example dashboard, with filters above an aggregate chart, a market share chart and a top products chart.' },
-				],
 			},
 		],
 	},

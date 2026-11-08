@@ -3,6 +3,7 @@ import { Image } from 'astro:assets';
 import { base } from '../../lib/base';
 import Icon from '../../components/Icon.astro';
 import Layout from '../../layouts/Layout.astro';
+import GuidelinesSite from '../../components/GuidelinesSite.astro';
 import AffinityBoard from '../../components/AffinityBoard.astro';
 import PasswordGate from '../../components/PasswordGate.astro';
 import { site } from '../../data/site';
@@ -53,19 +54,10 @@ const { study } = Astro.props;
 							);
 						case 'affinity':
 							return <AffinityBoard themes={b.themes} kind={b.kind} source={b.source} caption={b.caption} cols={b.cols} />;
-						case 'guide':
+						case 'guidelines':
 							return (
-								<figure class="guide">
-									<div class="guide-frame" data-guide>
-										{b.items.map((it, i) => (
-											<Image class={i === 0 ? 'is-on' : ''} src={studyImage(it.src)} alt={it.alt} widths={[900, 1400, 2000]} sizes="(max-width: 940px) 100vw, 900px" loading={i === 0 ? 'lazy' : 'lazy'} />
-										))}
-										<nav class="guide-nav" aria-label="Guidelines pages">
-											{b.items.map((it, i) => (
-												<button type="button" class={i === 0 ? 'is-on' : ''} data-i={i} style={`--y: ${(14.04 + i * 4.68).toFixed(2)}%`} aria-label={it.label} aria-pressed={i === 0 ? 'true' : 'false'}></button>
-											))}
-										</nav>
-									</div>
+								<figure class="guidelines">
+									<GuidelinesSite />
 									{b.caption && <figcaption>{b.caption}</figcaption>}
 								</figure>
 							);
@@ -284,65 +276,7 @@ const { study } = Astro.props;
 	});
 </script>
 
-<script>
-	// Guidelines walkthrough: clicking an item in the side nav shows that page
-	document.querySelectorAll<HTMLElement>('[data-guide]').forEach((frame) => {
-		const imgs = [...frame.querySelectorAll<HTMLImageElement>('img')];
-		const btns = [...frame.querySelectorAll<HTMLButtonElement>('.guide-nav button')];
-		const show = (i: number) => {
-			imgs.forEach((im, n) => im.classList.toggle('is-on', n === i));
-			btns.forEach((bt, n) => {
-				bt.classList.toggle('is-on', n === i);
-				bt.setAttribute('aria-pressed', String(n === i));
-			});
-		};
-		btns.forEach((bt) => bt.addEventListener('click', () => show(Number(bt.dataset.i))));
-	});
-</script>
-
 <style>
-	/* Guidelines walkthrough: the pages are stacked, and invisible buttons sit over the side nav items */
-	.guide-frame {
-		position: relative;
-		aspect-ratio: 4 / 3;
-		overflow: hidden;
-		border-radius: 20px;
-		border: 1px solid #ececec;
-		background: #fff;
-		box-shadow: 0 12px 30px -18px rgba(0, 0, 0, 0.15);
-	}
-	.guide-frame :global(img) {
-		position: absolute;
-		inset: 0;
-		width: 100%;
-		height: 100%;
-		margin: 0;
-		opacity: 0;
-		transition: opacity 0.25s ease;
-	}
-	.guide-frame :global(img.is-on) {
-		opacity: 1;
-	}
-	.guide-nav button {
-		position: absolute;
-		left: 1.2%;
-		width: 17.7%;
-		height: 5.2%;
-		top: calc(var(--y) - 2.6%);
-		padding: 0;
-		border: 0;
-		border-radius: 8px;
-		background: transparent;
-		cursor: pointer;
-		transition: background 0.2s ease;
-	}
-	.guide-nav button:hover:not(.is-on),
-	.guide-nav button:focus-visible {
-		background: rgba(150, 110, 170, 0.14);
-	}
-	.guide-nav button:focus-visible {
-		outline: 2px solid var(--accent);
-	}
 	/* Soft colour behind the top of the page, like the landing page */
 	.wash {
 		position: absolute;
