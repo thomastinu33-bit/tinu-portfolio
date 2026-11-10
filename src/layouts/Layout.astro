@@ -23,6 +23,14 @@ const navLinks = [
 	<head>
 		<meta charset="utf-8" />
 		<meta name="viewport" content="width=device-width, initial-scale=1" />
+		<!-- Google Analytics (GA4) -->
+		<script is:inline async src="https://www.googletagmanager.com/gtag/js?id=G-954JLHCTCX"></script>
+		<script is:inline>
+			window.dataLayer = window.dataLayer || [];
+			function gtag(){dataLayer.push(arguments);}
+			gtag('js', new Date());
+			gtag('config', 'G-954JLHCTCX');
+		</script>
 		<meta name="description" content={description} />
 		<link rel="icon" type="image/svg+xml" href={`${base}/favicon.svg`} />
 		<link rel="icon" href={`${base}/favicon.ico`} />

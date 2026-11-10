@@ -706,7 +706,7 @@ export const studies: Study[] = [
 		tags: ['Evertune AI', 'B2B SaaS', 'Product Design'],
 		summary:
 			'The brand overview page is where customers see how their AI visibility is doing across every prompt they have run, and what to do next.',
-		highlights: ['~97.5% of visitors return', '~31% of app users visit'],
+		highlights: ['~97.5% of visitors return', '~70% of app users visit'],
 		cover: { src: 'evertune-brand-overview/cover-final', alt: 'The Evertune brand overview page: key metrics, a visibility timeline, a competitor table and scores by model.' },
 		blocks: [
 			{ type: 'heading', text: 'Context' },
@@ -718,7 +718,7 @@ export const studies: Study[] = [
 			{
 				type: 'stats',
 				items: [
-					{ value: '~31%', label: 'Of app users visit the brand overview' },
+					{ value: '~70%', label: 'Of app users visit the brand overview' },
 					{ value: '~97.5%', label: 'Of visitors return' },
 				],
 			},
@@ -843,7 +843,7 @@ export const studies: Study[] = [
 			{ type: 'heading', text: 'Next steps' },
 			{
 				type: 'text',
-				text: 'Within 90 days of launch, 31% of users were actively coming back to the brand overview. We think it can become one of the most valuable views in the platform, with the goal that 90%+ of users never need to leave it. Getting there means:',
+				text: 'Within 90 days of launch, 70% of users were actively coming back to the brand overview. We think it can become one of the most valuable views in the platform, with the goal that 90%+ of users never need to leave it. Getting there means:',
 			},
 			{
 				type: 'list',
